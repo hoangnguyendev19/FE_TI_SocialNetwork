@@ -14,8 +14,12 @@ export const headerStyle: React.CSSProperties = {
 
 export const contentStyle: React.CSSProperties = {
   color: "#fff",
-  height: "100vh",
   padding: "0 100px",
+};
+
+export const siderStyle: React.CSSProperties = {
+  color: "#fff",
+  backgroundColor: Color.PRIMARY,
 };
 
 export const imageStyle: React.CSSProperties = {

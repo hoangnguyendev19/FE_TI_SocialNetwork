@@ -1,13 +1,20 @@
-import { Typography } from "antd";
-import { Color } from "constants";
+import { Layout } from "antd";
+import { SideBar, HeaderTop } from "components";
 import React from "react";
+import { layoutStyle, siderStyle } from "styles";
+
+const { Content, Sider } = Layout;
 
 export const Home: React.FC = () => {
   return (
-    <div>
-      <Typography.Title level={1} style={{ color: Color.SENCONDARY }}>
-        Home page!
-      </Typography.Title>
-    </div>
+    <Layout style={layoutStyle}>
+      <HeaderTop />
+      <Layout>
+        <Sider width="15%" style={siderStyle}>
+          <SideBar />
+        </Sider>
+        <Content>Content</Content>
+      </Layout>
+    </Layout>
   );
 };
