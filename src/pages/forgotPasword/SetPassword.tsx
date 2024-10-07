@@ -1,28 +1,12 @@
-import React from "react";
-import {
-  Layout,
-  Image,
-  Row,
-  Typography,
-  Col,
-  Input,
-  Flex,
-  Checkbox,
-  Button,
-} from "antd";
-import type { CheckboxProps } from "antd";
+import { Button, Col, Flex, Image, Input, Layout, Row, Typography } from "antd";
+import PasswordImage from "assets/images/img-password.png";
 import LogoImage from "assets/images/img-logo.png";
-import LoginImage from "assets/images/img-login.png";
+import React from "react";
 import { contentStyle, headerStyle, imageStyle, layoutStyle } from "styles";
-import { MENU } from "constants";
 
 const { Header, Content } = Layout;
 
-export const Login: React.FC = () => {
-  const onChange: CheckboxProps["onChange"] = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
-
+export const SetPassword: React.FC = () => {
   return (
     <Layout style={layoutStyle}>
       <Header style={headerStyle}>
@@ -36,33 +20,26 @@ export const Login: React.FC = () => {
               vertical
               style={{ height: "100%", width: "100%" }}
             >
-              <Typography.Title level={1}>Login</Typography.Title>
+              <Typography.Title level={1}>Set a password</Typography.Title>
               <Typography.Paragraph
                 type="secondary"
                 style={{ marginBottom: "15px" }}
               >
-                Login to access your TI-Social Network account
+                Your previous password has been reseted. Please set a new
+                password for your account.
               </Typography.Paragraph>
               <Row gutter={[0, 15]}>
                 <Col className="gutter-row" span={24}>
-                  <Input
-                    placeholder="Please type your email!"
+                  <Input.Password
+                    placeholder="Please type your new password!"
                     style={{ padding: "10px" }}
                   />
                 </Col>
                 <Col className="gutter-row" span={24}>
                   <Input.Password
-                    placeholder="Please type your password!"
+                    placeholder="Please re-type your new password!"
                     style={{ padding: "10px" }}
                   />
-                </Col>
-                <Col className="gutter-row" span={24}>
-                  <Flex justify="space-between" align="center">
-                    <Checkbox onChange={onChange}>Remember me</Checkbox>
-                    <Typography.Link type="danger">
-                      Forgot password?
-                    </Typography.Link>
-                  </Flex>
                 </Col>
               </Row>
 
@@ -75,23 +52,16 @@ export const Login: React.FC = () => {
                   marginTop: "30px",
                 }}
               >
-                Login
+                Set password
               </Button>
-
-              <Typography.Text style={{ textAlign: "center" }}>
-                Don't have an account?{" "}
-                <Typography.Link type="danger" href={MENU.SIGNUP}>
-                  Sign up
-                </Typography.Link>
-              </Typography.Text>
             </Flex>
           </Col>
           <Col span={12}>
             <Flex align="center" justify="center">
               <Image
                 style={imageStyle}
-                src={LoginImage}
-                placeholder="login"
+                src={PasswordImage}
+                placeholder="Set A Password"
                 preview={false}
               />
             </Flex>
