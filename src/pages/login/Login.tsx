@@ -43,24 +43,28 @@ export const Login: React.FC = () => {
               >
                 Login to access your TI-Social Network account
               </Typography.Paragraph>
-              <Input
-                placeholder="Please type your email!"
-                style={{ padding: "10px", marginBottom: "10px" }}
-              />
-              <Input.Password
-                placeholder="Please type your password!"
-                style={{ padding: "10px", marginBottom: "10px" }}
-              />
-              <Flex
-                justify="space-between"
-                align="center"
-                style={{ width: "100%", marginBottom: "30px" }}
-              >
-                <Checkbox onChange={onChange}>Remember me</Checkbox>
-                <Typography.Link type="danger">
-                  Forgot password?
-                </Typography.Link>
-              </Flex>
+              <Row gutter={[0, 15]}>
+                <Col className="gutter-row" span={24}>
+                  <Input
+                    placeholder="Please type your email!"
+                    style={{ padding: "10px" }}
+                  />
+                </Col>
+                <Col className="gutter-row" span={24}>
+                  <Input.Password
+                    placeholder="Please type your password!"
+                    style={{ padding: "10px" }}
+                  />
+                </Col>
+                <Col className="gutter-row" span={24}>
+                  <Flex justify="space-between" align="center">
+                    <Checkbox onChange={onChange}>Remember me</Checkbox>
+                    <Typography.Link type="danger">
+                      Forgot password?
+                    </Typography.Link>
+                  </Flex>
+                </Col>
+              </Row>
 
               <Button
                 type="primary"
@@ -68,6 +72,7 @@ export const Login: React.FC = () => {
                   width: "100%",
                   padding: "20px 0",
                   marginBottom: "10px",
+                  marginTop: "30px",
                 }}
               >
                 Login
