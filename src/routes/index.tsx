@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, Login, News } from "pages";
+import { Home, Login, News, Signup } from "pages";
 import { MENU } from "constants";
 
 export const router = createBrowserRouter([
@@ -8,10 +8,14 @@ export const router = createBrowserRouter([
     element: <Home />,
     // loader: rootLoader,
   },
-
   {
     path: MENU.LOGIN,
     element: <Login />,
+    // loader: teamLoader,
+  },
+  {
+    path: MENU.SIGNUP,
+    element: <Signup />,
     // loader: teamLoader,
   },
   {
