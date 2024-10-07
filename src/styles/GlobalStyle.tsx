@@ -15,13 +15,12 @@ export const headerStyle: React.CSSProperties = {
 export const contentStyle: React.CSSProperties = {
   color: "#fff",
   height: "100vh",
-  padding: "0 50px",
+  padding: "0 100px",
 };
 
 export const imageStyle: React.CSSProperties = {
-  maxWidth: "500px",
-  maxHeight: "816px",
+  maxWidth: "400px",
+  maxHeight: "500px",
   borderRadius: "30px 0px 0px 0px",
   objectFit: "cover",
-  textAlign: "center",
 };
