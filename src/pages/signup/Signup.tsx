@@ -14,6 +14,7 @@ import type { CheckboxProps } from "antd";
 import LogoImage from "assets/images/img-logo.png";
 import SignupImage from "assets/images/img-signup.png";
 import { contentStyle, headerStyle, imageStyle, layoutStyle } from "styles";
+import { MENU } from "constants";
 
 const { Header, Content } = Layout;
 
@@ -112,7 +113,9 @@ export const Signup: React.FC = () => {
 
               <Typography.Text style={{ textAlign: "center" }}>
                 Already have an account?{" "}
-                <Typography.Link type="danger">Login</Typography.Link>
+                <Typography.Link type="danger" href={MENU.LOGIN}>
+                  Login
+                </Typography.Link>
               </Typography.Text>
             </Flex>
           </Col>
