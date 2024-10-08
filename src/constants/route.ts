@@ -6,4 +6,5 @@ export const ROUTE = {
   VERIFY_CODE: "verify-code",
   SET_PASSWORD: "set-password",
   NEWS: "news",
+  SETTINGS: "settings",
 };

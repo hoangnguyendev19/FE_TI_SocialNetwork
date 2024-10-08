@@ -9,7 +9,7 @@ export const layoutStyle: React.CSSProperties = {
 
 export const headerStyle: React.CSSProperties = {
   backgroundColor: Color.PRIMARY,
-  margin: "20px 0",
+  margin: "10px 0",
 };
 
 export const contentStyle: React.CSSProperties = {
