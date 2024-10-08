@@ -1,28 +1,13 @@
-import React from "react";
-import {
-  Layout,
-  Image,
-  Row,
-  Typography,
-  Col,
-  Input,
-  Flex,
-  Checkbox,
-  Button,
-} from "antd";
-import type { CheckboxProps } from "antd";
+import { Button, Col, Flex, Image, Input, Layout, Row, Typography } from "antd";
 import LogoImage from "assets/images/img-logo.png";
 import SignupImage from "assets/images/img-signup.png";
+import { ROUTE } from "constants";
+import React from "react";
 import { contentStyle, headerStyle, imageStyle, layoutStyle } from "styles";
-import { MENU } from "constants";
 
 const { Header, Content } = Layout;
 
-export const Signup: React.FC = () => {
-  const onChange: CheckboxProps["onChange"] = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
-
+export const SignupPage: React.FC = () => {
   return (
     <Layout style={layoutStyle}>
       <Header style={headerStyle}>
@@ -113,7 +98,7 @@ export const Signup: React.FC = () => {
 
               <Typography.Text style={{ textAlign: "center" }}>
                 Already have an account?{" "}
-                <Typography.Link type="danger" href={MENU.LOGIN}>
+                <Typography.Link type="danger" href={ROUTE.LOGIN}>
                   Login
                 </Typography.Link>
               </Typography.Text>

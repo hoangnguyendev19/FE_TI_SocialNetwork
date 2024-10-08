@@ -1,11 +1,11 @@
 import { Layout } from "antd";
-import { SideBar, HeaderTop } from "components";
-import React from "react";
+import { HeaderTop, SideBar } from "components";
+import { Outlet } from "react-router-dom";
 import { layoutStyle, siderStyle } from "styles";
 
 const { Content, Sider } = Layout;
 
-export const Home: React.FC = () => {
+export const App = () => {
   return (
     <Layout style={layoutStyle}>
       <HeaderTop />
@@ -13,7 +13,9 @@ export const Home: React.FC = () => {
         <Sider width="15%" style={siderStyle}>
           <SideBar />
         </Sider>
-        <Content>Content</Content>
+        <Content>
+          <Outlet />
+        </Content>
       </Layout>
     </Layout>
   );
