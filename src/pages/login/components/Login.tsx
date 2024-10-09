@@ -9,7 +9,7 @@ import {
   Typography,
 } from "antd";
 import LoginImage from "assets/images/img-login.png";
-import { QueryKey, ROUTE } from "constants";
+import { LoginData, QueryKey, ROUTE } from "constants";
 import React from "react";
 import { imageStyle } from "styles";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,17 +18,11 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 
-interface LoginData {
-  email: string;
-  password: string;
-}
-
 export const Login: React.FC = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: ({ email, password }: LoginData) =>
-      authApi.login(email, password),
+    mutationFn: (data: LoginData) => authApi.login(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
     },
