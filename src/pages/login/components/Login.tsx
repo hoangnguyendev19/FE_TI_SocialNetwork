@@ -5,6 +5,7 @@ import {
   Flex,
   Image,
   Input,
+  notification,
   Row,
   Typography,
 } from "antd";
@@ -17,17 +18,22 @@ import { authApi } from "api";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export const Login: React.FC = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (data: LoginData) => authApi.login(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
+      navigate(ROUTE.ROOT);
     },
     onError: (error) => {
-      console.log("Login error:", error);
+      notification.error({
+        message: error.message,
+      });
     },
   });
 
