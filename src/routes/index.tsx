@@ -1,6 +1,6 @@
 import { App } from "app";
 import { ROUTE } from "constants";
-import { HomePage, LoginPage, NewsPage, SignupPage } from "pages";
+import { HomePage, LoginPage, NewsPage, NotFoundPage, SignupPage } from "pages";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -39,5 +39,9 @@ export const router = createBrowserRouter([
   {
     path: ROUTE.SIGNUP,
     element: <SignupPage />,
+  },
+  {
+    path: ROUTE.NOT_FOUND,
+    element: <NotFoundPage />,
   },
 ]);
