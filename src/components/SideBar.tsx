@@ -10,6 +10,10 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
+import { ROUTE } from "constants";
+import { useUserStore } from "hooks";
+import { useNavigate } from "react-router-dom";
+import { removeToken } from "utils";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -90,9 +94,18 @@ const items: MenuItem[] = [
 ];
 
 export const SideBar = () => {
+  const { logout }: any = useUserStore();
+  const navigate = useNavigate();
+
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
+    // console.log("click ", e);
+    if (e.key === "Logout") {
+      logout();
+      removeToken();
+      navigate(ROUTE.LOGIN);
+    }
   };
+
   return (
     <Menu
       onClick={onClick}
