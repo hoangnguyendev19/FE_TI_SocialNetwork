@@ -171,7 +171,7 @@ export const Profile: React.FC = () => {
           </Row>
         </Col>
         <Col span="20">
-          <Row gutter={[30, 15]}>
+          <Row gutter={[30, 5]}>
             <Col span="12">
               <Typography.Title level={5}>First Name</Typography.Title>
               <Controller
@@ -185,11 +185,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.firstName && (
-                <Typography.Text type="danger">
-                  {errors.firstName.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.firstName && (
+                  <Typography.Text type="danger">
+                    {errors.firstName.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>Last Name</Typography.Title>
@@ -204,11 +206,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.lastName && (
-                <Typography.Text type="danger">
-                  {errors.lastName.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.lastName && (
+                  <Typography.Text type="danger">
+                    {errors.lastName.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>Email</Typography.Title>
@@ -224,11 +228,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.email && (
-                <Typography.Text type="danger">
-                  {errors.email.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.email && (
+                  <Typography.Text type="danger">
+                    {errors.email.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>Present Address</Typography.Title>
@@ -243,11 +249,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.presentAddress && (
-                <Typography.Text type="danger">
-                  {errors.presentAddress.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.presentAddress && (
+                  <Typography.Text type="danger">
+                    {errors.presentAddress.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>Date of Birth</Typography.Title>
@@ -264,11 +272,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.dateOfBirth && (
-                <Typography.Text type="danger">
-                  {errors.dateOfBirth.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.dateOfBirth && (
+                  <Typography.Text type="danger">
+                    {errors.dateOfBirth.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>City</Typography.Title>
@@ -283,11 +293,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.city && (
-                <Typography.Text type="danger">
-                  {errors.city.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.city && (
+                  <Typography.Text type="danger">
+                    {errors.city.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>Permanent Address</Typography.Title>
@@ -302,11 +314,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.permanentAddress && (
-                <Typography.Text type="danger">
-                  {errors.permanentAddress.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.permanentAddress && (
+                  <Typography.Text type="danger">
+                    {errors.permanentAddress.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
             <Col span="12">
               <Typography.Title level={5}>Country</Typography.Title>
@@ -321,11 +335,13 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              {errors.country && (
-                <Typography.Text type="danger">
-                  {errors.country.message}
-                </Typography.Text>
-              )}
+              <div style={{ minHeight: "24px" }}>
+                {errors.country && (
+                  <Typography.Text type="danger">
+                    {errors.country.message}
+                  </Typography.Text>
+                )}
+              </div>
             </Col>
           </Row>
           <Row justify="end" style={{ marginTop: "20px" }}>
