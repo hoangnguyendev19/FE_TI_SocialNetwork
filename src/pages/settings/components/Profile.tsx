@@ -34,31 +34,31 @@ export const Profile: React.FC = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  if (isLoading) {
-    return (
-      <Row>
-        <Col span="24">
-          <Skeleton
-            avatar={{ shape: "circle", size: "large" }}
-            paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
-            active
-          />
-        </Col>
-      </Row>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Row>
+  //       <Col span="24">
+  //         <Skeleton
+  //           avatar={{ shape: "circle", size: "large" }}
+  //           paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
+  //           active
+  //         />
+  //       </Col>
+  //     </Row>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <Row>
-        <Col span="24">
-          <Typography.Text type="danger">
-            {error?.message || "An error occurred while fetching the profile"}
-          </Typography.Text>
-        </Col>
-      </Row>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <Row>
+  //       <Col span="24">
+  //         <Typography.Text type="danger">
+  //           {error?.message || "An error occurred while fetching the profile"}
+  //         </Typography.Text>
+  //       </Col>
+  //     </Row>
+  //   );
+  // }
 
   const queryClient = useQueryClient();
 

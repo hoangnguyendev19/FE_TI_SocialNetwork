@@ -1,6 +1,6 @@
 import { Row, Tabs, TabsProps } from "antd";
 import { Color } from "constants";
-import { Profile } from "./components";
+import { Profile, Security } from "./components";
 
 const items: TabsProps["items"] = [
   {
@@ -11,14 +11,11 @@ const items: TabsProps["items"] = [
   {
     key: "security",
     label: "Security",
-    children: "Content of Tab Pane 2",
+    children: <Security />,
   },
 ];
 
 export const SettingsPage: React.FC = () => {
-  const onChange = (key: string) => {
-    console.log(key);
-  };
   return (
     <Row
       style={{
@@ -28,7 +25,7 @@ export const SettingsPage: React.FC = () => {
         borderRadius: "20px",
       }}
     >
-      <Tabs defaultActiveKey="profile" items={items} onChange={onChange} />
+      <Tabs defaultActiveKey="profile" items={items} />
     </Row>
   );
 };

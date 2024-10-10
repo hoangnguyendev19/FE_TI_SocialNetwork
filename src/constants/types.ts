@@ -23,6 +23,12 @@ export interface ProfileData {
   country: string;
 }
 
+export interface PasswordData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
