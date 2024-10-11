@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   Button,
   Col,
@@ -14,25 +14,26 @@ import {
 import { authApi } from "api";
 import LogoImage from "assets/images/img-logo.png";
 import SignupImage from "assets/images/img-signup.png";
-import { QueryKey, ROUTE, SignupData } from "constants";
+import { ROUTE, SignupData } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { contentStyle, headerStyle, imageStyle, layoutStyle } from "styles";
 import * as yup from "yup";
 
 const { Header, Content } = Layout;
 
 export const SignupPage: React.FC = () => {
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (data: SignupData) => authApi.signup(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
+      navigate(ROUTE.LOGIN);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       notification.error({
-        message: error.message,
+        message: error.response?.data.message,
       });
     },
   });

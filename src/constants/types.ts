@@ -1,5 +1,3 @@
-import { Moment } from "moment";
-
 export interface LoginData {
   email: string;
   password: string;
