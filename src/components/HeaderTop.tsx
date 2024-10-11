@@ -1,6 +1,5 @@
 import { SettingFilled, UserOutlined } from "@ant-design/icons";
 import { Avatar, Flex, Image, Layout, Row } from "antd";
-import AvatarImage from "assets/images/img-avatar.png";
 import LogoImage from "assets/images/img-logo.png";
 import { Color, ROUTE } from "constants";
 import { useProfile } from "hooks";
@@ -11,7 +10,7 @@ const { Header } = Layout;
 
 export const HeaderTop = () => {
   const navigate = useNavigate();
-  const { data: userProfile, isLoading }: any = useProfile({
+  const { data: res }: any = useProfile({
     enabled: true,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -34,12 +33,8 @@ export const HeaderTop = () => {
             alt="Settings"
             onClick={() => navigate(ROUTE.SETTINGS)}
           />
-          {isLoading ? (
-            <Avatar
-              size={44}
-              src={userProfile?.profilePictureUrl}
-              alt="Avatar"
-            />
+          {res?.data ? (
+            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" />
           ) : (
             <Avatar size={44} icon={<UserOutlined />} alt="Avatar" />
           )}
