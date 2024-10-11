@@ -72,7 +72,7 @@ export const Login: React.FC = () => {
           </Typography.Paragraph>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Row gutter={[0, 15]}>
+            <Row gutter={[0, 5]}>
               <Col className="gutter-row" span={24}>
                 <Controller
                   name="email"
@@ -86,11 +86,13 @@ export const Login: React.FC = () => {
                     />
                   )}
                 />
-                {errors.email && (
-                  <Typography.Text type="danger">
-                    {errors.email.message}
-                  </Typography.Text>
-                )}
+                <div style={{ minHeight: "24px" }}>
+                  {errors.email && (
+                    <Typography.Text type="danger">
+                      {errors.email.message}
+                    </Typography.Text>
+                  )}
+                </div>
               </Col>
               <Col className="gutter-row" span={24}>
                 <Controller
@@ -105,11 +107,13 @@ export const Login: React.FC = () => {
                     />
                   )}
                 />
-                {errors.password && (
-                  <Typography.Text type="danger">
-                    {errors.password.message}
-                  </Typography.Text>
-                )}
+                <div style={{ minHeight: "24px" }}>
+                  {errors.password && (
+                    <Typography.Text type="danger">
+                      {errors.password.message}
+                    </Typography.Text>
+                  )}
+                </div>
               </Col>
               <Col className="gutter-row" span={24}>
                 <Flex justify="space-between" align="center">

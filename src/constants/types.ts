@@ -29,6 +29,19 @@ export interface PasswordData {
   confirmNewPassword: string;
 }
 
+export interface ForgotPasswordData {
+  email: string;
+}
+
+export interface VerifyCodeData {
+  code: string;
+}
+
+export interface SetPasswordData {
+  password: string;
+  confirmPassword: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
