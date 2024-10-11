@@ -14,24 +14,20 @@ import {
 import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
 import { LoginData, ROUTE } from "constants";
-import { useUserStore } from "hooks";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { imageStyle } from "styles";
+import { setToken } from "utils";
 import * as yup from "yup";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { setUser }: any = useUserStore();
 
   const mutation = useMutation({
     mutationFn: (data: LoginData) => authApi.login(data),
     onSuccess: (data: any) => {
-      localStorage.setItem("access_token", data.data.accessToken);
-      localStorage.setItem("refresh_token", data.data.refreshToken);
-
-      setUser(data.data.user);
+      setToken(data.data.accessToken, data.data.refreshToken);
 
       navigate(ROUTE.ROOT);
     },

@@ -7,4 +7,6 @@ export const ROUTE = {
   SET_PASSWORD: "set-password",
   NEWS: "news",
   SETTINGS: "settings",
+  PROFILE: "profile",
+  BOARDING_HOUSE: "boarding-house",
 };
