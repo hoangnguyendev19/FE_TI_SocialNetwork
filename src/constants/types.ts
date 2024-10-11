@@ -28,7 +28,7 @@ export interface ProfileData {
 export interface PasswordData {
   currentPassword: string;
   newPassword: string;
-  confirmPassword: string;
+  confirmNewPassword: string;
 }
 
 export interface User {

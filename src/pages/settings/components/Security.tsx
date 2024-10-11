@@ -1,38 +1,57 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Button, Col, Input, notification, Row, Typography } from "antd";
 import { userApi } from "api";
-import { PasswordData, QueryKey } from "constants";
+import { PasswordData } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 
 export const Security: React.FC = () => {
-  const queryClient = useQueryClient();
+  const [defaultValues, setDefaultValues] = React.useState<PasswordData>({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
 
   const mutation = useMutation({
     mutationFn: (data: PasswordData) => userApi.updatePassword(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
+    onSuccess: (data) => {
+      setDefaultValues({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
       notification.success({
-        message: "Password updated successfully!",
+        message: data.message,
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       notification.error({
-        message:
-          error.message || "An error occurred while updating the password!",
+        message: error?.response?.data?.message || "Failed to update password!",
       });
     },
   });
 
   const schema = yup.object().shape({
-    currentPassword: yup.string().required("Current password is required"),
-    newPassword: yup.string().required("New password is required"),
-    confirmPassword: yup
+    currentPassword: yup
+      .string()
+      .required("Current password is required")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~]{8,}$/,
+        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+      ),
+    newPassword: yup
+      .string()
+      .required("New password is required")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~]{8,}$/,
+        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+      ),
+    confirmNewPassword: yup
       .string()
       .oneOf([yup.ref("newPassword")], "Passwords must match")
-      .required("Confirm password is required"),
+      .required("Confirm new password is required"),
   });
 
   const {
@@ -41,6 +60,7 @@ export const Security: React.FC = () => {
     formState: { errors },
   } = useForm<PasswordData>({
     resolver: yupResolver(schema),
+    defaultValues,
   });
 
   const onSubmit: SubmitHandler<PasswordData> = (data) => {
@@ -50,16 +70,17 @@ export const Security: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[0, 5]}>
-        <Col span="24">
-          <Typography.Title level={5}>Current password</Typography.Title>
+        <Col span={24}>
+          <Typography.Title level={5}>Current Password</Typography.Title>
           <Controller
             name="currentPassword"
             control={control}
             render={({ field }) => (
               <Input.Password
                 {...field}
-                placeholder="Please type your current password!"
+                placeholder="Please type your current password"
                 style={{ padding: "5px 10px" }}
+                visibilityToggle
               />
             )}
           />
@@ -71,16 +92,18 @@ export const Security: React.FC = () => {
             )}
           </div>
         </Col>
-        <Col span="24">
-          <Typography.Title level={5}>New password</Typography.Title>
+
+        <Col span={24}>
+          <Typography.Title level={5}>New Password</Typography.Title>
           <Controller
             name="newPassword"
             control={control}
             render={({ field }) => (
               <Input.Password
                 {...field}
-                placeholder="Please type your new password!"
+                placeholder="Please type your new password"
                 style={{ padding: "5px 10px" }}
+                visibilityToggle
               />
             )}
           />
@@ -92,28 +115,31 @@ export const Security: React.FC = () => {
             )}
           </div>
         </Col>
-        <Col span="24">
-          <Typography.Title level={5}>Confirm password</Typography.Title>
+
+        <Col span={24}>
+          <Typography.Title level={5}>Confirm New Password</Typography.Title>
           <Controller
-            name="confirmPassword"
+            name="confirmNewPassword"
             control={control}
             render={({ field }) => (
               <Input.Password
                 {...field}
-                placeholder="Please type your confirm password!"
+                placeholder="Please confirm your new password"
                 style={{ padding: "5px 10px" }}
+                visibilityToggle
               />
             )}
           />
           <div style={{ minHeight: "24px" }}>
-            {errors.confirmPassword && (
+            {errors.confirmNewPassword && (
               <Typography.Text type="danger">
-                {errors.confirmPassword.message}
+                {errors.confirmNewPassword.message}
               </Typography.Text>
             )}
           </div>
         </Col>
       </Row>
+
       <Row justify="start" style={{ marginTop: "20px" }}>
         <Button
           type="primary"
