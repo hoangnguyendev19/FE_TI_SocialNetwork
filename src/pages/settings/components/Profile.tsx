@@ -1,4 +1,4 @@
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -19,13 +19,58 @@ import AvatarImage from "assets/images/img-avatar.png";
 import { ProfileData, QueryKey } from "constants";
 import { useProfile } from "hooks";
 import moment from "moment";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { getAccessToken } from "utils";
 import * as yup from "yup";
+
+const inputStyle = {
+  padding: "5px 10px",
+  borderRadius: "8px",
+  width: "100%",
+};
+
+const inputList = [
+  {
+    name: "firstName",
+    label: "First Name",
+    placeholder: "Please type your first name!",
+  },
+  {
+    name: "lastName",
+    label: "Last Name",
+    placeholder: "Please type your last name!",
+  },
+  {
+    name: "phoneNumber",
+    label: "Phone Number",
+    placeholder: "Please type your phone number!",
+  },
+  {
+    name: "presentAddress",
+    label: "Present Address",
+    placeholder: "Please type your present address!",
+  },
+  {
+    name: "city",
+    label: "City",
+    placeholder: "Please type your city!",
+  },
+  {
+    name: "permanentAddress",
+    label: "Permanent Address",
+    placeholder: "Please type your permanent address!",
+  },
+  {
+    name: "country",
+    label: "Country",
+    placeholder: "Please type your country!",
+  },
+];
 
 export const Profile: React.FC = () => {
   const {
-    data: userProfile,
+    data: res,
     isLoading,
     isError,
     error,
@@ -33,32 +78,6 @@ export const Profile: React.FC = () => {
     enabled: true,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
-
-  // if (isLoading) {
-  //   return (
-  //     <Row>
-  //       <Col span="24">
-  //         <Skeleton
-  //           avatar={{ shape: "circle", size: "large" }}
-  //           paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
-  //           active
-  //         />
-  //       </Col>
-  //     </Row>
-  //   );
-  // }
-
-  // if (isError) {
-  //   return (
-  //     <Row>
-  //       <Col span="24">
-  //         <Typography.Text type="danger">
-  //           {error?.message || "An error occurred while fetching the profile"}
-  //         </Typography.Text>
-  //       </Col>
-  //     </Row>
-  //   );
-  // }
 
   const queryClient = useQueryClient();
 
@@ -78,25 +97,28 @@ export const Profile: React.FC = () => {
     },
   });
 
-  const defaultValues: ProfileData = {
-    firstName: userProfile?.firstName || "",
-    lastName: userProfile?.lastName || "",
-    email: userProfile?.email || "",
-    presentAddress: userProfile?.presentAddress || "",
-    dateOfBirth: userProfile?.dateOfBirth
-      ? moment(userProfile?.dateOfBirth)
-      : moment(),
-    city: userProfile?.city || "",
-    permanentAddress: userProfile?.permanentAddress || "",
-    country: userProfile?.country || "",
-  };
-
   const schema = yup.object().shape({
-    firstName: yup.string().required("First name is required"),
-    lastName: yup.string().required("Last name is required"),
-    email: yup.string().email("Invalid email").required("Email is required"),
+    firstName: yup
+      .string()
+      .required("First name is required")
+      .min(2, "First name must be at least 2 characters"),
+    lastName: yup
+      .string()
+      .required("Last name is required")
+      .min(2, "Last name must be at least 2 characters"),
+    phoneNumber: yup
+      .string()
+      .required("Phone number is required")
+      .matches(/^[0-9]+$/, "Phone number is not valid")
+      .min(10, "Phone number must be at most 10 digits")
+      .max(10, "Phone number must be at most 10 digits"),
     presentAddress: yup.string().required("Present address is required"),
-    dateOfBirth: yup.object().required("Date of birth is required"),
+    dateOfBirth: yup
+      .date()
+      .nullable()
+      .required("Date of birth is required")
+      .max(new Date(), "Date of birth cannot be in the future")
+      .typeError("Invalid date format"),
     city: yup.string().required("City is required"),
     permanentAddress: yup.string().required("Permanent address is required"),
     country: yup.string().required("Country is required"),
@@ -105,32 +127,59 @@ export const Profile: React.FC = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ProfileData>({
     resolver: yupResolver(schema),
-    defaultValues,
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      presentAddress: "",
+      dateOfBirth: moment().toDate(),
+      city: "",
+      permanentAddress: "",
+      country: "",
+    },
   });
 
-  const [profilePictureUrl, setProfilePictureUrl] =
-    React.useState<string>(AvatarImage);
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (res?.data) {
+      reset({
+        firstName: res.data.firstName || "",
+        lastName: res.data.lastName || "",
+        phoneNumber: res.data.phoneNumber || "",
+        presentAddress: res.data.presentAddress || "",
+        dateOfBirth: res.data.dateOfBirth || moment().toDate(),
+        city: res.data.city || "",
+        permanentAddress: res.data.permanentAddress || "",
+        country: res.data.country || "",
+      });
+
+      setProfilePictureUrl(res.data.profilePictureUrl || "");
+    }
+  }, [res?.data, reset]);
 
   const onSubmit: SubmitHandler<ProfileData> = (data) => {
     mutation.mutate({
       ...data,
       dateOfBirth: moment(data.dateOfBirth).format("YYYY-MM-DD"),
-      profilePictureUrl,
     });
   };
 
   const uploadProps: UploadProps = {
-    name: "file",
-    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload", // replace with real API
+    name: "imageFile",
+    action: import.meta.env.VITE_API_URL + "/api/v1/users/avatar",
     headers: {
-      authorization: "authorization-text",
+      Authorization: `Bearer ${getAccessToken()}`,
     },
+    method: "PUT",
     onChange(info) {
       if (info.file.status === "done") {
-        const uploadedUrl = info.file.response?.url;
+        const uploadedUrl = info.file.response?.data;
+
         setProfilePictureUrl(uploadedUrl);
         notification.success({
           message: `${info.file.name} file uploaded successfully!`,
@@ -143,23 +192,61 @@ export const Profile: React.FC = () => {
     },
   };
 
+  if (isLoading) {
+    return (
+      <Row>
+        <Col span="24">
+          <Skeleton
+            avatar={{ shape: "circle", size: "large" }}
+            paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
+            active
+          />
+        </Col>
+      </Row>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Row>
+        <Col span="24">
+          <Typography.Text type="danger">
+            {error?.message || "An error occurred while fetching the profile"}
+          </Typography.Text>
+        </Col>
+      </Row>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row>
         <Col span="4">
           <Row style={{ position: "relative" }}>
-            <Avatar
-              shape="circle"
-              src={profilePictureUrl}
-              alt="Avatar"
-              size={130}
-            />
+            {profilePictureUrl ? (
+              <Avatar
+                shape="circle"
+                src={profilePictureUrl}
+                alt="Profile Picture"
+                size={130}
+                aria-label="Profile Picture"
+              />
+            ) : (
+              <Avatar
+                shape="circle"
+                icon={<UserOutlined />}
+                alt="Profile Picture"
+                size={130}
+                aria-label="Profile Picture"
+              />
+            )}
 
             <Upload {...uploadProps} showUploadList={false}>
               <Button
                 type="primary"
                 shape="circle"
                 icon={<EditOutlined />}
+                aria-label="Edit Profile Picture"
                 style={{
                   position: "absolute",
                   bottom: "10%",
@@ -170,93 +257,33 @@ export const Profile: React.FC = () => {
             </Upload>
           </Row>
         </Col>
+
         <Col span="20">
           <Row gutter={[30, 5]}>
-            <Col span="12">
-              <Typography.Title level={5}>First Name</Typography.Title>
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Please type your first name!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.firstName && (
-                  <Typography.Text type="danger">
-                    {errors.firstName.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
-            <Col span="12">
-              <Typography.Title level={5}>Last Name</Typography.Title>
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Please type your last name!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.lastName && (
-                  <Typography.Text type="danger">
-                    {errors.lastName.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
-            <Col span="12">
-              <Typography.Title level={5}>Email</Typography.Title>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="email"
-                    placeholder="Please type your email!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.email && (
-                  <Typography.Text type="danger">
-                    {errors.email.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
-            <Col span="12">
-              <Typography.Title level={5}>Present Address</Typography.Title>
-              <Controller
-                name="presentAddress"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Please type your present address!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.presentAddress && (
-                  <Typography.Text type="danger">
-                    {errors.presentAddress.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
+            {inputList.map(({ name, label, placeholder }) => (
+              <Col span="12" key={name}>
+                <Typography.Title level={5}>{label}</Typography.Title>
+                <Controller
+                  name={name as keyof ProfileData}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...(field as any)}
+                      placeholder={placeholder}
+                      style={inputStyle}
+                    />
+                  )}
+                />
+                <div style={{ minHeight: "24px" }}>
+                  {errors[name as keyof ProfileData] && (
+                    <Typography.Text type="danger">
+                      {errors[name as keyof ProfileData]?.message}
+                    </Typography.Text>
+                  )}
+                </div>
+              </Col>
+            ))}
+
             <Col span="12">
               <Typography.Title level={5}>Date of Birth</Typography.Title>
               <Controller
@@ -266,9 +293,12 @@ export const Profile: React.FC = () => {
                   <DatePicker
                     {...field}
                     value={field.value ? moment(field.value) : null}
-                    onChange={(date) => field.onChange(date)}
+                    onChange={(date) =>
+                      field.onChange(date ? date.toDate() : null)
+                    }
                     placeholder="yyyy-mm-dd"
-                    style={{ padding: "5px 10px", width: "100%" }}
+                    format="YYYY-MM-DD"
+                    style={inputStyle}
                   />
                 )}
               />
@@ -280,70 +310,8 @@ export const Profile: React.FC = () => {
                 )}
               </div>
             </Col>
-            <Col span="12">
-              <Typography.Title level={5}>City</Typography.Title>
-              <Controller
-                name="city"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Please type your city!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.city && (
-                  <Typography.Text type="danger">
-                    {errors.city.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
-            <Col span="12">
-              <Typography.Title level={5}>Permanent Address</Typography.Title>
-              <Controller
-                name="permanentAddress"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Please type your permanent address!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.permanentAddress && (
-                  <Typography.Text type="danger">
-                    {errors.permanentAddress.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
-            <Col span="12">
-              <Typography.Title level={5}>Country</Typography.Title>
-              <Controller
-                name="country"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Please type your country!"
-                    style={{ padding: "5px 10px" }}
-                  />
-                )}
-              />
-              <div style={{ minHeight: "24px" }}>
-                {errors.country && (
-                  <Typography.Text type="danger">
-                    {errors.country.message}
-                  </Typography.Text>
-                )}
-              </div>
-            </Col>
           </Row>
+
           <Row justify="end" style={{ marginTop: "20px" }}>
             <Button
               type="primary"

@@ -1,3 +1,5 @@
+import { Moment } from "moment";
+
 export interface LoginData {
   email: string;
   password: string;
@@ -15,9 +17,9 @@ export interface SignupData {
 export interface ProfileData {
   firstName: string;
   lastName: string;
-  email: string;
-  dateOfBirth: Object;
+  phoneNumber: string;
   presentAddress: string;
+  dateOfBirth: Date;
   permanentAddress: string;
   city: string;
   country: string;

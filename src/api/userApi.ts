@@ -1,10 +1,9 @@
 import { PasswordData, User } from "constants";
-import axiosClient from "./axiosClient";
+import axiosAuth from "./axiosAuth";
 
 export const userApi = {
-  getProfile: (): Promise<User> => axiosClient.get("/users/profile"),
-  updateProfile: (data: any): Promise<any> =>
-    axiosClient.put("/users/profile", data),
+  getProfile: (): Promise<User> => axiosAuth.get("/users"),
+  updateProfile: (data: any): Promise<any> => axiosAuth.put("/users", data),
   updatePassword: (data: PasswordData): Promise<any> =>
-    axiosClient.put("/users/password", data),
+    axiosAuth.put("/users/password", data),
 };
