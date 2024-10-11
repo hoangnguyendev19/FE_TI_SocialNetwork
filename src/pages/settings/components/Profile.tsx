@@ -15,7 +15,6 @@ import {
   UploadProps,
 } from "antd";
 import { userApi } from "api";
-import AvatarImage from "assets/images/img-avatar.png";
 import { ProfileData, QueryKey } from "constants";
 import { useProfile } from "hooks";
 import moment from "moment";
@@ -83,16 +82,15 @@ export const Profile: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: (data: any) => userApi.updateProfile(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
       notification.success({
-        message: "Profile updated successfully!",
+        message: data.message || "Profile updated successfully!",
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       notification.error({
-        message:
-          error.message || "An error occurred while updating the profile",
+        message: error?.response?.data?.message || "Failed to update password!",
       });
     },
   });
