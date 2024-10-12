@@ -17,7 +17,7 @@ import { LoginData, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { imageStyle } from "styles";
+import { imageStyle, inputErrorStyle, inputStyle } from "styles";
 import { setToken } from "utils";
 import * as yup from "yup";
 
@@ -81,13 +81,13 @@ export const Login: React.FC = () => {
                   render={({ field }) => (
                     <Input
                       placeholder="Please type your email!"
-                      style={{ padding: "10px" }}
+                      style={inputStyle}
                       {...field}
                       aria-invalid={!!errors.email}
                     />
                   )}
                 />
-                <div style={{ marginTop: "5px" }}>
+                <div style={inputErrorStyle}>
                   {errors.email && (
                     <Typography.Text type="danger">
                       {errors.email.message}
@@ -103,13 +103,13 @@ export const Login: React.FC = () => {
                   render={({ field }) => (
                     <Input.Password
                       placeholder="Please type your password!"
-                      style={{ padding: "10px" }}
+                      style={inputStyle}
                       {...field}
                       aria-invalid={!!errors.password}
                     />
                   )}
                 />
-                <div style={{ marginTop: "5px" }}>
+                <div style={inputErrorStyle}>
                   {errors.password && (
                     <Typography.Text type="danger">
                       {errors.password.message}
