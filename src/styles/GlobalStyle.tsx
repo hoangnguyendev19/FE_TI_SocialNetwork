@@ -23,8 +23,8 @@ export const siderStyle: React.CSSProperties = {
 };
 
 export const imageStyle: React.CSSProperties = {
-  maxWidth: "400px",
-  maxHeight: "500px",
+  maxWidth: "500px",
+  maxHeight: "550px",
   borderRadius: "30px 0px 0px 0px",
   objectFit: "cover",
 };
