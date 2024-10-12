@@ -2,29 +2,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Col, Input, notification, Row, Typography } from "antd";
 import { userApi } from "api";
-import { PasswordData } from "constants";
+import { PasswordData, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { inputErrorStyle, inputStyle } from "styles";
+import { removeToken } from "utils";
 import * as yup from "yup";
 
 export const Security: React.FC = () => {
-  const [defaultValues, setDefaultValues] = React.useState<PasswordData>({
-    currentPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
-  });
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (data: PasswordData) => userApi.updatePassword(data),
-    onSuccess: (data) => {
-      setDefaultValues({
-        currentPassword: "",
-        newPassword: "",
-        confirmNewPassword: "",
-      });
-      notification.success({
-        message: data.message,
-      });
+    onSuccess: () => {
+      removeToken();
+      navigate(ROUTE.LOGIN);
     },
     onError: (error: any) => {
       notification.error({
@@ -60,7 +53,6 @@ export const Security: React.FC = () => {
     formState: { errors },
   } = useForm<PasswordData>({
     resolver: yupResolver(schema),
-    defaultValues,
   });
 
   const onSubmit: SubmitHandler<PasswordData> = (data) => {
@@ -71,7 +63,9 @@ export const Security: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[0, 5]}>
         <Col span={24}>
-          <Typography.Title level={5}>Current Password</Typography.Title>
+          <Typography.Title level={5}>
+            Current Password<span style={{ color: "red" }}>*</span>
+          </Typography.Title>
           <Controller
             name="currentPassword"
             control={control}
@@ -79,12 +73,12 @@ export const Security: React.FC = () => {
               <Input.Password
                 {...field}
                 placeholder="Please type your current password"
-                style={{ padding: "5px 10px" }}
+                style={inputStyle}
                 visibilityToggle
               />
             )}
           />
-          <div style={{ minHeight: "24px" }}>
+          <div style={inputErrorStyle}>
             {errors.currentPassword && (
               <Typography.Text type="danger">
                 {errors.currentPassword.message}
@@ -94,7 +88,10 @@ export const Security: React.FC = () => {
         </Col>
 
         <Col span={24}>
-          <Typography.Title level={5}>New Password</Typography.Title>
+          <Typography.Title level={5}>
+            New Password
+            <span style={{ color: "red" }}>*</span>
+          </Typography.Title>
           <Controller
             name="newPassword"
             control={control}
@@ -102,12 +99,12 @@ export const Security: React.FC = () => {
               <Input.Password
                 {...field}
                 placeholder="Please type your new password"
-                style={{ padding: "5px 10px" }}
+                style={inputStyle}
                 visibilityToggle
               />
             )}
           />
-          <div style={{ minHeight: "24px" }}>
+          <div style={inputErrorStyle}>
             {errors.newPassword && (
               <Typography.Text type="danger">
                 {errors.newPassword.message}
@@ -117,7 +114,9 @@ export const Security: React.FC = () => {
         </Col>
 
         <Col span={24}>
-          <Typography.Title level={5}>Confirm New Password</Typography.Title>
+          <Typography.Title level={5}>
+            Confirm New Password<span style={{ color: "red" }}>*</span>
+          </Typography.Title>
           <Controller
             name="confirmNewPassword"
             control={control}
@@ -125,12 +124,12 @@ export const Security: React.FC = () => {
               <Input.Password
                 {...field}
                 placeholder="Please confirm your new password"
-                style={{ padding: "5px 10px" }}
+                style={inputStyle}
                 visibilityToggle
               />
             )}
           />
-          <div style={{ minHeight: "24px" }}>
+          <div style={inputErrorStyle}>
             {errors.confirmNewPassword && (
               <Typography.Text type="danger">
                 {errors.confirmNewPassword.message}
