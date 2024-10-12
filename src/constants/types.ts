@@ -34,12 +34,12 @@ export interface ForgotPasswordData {
 }
 
 export interface VerifyCodeData {
-  code: string;
+  otp: string;
 }
 
 export interface SetPasswordData {
-  password: string;
-  confirmPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
 }
 
 export interface User {

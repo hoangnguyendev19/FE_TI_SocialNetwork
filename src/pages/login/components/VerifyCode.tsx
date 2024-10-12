@@ -14,7 +14,7 @@ import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
 import { ROUTE, VerifyCodeData } from "constants";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { imageStyle } from "styles";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,13 +22,16 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 export const VerifyCode: React.FC = () => {
   const navigate = useNavigate();
+  const {
+    state: { email },
+  } = useLocation();
 
   const mutation = useMutation({
-    mutationFn: (data: VerifyCodeData) => authApi.verifyCode(data),
-    onSuccess: (data: any) => {
-      console.log(data);
-
-      // navigate(ROUTE.ROOT);
+    mutationFn: (data: any) => authApi.verifyCode(data),
+    onSuccess: () => {
+      navigate(ROUTE.SET_PASSWORD, {
+        state: { email },
+      });
     },
     onError: (error: any) => {
       notification.error({
@@ -38,7 +41,7 @@ export const VerifyCode: React.FC = () => {
   });
 
   const schema = yup.object().shape({
-    code: yup.string().required("Code is required"),
+    otp: yup.string().required("OTP is required"),
   });
 
   const {
@@ -50,7 +53,10 @@ export const VerifyCode: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<VerifyCodeData> = (data) => {
-    mutation.mutate(data);
+    mutation.mutate({
+      ...data,
+      email,
+    });
   };
 
   return (
@@ -73,21 +79,21 @@ export const VerifyCode: React.FC = () => {
           </Typography.Paragraph>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
-              name="code"
+              name="otp"
               control={control}
               render={({ field }) => (
                 <Input
-                  placeholder="Please type your code!"
+                  placeholder="Please type your otp!"
                   style={{ padding: "10px" }}
                   {...field}
-                  aria-invalid={!!errors.code}
+                  aria-invalid={!!errors.otp}
                 />
               )}
             />
             <div style={{ minHeight: "24px" }}>
-              {errors.code && (
+              {errors.otp && (
                 <Typography.Text type="danger">
-                  {errors.code.message}
+                  {errors.otp.message}
                 </Typography.Text>
               )}
             </div>

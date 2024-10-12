@@ -10,7 +10,7 @@ export const authApi = {
   forgotPasword: (data: ForgotPasswordData): Promise<any> =>
     axiosClient.post("/auth/forgot-password", data),
   verifyCode: (data: any): Promise<any> =>
-    axiosClient.put("/auth/verify-code", data),
+    axiosClient.put("/auth/verify-otp", data),
   setPassword: (data: any): Promise<any> =>
     axiosClient.put("/auth/set-password", data),
 };

@@ -21,14 +21,15 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 export const ForgotPassword: React.FC = () => {
+  const [email, setEmail] = React.useState("");
   const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (data: ForgotPasswordData) => authApi.forgotPasword(data),
-    onSuccess: (data: any) => {
-      console.log(data);
-
-      // navigate(`${ROUTE.VERIFY_CODE}?email=${data.data.email}`);
+    onSuccess: () => {
+      navigate(ROUTE.VERIFY_CODE, {
+        state: { email },
+      });
     },
     onError: (error: any) => {
       notification.error({
@@ -47,9 +48,13 @@ export const ForgotPassword: React.FC = () => {
     formState: { errors },
   } = useForm<ForgotPasswordData>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      email: email,
+    },
   });
 
   const onSubmit: SubmitHandler<ForgotPasswordData> = (data) => {
+    setEmail(data.email);
     mutation.mutate(data);
   };
 
