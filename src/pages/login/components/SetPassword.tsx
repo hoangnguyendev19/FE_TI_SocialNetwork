@@ -8,6 +8,7 @@ import {
   Input,
   notification,
   Row,
+  Tooltip,
   Typography,
 } from "antd";
 import { authApi } from "api";
@@ -16,7 +17,12 @@ import { ROUTE, SetPasswordData } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { imageStyle } from "styles";
+import {
+  imageStyle,
+  inputErrorStyle,
+  inputStyle,
+  overlayInnerStyle,
+} from "styles";
 import * as yup from "yup";
 
 export const SetPassword: React.FC = () => {
@@ -84,19 +90,27 @@ export const SetPassword: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row gutter={[0, 5]}>
               <Col className="gutter-row" span={24}>
+                <Typography.Title level={5}>
+                  New Password<span style={{ color: "red" }}>*</span>
+                </Typography.Title>
                 <Controller
                   name="newPassword"
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      placeholder="Please type your new password!"
-                      style={{ padding: "10px" }}
-                      {...field}
-                      aria-invalid={!!errors.newPassword}
-                    />
+                    <Tooltip
+                      title="Password must contain upper and lower case letters, a number, and a special character"
+                      overlayInnerStyle={overlayInnerStyle}
+                    >
+                      <Input
+                        placeholder="Please type your new password!"
+                        style={inputStyle}
+                        {...field}
+                        aria-invalid={!!errors.newPassword}
+                      />
+                    </Tooltip>
                   )}
                 />
-                <div style={{ minHeight: "24px" }}>
+                <div style={inputErrorStyle}>
                   {errors.newPassword && (
                     <Typography.Text type="danger">
                       {errors.newPassword.message}
@@ -105,19 +119,27 @@ export const SetPassword: React.FC = () => {
                 </div>
               </Col>
               <Col className="gutter-row" span={24}>
+                <Typography.Title level={5}>
+                  Confirm New Password<span style={{ color: "red" }}>*</span>
+                </Typography.Title>
                 <Controller
                   name="confirmNewPassword"
                   control={control}
                   render={({ field }) => (
-                    <Input.Password
-                      placeholder="Please type your confirm new password!"
-                      style={{ padding: "10px" }}
-                      {...field}
-                      aria-invalid={!!errors.confirmNewPassword}
-                    />
+                    <Tooltip
+                      title="Must match the password"
+                      overlayInnerStyle={overlayInnerStyle}
+                    >
+                      <Input.Password
+                        placeholder="Please type your confirm new password!"
+                        style={inputStyle}
+                        {...field}
+                        aria-invalid={!!errors.confirmNewPassword}
+                      />
+                    </Tooltip>
                   )}
                 />
-                <div style={{ minHeight: "24px" }}>
+                <div style={inputErrorStyle}>
                   {errors.confirmNewPassword && (
                     <Typography.Text type="danger">
                       {errors.confirmNewPassword.message}

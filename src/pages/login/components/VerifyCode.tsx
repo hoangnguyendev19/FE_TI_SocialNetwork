@@ -15,7 +15,7 @@ import LoginImage from "assets/images/img-login.png";
 import { ROUTE, VerifyCodeData } from "constants";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { imageStyle } from "styles";
+import { imageStyle, inputErrorStyle, inputStyle } from "styles";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -59,9 +59,26 @@ export const VerifyCode: React.FC = () => {
     });
   };
 
+  const handResend = () => {
+    try {
+      const { data }: any = authApi.forgotPasword({
+        email,
+      });
+      if (data) {
+        notification.success({
+          message: "Code has been sent to your email",
+        });
+      }
+    } catch (error: any) {
+      notification.error({
+        message: error?.response?.data?.message || "Something went wrong!",
+      });
+    }
+  };
+
   return (
     <Row>
-      <Col span={12}>
+      <Col span={14}>
         <Flex
           justify="center"
           vertical
@@ -70,7 +87,7 @@ export const VerifyCode: React.FC = () => {
           <Typography.Link href={ROUTE.LOGIN}>
             <LeftOutlined /> Back to login
           </Typography.Link>
-          <Typography.Title level={1}>Verify code</Typography.Title>
+          <Typography.Title level={2}>Verify code</Typography.Title>
           <Typography.Paragraph
             type="secondary"
             style={{ marginBottom: "15px" }}
@@ -78,19 +95,20 @@ export const VerifyCode: React.FC = () => {
             An authentication code has been sent to your email.
           </Typography.Paragraph>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <Typography.Title level={5}>OTP</Typography.Title>
             <Controller
               name="otp"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="Please type your otp!"
-                  style={{ padding: "10px" }}
+                  style={inputStyle}
                   {...field}
                   aria-invalid={!!errors.otp}
                 />
               )}
             />
-            <div style={{ minHeight: "24px" }}>
+            <div style={inputErrorStyle}>
               {errors.otp && (
                 <Typography.Text type="danger">
                   {errors.otp.message}
@@ -98,9 +116,9 @@ export const VerifyCode: React.FC = () => {
               )}
             </div>
 
-            <Typography.Text>
+            <Typography.Text style={{ marginTop: "10px" }}>
               Didn’t receive a code?{" "}
-              <Typography.Link type="danger" href="">
+              <Typography.Link type="danger" onClick={handResend}>
                 Resend
               </Typography.Link>
             </Typography.Text>
@@ -120,8 +138,8 @@ export const VerifyCode: React.FC = () => {
           </form>
         </Flex>
       </Col>
-      <Col span={12}>
-        <Flex align="center" justify="center">
+      <Col span={10}>
+        <Flex align="center" justify="end">
           <Image
             style={imageStyle}
             src={LoginImage}

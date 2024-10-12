@@ -28,3 +28,20 @@ export const imageStyle: React.CSSProperties = {
   borderRadius: "30px 0px 0px 0px",
   objectFit: "cover",
 };
+
+export const overlayInnerStyle = {
+  backgroundColor: "white",
+  color: "black",
+  padding: "10px",
+  borderRadius: "5px",
+};
+
+export const inputStyle = {
+  padding: "10px",
+  borderRadius: "8px",
+  width: "100%",
+};
+
+export const inputErrorStyle = {
+  marginTop: "5px",
+};
