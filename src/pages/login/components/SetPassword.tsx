@@ -27,9 +27,9 @@ import * as yup from "yup";
 
 export const SetPassword: React.FC = () => {
   const navigate = useNavigate();
-  // const {
-  //   state: { email },
-  // } = useLocation();
+  const {
+    state: { email },
+  } = useLocation();
 
   const mutation = useMutation({
     mutationFn: (data: any) => authApi.setPassword(data),
