@@ -19,23 +19,18 @@ import { ROUTE, SignupData } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { contentStyle, headerStyle, imageStyle, layoutStyle } from "styles";
+import {
+  contentStyle,
+  headerStyle,
+  imageStyle,
+  inputErrorStyle,
+  inputStyle,
+  layoutStyle,
+  overlayInnerStyle,
+} from "styles";
 import * as yup from "yup";
 
 const { Header, Content } = Layout;
-
-const overlayInnerStyle = {
-  backgroundColor: "white",
-  color: "black",
-  padding: "10px",
-  borderRadius: "5px",
-};
-
-const inputStyle = {
-  padding: "10px",
-  borderRadius: "8px",
-  width: "100%",
-};
 
 const inputList = [
   {
@@ -182,7 +177,7 @@ export const SignupPage: React.FC = () => {
                             )
                           }
                         />
-                        <div style={{ marginTop: "5px" }}>
+                        <div style={inputErrorStyle}>
                           {errors[name as keyof SignupData] && (
                             <Typography.Text type="danger">
                               {errors[name as keyof SignupData]?.message}
@@ -208,12 +203,12 @@ export const SignupPage: React.FC = () => {
                           <Input.Password
                             {...field}
                             placeholder="Please type your password!"
-                            style={{ padding: "10px" }}
+                            style={inputStyle}
                           />
                         </Tooltip>
                       )}
                     />
-                    <div style={{ marginTop: "5px" }}>
+                    <div style={inputErrorStyle}>
                       {errors.password && (
                         <Typography.Text type="danger">
                           {errors.password.message}
@@ -236,12 +231,12 @@ export const SignupPage: React.FC = () => {
                           <Input.Password
                             {...field}
                             placeholder="Please type your confirmed password!"
-                            style={{ padding: "10px" }}
+                            style={inputStyle}
                           />
                         </Tooltip>
                       )}
                     />
-                    <div style={{ marginTop: "5px" }}>
+                    <div style={inputErrorStyle}>
                       {errors.confirmPassword && (
                         <Typography.Text type="danger">
                           {errors.confirmPassword.message}
