@@ -20,14 +20,9 @@ import { useProfile } from "hooks";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { inputErrorStyle, inputStyle } from "styles";
 import { getAccessToken } from "utils";
 import * as yup from "yup";
-
-const inputStyle = {
-  padding: "5px 10px",
-  borderRadius: "8px",
-  width: "100%",
-};
 
 const inputList = [
   {
@@ -190,31 +185,31 @@ export const Profile: React.FC = () => {
     },
   };
 
-  if (isLoading) {
-    return (
-      <Row>
-        <Col span="24">
-          <Skeleton
-            avatar={{ shape: "circle", size: "large" }}
-            paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
-            active
-          />
-        </Col>
-      </Row>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Row>
+  //       <Col span="24">
+  //         <Skeleton
+  //           avatar={{ shape: "circle", size: "large" }}
+  //           paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
+  //           active
+  //         />
+  //       </Col>
+  //     </Row>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <Row>
-        <Col span="24">
-          <Typography.Text type="danger">
-            {error?.message || "An error occurred while fetching the profile"}
-          </Typography.Text>
-        </Col>
-      </Row>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <Row>
+  //       <Col span="24">
+  //         <Typography.Text type="danger">
+  //           {error?.message || "An error occurred while fetching the profile"}
+  //         </Typography.Text>
+  //       </Col>
+  //     </Row>
+  //   );
+  // }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -260,7 +255,10 @@ export const Profile: React.FC = () => {
           <Row gutter={[30, 5]}>
             {inputList.map(({ name, label, placeholder }) => (
               <Col span="12" key={name}>
-                <Typography.Title level={5}>{label}</Typography.Title>
+                <Typography.Title level={5}>
+                  {label}
+                  <span style={{ color: "red" }}>*</span>
+                </Typography.Title>
                 <Controller
                   name={name as keyof ProfileData}
                   control={control}
@@ -272,7 +270,7 @@ export const Profile: React.FC = () => {
                     />
                   )}
                 />
-                <div style={{ minHeight: "24px" }}>
+                <div style={inputErrorStyle}>
                   {errors[name as keyof ProfileData] && (
                     <Typography.Text type="danger">
                       {errors[name as keyof ProfileData]?.message}
@@ -283,7 +281,10 @@ export const Profile: React.FC = () => {
             ))}
 
             <Col span="12">
-              <Typography.Title level={5}>Date of Birth</Typography.Title>
+              <Typography.Title level={5}>
+                Date of Birth
+                <span style={{ color: "red" }}>*</span>
+              </Typography.Title>
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -300,7 +301,7 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              <div style={{ minHeight: "24px" }}>
+              <div style={inputErrorStyle}>
                 {errors.dateOfBirth && (
                   <Typography.Text type="danger">
                     {errors.dateOfBirth.message}
@@ -310,7 +311,7 @@ export const Profile: React.FC = () => {
             </Col>
           </Row>
 
-          <Row justify="end" style={{ marginTop: "20px" }}>
+          <Row justify="end" style={{ marginTop: "15px" }}>
             <Button
               type="primary"
               htmlType="submit"
