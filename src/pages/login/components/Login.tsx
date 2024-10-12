@@ -57,13 +57,13 @@ export const Login: React.FC = () => {
 
   return (
     <Row>
-      <Col span={12}>
+      <Col span={14}>
         <Flex
           justify="center"
           vertical
           style={{ height: "100%", width: "100%" }}
         >
-          <Typography.Title level={1}>Login</Typography.Title>
+          <Typography.Title level={2}>Login</Typography.Title>
           <Typography.Paragraph
             type="secondary"
             style={{ marginBottom: "15px" }}
@@ -74,6 +74,7 @@ export const Login: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row gutter={[0, 5]}>
               <Col className="gutter-row" span={24}>
+                <Typography.Title level={5}>Email</Typography.Title>
                 <Controller
                   name="email"
                   control={control}
@@ -86,7 +87,7 @@ export const Login: React.FC = () => {
                     />
                   )}
                 />
-                <div style={{ minHeight: "24px" }}>
+                <div style={{ marginTop: "5px" }}>
                   {errors.email && (
                     <Typography.Text type="danger">
                       {errors.email.message}
@@ -95,6 +96,7 @@ export const Login: React.FC = () => {
                 </div>
               </Col>
               <Col className="gutter-row" span={24}>
+                <Typography.Title level={5}>Password</Typography.Title>
                 <Controller
                   name="password"
                   control={control}
@@ -107,7 +109,7 @@ export const Login: React.FC = () => {
                     />
                   )}
                 />
-                <div style={{ minHeight: "24px" }}>
+                <div style={{ marginTop: "5px" }}>
                   {errors.password && (
                     <Typography.Text type="danger">
                       {errors.password.message}
@@ -146,8 +148,8 @@ export const Login: React.FC = () => {
           </Typography.Text>
         </Flex>
       </Col>
-      <Col span={12}>
-        <Flex align="center" justify="center">
+      <Col span={10}>
+        <Flex align="center" justify="end">
           <Image
             style={imageStyle}
             src={LoginImage}
