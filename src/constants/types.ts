@@ -58,3 +58,16 @@ export interface User {
   profilePictureUrl: string;
   coverPictureUrl: string;
 }
+
+export interface PostData {
+  id: string;
+  avatar: string;
+  name: string;
+  createdAt: string;
+  content: string;
+  image: string;
+  likes: number;
+  comments: number;
+  shares: number;
+  views: number;
+}
