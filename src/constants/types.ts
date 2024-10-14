@@ -70,7 +70,7 @@ export interface PostData {
   comments: Array<CommentData>;
   shares: Array<ShareData>;
   createdAt: string;
-  lastModifiedAt: string;
+  lastModified: string;
 }
 
 export interface LikeData {
@@ -86,7 +86,7 @@ export interface CommentData {
   content: string;
   name: string;
   createdAt: string;
-  lastModifiedAt: string;
+  lastModified: string;
 }
 
 export interface ShareData {

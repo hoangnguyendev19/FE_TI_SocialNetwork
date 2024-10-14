@@ -33,7 +33,7 @@ export const Post: React.FC<PostData> = (props) => {
     comments,
     shares,
     createdAt,
-    lastModifiedAt,
+    lastModified,
   } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,9 +102,9 @@ export const Post: React.FC<PostData> = (props) => {
               {`${firstName} ${lastName}`}
             </Typography.Title>
             <Typography.Text style={{ color: "gray", fontSize: "12px" }}>
-              {createdAt === lastModifiedAt
+              {createdAt === lastModified
                 ? `Posted on ${convertToRelativeTime(createdAt)}`
-                : `Edited on ${convertToRelativeTime(lastModifiedAt)}`}
+                : `Edited on ${convertToRelativeTime(lastModified)}`}
             </Typography.Text>
           </Col>
         </Flex>
@@ -207,7 +207,8 @@ export const Post: React.FC<PostData> = (props) => {
       <UpdatePost
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        post={props}
+        text={content}
+        mediaList={mediaList}
       />
     </Col>
   );

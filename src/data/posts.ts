@@ -32,7 +32,7 @@ export const posts: Array<PostData> = [
         content: "Looks amazing!",
         name: "Sarah Connor",
         createdAt: "2024-10-10T10:00:00Z",
-        lastModifiedAt: "2024-10-10T10:00:00Z",
+        lastModified: "2024-10-10T10:00:00Z",
       },
     ],
     shares: [
@@ -45,7 +45,7 @@ export const posts: Array<PostData> = [
       },
     ],
     createdAt: "2024-10-10T08:00:00Z",
-    lastModifiedAt: "2024-10-10T08:00:00Z",
+    lastModified: "2024-10-10T08:00:00Z",
   },
   {
     id: "2",
@@ -92,7 +92,7 @@ export const posts: Array<PostData> = [
         content: "I need to visit this place!",
         name: "Alex Green",
         createdAt: "2024-10-12T09:00:00Z",
-        lastModifiedAt: "2024-10-12T09:00:00Z",
+        lastModified: "2024-10-12T09:00:00Z",
       },
     ],
     shares: [
@@ -105,6 +105,6 @@ export const posts: Array<PostData> = [
       },
     ],
     createdAt: "2024-10-11T07:30:00Z",
-    lastModifiedAt: "2024-10-11T07:30:00Z",
+    lastModified: "2024-10-11T07:30:00Z",
   },
 ];
