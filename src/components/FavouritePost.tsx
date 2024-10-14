@@ -1,13 +1,13 @@
 import { Avatar, Divider, Modal, Typography } from "antd";
 import { Color, LikeData } from "constants";
 
-interface DeletePostProps {
+interface FavouritePostProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   likes: Array<LikeData>;
 }
 
-export const FavouritePost: React.FC<DeletePostProps> = ({
+export const FavouritePost: React.FC<FavouritePostProps> = ({
   isModalOpen,
   setIsModalOpen,
   likes,
