@@ -17,28 +17,8 @@ import {
   Typography,
 } from "antd";
 import { Color, PostData } from "constants";
-import React from "react";
-
-const items: MenuProps["items"] = [
-  {
-    label: "Update post",
-    key: "0",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: "Delete post",
-    key: "2",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: "Report post",
-    key: "4",
-  },
-];
+import React, { useState } from "react";
+import { UpdatePost } from "./UpdatePost";
 
 export const Post: React.FC<PostData> = (props) => {
   const {
@@ -53,6 +33,37 @@ export const Post: React.FC<PostData> = (props) => {
     shares,
     views,
   } = props;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Update post",
+      key: "0",
+      onClick: () => {
+        showModal();
+      },
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "Delete post",
+      key: "2",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "Report post",
+      key: "4",
+    },
+  ];
+
   return (
     <Col
       span="24"
@@ -138,6 +149,12 @@ export const Post: React.FC<PostData> = (props) => {
           </Button>
         </Flex>
       </Col>
+
+      <UpdatePost
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        post={props}
+      />
     </Col>
   );
 };
