@@ -1,7 +1,11 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Input } from "antd";
 
-export const InputPost: React.FC = () => {
+interface InputPostProps {
+  showModal: () => void;
+}
+
+export const InputPost: React.FC<InputPostProps> = ({ showModal }) => {
   return (
     <Input
       size="large"
@@ -14,7 +18,8 @@ export const InputPost: React.FC = () => {
           style={{ marginRight: "5px", marginLeft: "10px" }}
         />
       }
-      style={{ width: "100%", outline: "none" }}
+      style={{ width: "100%", border: "1px solid rgba(0,0,0,0.2)" }}
+      onClick={showModal}
     />
   );
 };

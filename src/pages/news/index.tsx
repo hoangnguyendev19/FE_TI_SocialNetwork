@@ -1,7 +1,7 @@
 import { Col, Flex } from "antd";
-import { InputPost, Post } from "components";
+import { CreatePost, InputPost, Post } from "components";
 import { PostData } from "constants";
-import React from "react";
+import React, { useState } from "react";
 
 const posts = [
   {
@@ -31,6 +31,12 @@ const posts = [
 ];
 
 export const NewsPage: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <Flex
       justify="center"
@@ -38,11 +44,13 @@ export const NewsPage: React.FC = () => {
       style={{ padding: "20px", maxHeight: "100%", overflowY: "auto" }}
     >
       <Col span="10">
-        <InputPost />
+        <InputPost showModal={showModal} />
 
         {posts.map((post: PostData) => (
           <Post key={post.id} {...post} />
         ))}
+
+        <CreatePost isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       </Col>
     </Flex>
   );
