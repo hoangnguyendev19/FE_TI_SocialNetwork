@@ -61,13 +61,43 @@ export interface User {
 
 export interface PostData {
   id: string;
-  avatar: string;
+  profilePictureUrl: string;
+  firstName: string;
+  lastName: string;
+  content: string;
+  mediaList: Array<MediaData>;
+  likes: Array<LikeData>;
+  comments: Array<CommentData>;
+  shares: Array<ShareData>;
+  createdAt: string;
+  lastModifiedAt: string;
+}
+
+export interface LikeData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+}
+
+export interface CommentData {
+  id: string;
+  profilePictureUrl: string;
+  content: string;
   name: string;
   createdAt: string;
-  content: string;
-  image: string;
-  likes: number;
-  comments: number;
-  shares: number;
-  views: number;
+  lastModifiedAt: string;
+}
+
+export interface ShareData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+}
+
+export interface MediaData {
+  id: string;
+  mediaUrl: string;
+  mediaType: string;
 }
