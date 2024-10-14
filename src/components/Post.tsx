@@ -20,6 +20,7 @@ import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
 import { UpdatePost } from "./UpdatePost";
+import { DeletePost } from "./DeletePost";
 
 export const Post: React.FC<PostData> = (props) => {
   const {
@@ -37,9 +38,14 @@ export const Post: React.FC<PostData> = (props) => {
   } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const showDeleteModal = () => {
+    setIsDeleteModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -56,6 +62,9 @@ export const Post: React.FC<PostData> = (props) => {
     {
       label: "Delete post",
       key: "2",
+      onClick: () => {
+        showDeleteModal();
+      },
     },
     {
       type: "divider",
@@ -209,6 +218,12 @@ export const Post: React.FC<PostData> = (props) => {
         setIsModalOpen={setIsModalOpen}
         text={content}
         mediaList={mediaList}
+      />
+
+      <DeletePost
+        isModalOpen={isDeleteModalOpen}
+        setIsModalOpen={setIsDeleteModalOpen}
+        postId={id}
       />
     </Col>
   );
