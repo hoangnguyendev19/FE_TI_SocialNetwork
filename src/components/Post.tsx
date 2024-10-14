@@ -21,6 +21,7 @@ import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
 import { UpdatePost } from "./UpdatePost";
 import { DeletePost } from "./DeletePost";
+import { FavouritePost } from "./FavouritePost";
 
 export const Post: React.FC<PostData> = (props) => {
   const {
@@ -39,6 +40,7 @@ export const Post: React.FC<PostData> = (props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -46,6 +48,10 @@ export const Post: React.FC<PostData> = (props) => {
 
   const showDeleteModal = () => {
     setIsDeleteModalOpen(true);
+  };
+
+  const showFavouriteModal = () => {
+    setIsFavouriteModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -185,7 +191,11 @@ export const Post: React.FC<PostData> = (props) => {
             }}
           >
             <Button type="text" icon={<HeartOutlined />} />
-            <Button type="text" style={{ padding: "0 10px 0 5px" }}>
+            <Button
+              type="text"
+              style={{ padding: "0 10px 0 5px" }}
+              onClick={showFavouriteModal}
+            >
               {likes.length}
             </Button>
           </Flex>
@@ -224,6 +234,12 @@ export const Post: React.FC<PostData> = (props) => {
         isModalOpen={isDeleteModalOpen}
         setIsModalOpen={setIsDeleteModalOpen}
         postId={id}
+      />
+
+      <FavouritePost
+        isModalOpen={isFavouriteModalOpen}
+        setIsModalOpen={setIsFavouriteModalOpen}
+        likes={likes}
       />
     </Col>
   );
