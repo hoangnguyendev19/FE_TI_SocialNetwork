@@ -22,6 +22,7 @@ import { convertToRelativeTime } from "utils";
 import { UpdatePost } from "./UpdatePost";
 import { DeletePost } from "./DeletePost";
 import { FavouritePost } from "./FavouritePost";
+import { SharePost } from "./SharePost";
 
 export const Post: React.FC<PostData> = (props) => {
   const {
@@ -41,6 +42,7 @@ export const Post: React.FC<PostData> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -52,6 +54,10 @@ export const Post: React.FC<PostData> = (props) => {
 
   const showFavouriteModal = () => {
     setIsFavouriteModalOpen(true);
+  };
+
+  const showShareModal = () => {
+    setIsShareModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -216,7 +222,11 @@ export const Post: React.FC<PostData> = (props) => {
             style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}
           >
             <Button type="text" icon={<ShareAltOutlined />} />
-            <Button type="text" style={{ padding: "0 10px 0 5px" }}>
+            <Button
+              type="text"
+              style={{ padding: "0 10px 0 5px" }}
+              onClick={showShareModal}
+            >
               {shares.length}
             </Button>
           </Flex>
@@ -240,6 +250,12 @@ export const Post: React.FC<PostData> = (props) => {
         isModalOpen={isFavouriteModalOpen}
         setIsModalOpen={setIsFavouriteModalOpen}
         likes={likes}
+      />
+
+      <SharePost
+        isModalOpen={isShareModalOpen}
+        setIsModalOpen={setIsShareModalOpen}
+        shares={shares}
       />
     </Col>
   );
