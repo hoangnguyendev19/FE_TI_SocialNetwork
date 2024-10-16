@@ -1,18 +1,42 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, News } from "pages";
+import {
+  Home,
+  Login,
+  News,
+  Signup,
+  ForgotPassword,
+  VerifyCode,
+  SetPassword,
+} from "pages";
 import { MENU } from "constants";
 
 export const router = createBrowserRouter([
   {
-    path: MENU.HOME,
+    path: MENU.ROOT,
     element: <Home />,
-    // loader: rootLoader,
-    children: [
-      {
-        path: MENU.NEWS,
-        element: <News />,
-        // loader: teamLoader,
-      },
-    ],
+  },
+  {
+    path: MENU.LOGIN,
+    element: <Login />,
+  },
+  {
+    path: MENU.SIGNUP,
+    element: <Signup />,
+  },
+  {
+    path: MENU.FORGOT_PASSWORD,
+    element: <ForgotPassword />,
+  },
+  {
+    path: MENU.VERIFY_CODE,
+    element: <VerifyCode />,
+  },
+  {
+    path: MENU.SET_PASSWORD,
+    element: <SetPassword />,
+  },
+  {
+    path: MENU.NEWS,
+    element: <News />,
   },
 ]);
