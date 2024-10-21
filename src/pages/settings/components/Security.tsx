@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Col, Input, notification, Row, Typography } from "antd";
 import { userApi } from "api";
-import { PasswordData, ROUTE } from "constants";
+import { ErrorCode, ErrorMessage, PasswordRequest, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -14,15 +14,35 @@ export const Security: React.FC = () => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data: PasswordData) => userApi.updatePassword(data),
+    mutationFn: (data: PasswordRequest) => userApi.updatePassword(data),
     onSuccess: () => {
       removeToken();
       navigate(ROUTE.LOGIN);
     },
     onError: (error: any) => {
-      notification.error({
-        message: error?.response?.data?.message || "Failed to update password!",
-      });
+      switch (error?.response?.data?.message) {
+        case ErrorCode.WRONG_PASSWORD:
+          notification.error({
+            message: ErrorMessage.WRONG_PASSWORD,
+          });
+          break;
+        case ErrorCode.PASSWORD_INVALID:
+          notification.error({
+            message: ErrorMessage.PASSWORD_INVALID,
+          });
+          break;
+        case ErrorCode.CONFIRM_PASSWORD_DOES_NOT_MATCH:
+          notification.error({
+            message: ErrorMessage.CONFIRM_PASSWORD_DOES_NOT_MATCH,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "An unexpected error occurred. Please try again later.",
+          });
+          break;
+      }
     },
   });
 
@@ -51,11 +71,11 @@ export const Security: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<PasswordData>({
+  } = useForm<PasswordRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<PasswordData> = (data) => {
+  const onSubmit: SubmitHandler<PasswordRequest> = (data) => {
     mutation.mutate(data);
   };
 
