@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import PasswordImage from "assets/images/img-password.png";
-import { ForgotPasswordData, ROUTE } from "constants";
+import { ForgotPasswordRequest, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ export const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data: ForgotPasswordData) => authApi.forgotPasword(data),
+    mutationFn: (data: ForgotPasswordRequest) => authApi.forgotPasword(data),
     onSuccess: () => {
       navigate(ROUTE.VERIFY_CODE, {
         state: { email },
@@ -46,14 +46,14 @@ export const ForgotPassword: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotPasswordData>({
+  } = useForm<ForgotPasswordRequest>({
     resolver: yupResolver(schema),
     defaultValues: {
       email: email,
     },
   });
 
-  const onSubmit: SubmitHandler<ForgotPasswordData> = (data) => {
+  const onSubmit: SubmitHandler<ForgotPasswordRequest> = (data) => {
     setEmail(data.email);
     mutation.mutate(data);
   };

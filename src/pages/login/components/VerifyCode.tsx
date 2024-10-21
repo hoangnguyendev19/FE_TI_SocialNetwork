@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
-import { ROUTE, VerifyCodeData } from "constants";
+import { ROUTE, VerifyCodeRequest } from "constants";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { imageStyle, inputErrorStyle, inputStyle } from "styles";
@@ -48,11 +48,11 @@ export const VerifyCode: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<VerifyCodeData>({
+  } = useForm<VerifyCodeRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<VerifyCodeData> = (data) => {
+  const onSubmit: SubmitHandler<VerifyCodeRequest> = (data) => {
     mutation.mutate({
       ...data,
       email,

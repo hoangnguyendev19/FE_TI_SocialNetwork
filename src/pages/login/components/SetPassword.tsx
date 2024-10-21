@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import PasswordImage from "assets/images/img-password.png";
-import { ROUTE, SetPasswordData } from "constants";
+import { ROUTE, SetPasswordRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -61,11 +61,11 @@ export const SetPassword: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SetPasswordData>({
+  } = useForm<SetPasswordRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<SetPasswordData> = (data) => {
+  const onSubmit: SubmitHandler<SetPasswordRequest> = (data) => {
     mutation.mutate({
       ...data,
       email,
