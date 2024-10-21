@@ -11,4 +11,11 @@ export const ErrorMessage = {
   INVALID_PHONE_NUMBER: "Phone number is invalid",
   // PASSWORD_INVALID: "Password is invalid",
   PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
+
+  // Forgot password error
+  USER_DOES_NOT_EXIST: "User does not exist",
+  UNABLE_TO_SEND_OTP: "Unable to send OTP",
+  OTP_EXPIRED: "OTP is expired",
+  OTP_DOES_NOT_EXIST: "OTP does not exist",
+  // PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
 };
