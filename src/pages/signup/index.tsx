@@ -15,7 +15,7 @@ import {
 import { authApi } from "api";
 import LogoImage from "assets/images/img-logo.png";
 import SignupImage from "assets/images/img-signup.png";
-import { ROUTE, SignupRequest } from "constants";
+import { ErrorCode, ErrorMessage, ROUTE, SignupRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -66,9 +66,38 @@ export const SignupPage: React.FC = () => {
       navigate(ROUTE.LOGIN);
     },
     onError: (error: any) => {
-      notification.error({
-        message: error.response?.data.message,
-      });
+      switch (error?.response?.data?.message) {
+        case ErrorCode.EMAIL_ALREADY_EXIST:
+          notification.error({
+            message: ErrorMessage.EMAIL_ALREADY_EXIST,
+          });
+          break;
+        case ErrorCode.EMAIL_NOT_CORRECT_FORMAT:
+          notification.error({
+            message: ErrorMessage.EMAIL_NOT_CORRECT_FORMAT,
+          });
+          break;
+        case ErrorCode.INVALID_PHONE_NUMBER:
+          notification.error({
+            message: ErrorMessage.INVALID_PHONE_NUMBER,
+          });
+          break;
+        case ErrorCode.PASSWORD_INVALID:
+          notification.error({
+            message: ErrorMessage.PASSWORD_INVALID,
+          });
+          break;
+        case ErrorCode.PASSWORDS_DO_NOT_MATCH:
+          notification.error({
+            message: ErrorMessage.PASSWORDS_DO_NOT_MATCH,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "An unexpected error occurred. Please try again later.",
+          });
+      }
     },
   });
 
