@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
-import { LoginRequest, ROUTE } from "constants";
+import { ErrorCode, ErrorMessage, LoginRequest, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -28,13 +28,36 @@ export const Login: React.FC = () => {
     mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: (data: any) => {
       setToken(data.data.accessToken, data.data.refreshToken);
-
       navigate(ROUTE.ROOT);
     },
-    onError: (error) => {
-      notification.error({
-        message: error.message,
-      });
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        case ErrorCode.USER_NOT_EXIST:
+          notification.error({
+            message: ErrorMessage.USER_NOT_EXIST,
+          });
+          break;
+        case ErrorCode.WRONG_PASSWORD:
+          notification.error({
+            message: ErrorMessage.WRONG_PASSWORD,
+          });
+          break;
+        case ErrorCode.PASSWORD_INVALID:
+          notification.error({
+            message: ErrorMessage.PASSWORD_INVALID,
+          });
+          break;
+        case ErrorCode.EMAIL_INVALID:
+          notification.error({
+            message: ErrorMessage.EMAIL_INVALID,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "An unexpected error occurred. Please try again later.",
+          });
+      }
     },
   });
 
