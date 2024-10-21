@@ -1,8 +1,8 @@
-import { ForgotPasswordData, LoginData, SignupData } from "constants";
+import { ForgotPasswordData, LoginRequest, SignupData } from "constants";
 import axiosClient from "./axiosClient";
 
 export const authApi = {
-  login: (data: LoginData): Promise<any> =>
+  login: (data: LoginRequest): Promise<any> =>
     axiosClient.post("/auth/login", data),
 
   signup: (data: SignupData): Promise<any> =>

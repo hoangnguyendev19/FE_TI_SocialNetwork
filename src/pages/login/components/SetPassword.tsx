@@ -101,7 +101,7 @@ export const SetPassword: React.FC = () => {
                       title="Password must contain upper and lower case letters, a number, and a special character"
                       overlayInnerStyle={overlayInnerStyle}
                     >
-                      <Input
+                      <Input.Password
                         placeholder="Please type your new password!"
                         style={inputStyle}
                         {...field}
