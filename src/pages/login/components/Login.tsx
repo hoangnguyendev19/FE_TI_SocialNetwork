@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
-import { LoginData, ROUTE } from "constants";
+import { LoginRequest, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data: LoginData) => authApi.login(data),
+    mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: (data: any) => {
       setToken(data.data.accessToken, data.data.refreshToken);
 
@@ -47,11 +47,11 @@ export const Login: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginData>({
+  } = useForm<LoginRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<LoginData> = (data) => {
+  const onSubmit: SubmitHandler<LoginRequest> = (data) => {
     mutation.mutate(data);
   };
 
