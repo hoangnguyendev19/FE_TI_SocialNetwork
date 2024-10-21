@@ -5,7 +5,7 @@ import React from "react";
 export const HomePage: React.FC = () => {
   return (
     <div>
-      <Typography.Title level={1} style={{ color: Color.SENCONDARY }}>
+      <Typography.Title level={1} style={{ color: Color.SECONDARY }}>
         Home page!
       </Typography.Title>
     </div>

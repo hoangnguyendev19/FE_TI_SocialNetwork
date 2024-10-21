@@ -15,7 +15,7 @@ import {
   UploadProps,
 } from "antd";
 import { userApi } from "api";
-import { ProfileData, QueryKey } from "constants";
+import { ProfileRequest, QueryKey } from "constants";
 import { useProfile } from "hooks";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -77,10 +77,10 @@ export const Profile: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: (data: any) => userApi.updateProfile(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
       notification.success({
-        message: data.message || "Profile updated successfully!",
+        message: "Profile updated successfully!",
       });
     },
     onError: (error: any) => {
@@ -122,7 +122,7 @@ export const Profile: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ProfileData>({
+  } = useForm<ProfileRequest>({
     resolver: yupResolver(schema),
     defaultValues: {
       firstName: "",
@@ -155,7 +155,7 @@ export const Profile: React.FC = () => {
     }
   }, [res?.data, reset]);
 
-  const onSubmit: SubmitHandler<ProfileData> = (data) => {
+  const onSubmit: SubmitHandler<ProfileRequest> = (data) => {
     mutation.mutate({
       ...data,
       dateOfBirth: moment(data.dateOfBirth).format("YYYY-MM-DD"),
@@ -164,7 +164,7 @@ export const Profile: React.FC = () => {
 
   const uploadProps: UploadProps = {
     name: "imageFile",
-    action: import.meta.env.VITE_API_URL + "/api/v1/users/avatar",
+    action: import.meta.env.VITE_API_URL + "/api/v1/user/avatar",
     headers: {
       Authorization: `Bearer ${getAccessToken()}`,
     },
@@ -174,6 +174,7 @@ export const Profile: React.FC = () => {
         const uploadedUrl = info.file.response?.data;
 
         setProfilePictureUrl(uploadedUrl);
+        queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
         notification.success({
           message: `${info.file.name} file uploaded successfully!`,
         });
@@ -185,31 +186,31 @@ export const Profile: React.FC = () => {
     },
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <Row>
-  //       <Col span="24">
-  //         <Skeleton
-  //           avatar={{ shape: "circle", size: "large" }}
-  //           paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
-  //           active
-  //         />
-  //       </Col>
-  //     </Row>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <Row>
+        <Col span="24">
+          <Skeleton
+            avatar={{ shape: "circle", size: "large" }}
+            paragraph={{ rows: 4, width: ["100%", "100%", "100%", "100%"] }}
+            active
+          />
+        </Col>
+      </Row>
+    );
+  }
 
-  // if (isError) {
-  //   return (
-  //     <Row>
-  //       <Col span="24">
-  //         <Typography.Text type="danger">
-  //           {error?.message || "An error occurred while fetching the profile"}
-  //         </Typography.Text>
-  //       </Col>
-  //     </Row>
-  //   );
-  // }
+  if (isError) {
+    return (
+      <Row>
+        <Col span="24">
+          <Typography.Text type="danger">
+            {error?.message || "An error occurred while fetching the profile"}
+          </Typography.Text>
+        </Col>
+      </Row>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -260,7 +261,7 @@ export const Profile: React.FC = () => {
                   <span style={{ color: "red" }}>*</span>
                 </Typography.Title>
                 <Controller
-                  name={name as keyof ProfileData}
+                  name={name as keyof ProfileRequest}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -271,9 +272,9 @@ export const Profile: React.FC = () => {
                   )}
                 />
                 <div style={inputErrorStyle}>
-                  {errors[name as keyof ProfileData] && (
+                  {errors[name as keyof ProfileRequest] && (
                     <Typography.Text type="danger">
-                      {errors[name as keyof ProfileData]?.message}
+                      {errors[name as keyof ProfileRequest]?.message}
                     </Typography.Text>
                   )}
                 </div>
