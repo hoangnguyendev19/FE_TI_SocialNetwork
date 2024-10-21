@@ -1,6 +1,6 @@
 import { Col, Flex } from "antd";
 import { CreatePost, InputPost, Post } from "components";
-import { PostData } from "constants";
+import { PostResponse } from "constants";
 import { posts } from "data";
 import React, { useState } from "react";
 
@@ -20,7 +20,7 @@ export const NewsPage: React.FC = () => {
       <Col span="10">
         <InputPost showModal={showModal} />
 
-        {posts.map((post: PostData) => (
+        {posts.map((post: PostResponse) => (
           <Post key={post.id} {...post} />
         ))}
 

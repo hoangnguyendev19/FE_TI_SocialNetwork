@@ -15,25 +15,26 @@ import {
   MenuProps,
   Typography,
 } from "antd";
-import { Color, PostData } from "constants";
+import { Color, PostResponse } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
 import { UpdatePost } from "./UpdatePost";
 
-export const Post: React.FC<PostData> = (props) => {
+export const Post: React.FC<PostResponse> = (props) => {
   const {
     id,
-    profilePictureUrl,
     firstName,
     lastName,
+    profilePictureUrl,
     content,
+    totalLikes,
+    totalComments,
+    totalShares,
+    parentPost,
     mediaList,
-    likes,
-    comments,
-    shares,
     createdAt,
-    lastModifiedAt,
+    lastModified,
   } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,9 +103,9 @@ export const Post: React.FC<PostData> = (props) => {
               {`${firstName} ${lastName}`}
             </Typography.Title>
             <Typography.Text style={{ color: "gray", fontSize: "12px" }}>
-              {createdAt === lastModifiedAt
+              {createdAt === lastModified
                 ? `Posted on ${convertToRelativeTime(createdAt)}`
-                : `Edited on ${convertToRelativeTime(lastModifiedAt)}`}
+                : `Edited on ${convertToRelativeTime(lastModified)}`}
             </Typography.Text>
           </Col>
         </Flex>
@@ -140,13 +141,13 @@ export const Post: React.FC<PostData> = (props) => {
           }}
         >
           {mediaList.map((media) =>
-            media.mediaType === "image" ? (
+            media.type === "image" ? (
               <Image
                 key={media.id}
                 width="100%"
                 height="350px"
                 style={{ objectFit: "cover" }}
-                src={media.mediaUrl}
+                src={media.url}
               />
             ) : (
               <ReactPlayer
@@ -154,7 +155,7 @@ export const Post: React.FC<PostData> = (props) => {
                 width="100%"
                 height="350px"
                 key={media.id}
-                url={media.mediaUrl}
+                url={media.url}
                 style={{
                   objectFit: "cover",
                 }}
@@ -162,6 +163,23 @@ export const Post: React.FC<PostData> = (props) => {
             )
           )}
         </Image.PreviewGroup>
+      </Col>
+
+      <Col span="24" style={{ padding: "15px 0" }}>
+        {parentPost && (
+          <Col
+            span="24"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.1)",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <Typography.Text style={{ color: "black", fontSize: "12px" }}>
+              {parentPost.content}
+            </Typography.Text>
+          </Col>
+        )}
       </Col>
 
       <Col span="24">
@@ -177,7 +195,7 @@ export const Post: React.FC<PostData> = (props) => {
           >
             <Button type="text" icon={<HeartOutlined />} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
-              {likes.length}
+              {totalLikes}
             </Button>
           </Flex>
           <Button
@@ -189,7 +207,7 @@ export const Post: React.FC<PostData> = (props) => {
             }}
             icon={<MessageOutlined />}
           >
-            {comments.length}
+            {totalComments}
           </Button>
           <Flex
             justify="center"
@@ -198,7 +216,7 @@ export const Post: React.FC<PostData> = (props) => {
           >
             <Button type="text" icon={<ShareAltOutlined />} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
-              {shares.length}
+              {totalShares}
             </Button>
           </Flex>
         </Flex>
