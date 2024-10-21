@@ -3,14 +3,12 @@ import { postApi } from "api";
 import { PostQueryRequest, QueryKey } from "constants";
 
 export const usePost = (
-  options?: Omit<UseQueryOptions<any>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<any>, "queryKey" | "queryFn">,
+  postQueryRequest?: PostQueryRequest
 ) => {
   return useQuery<any>({
     ...options,
-    queryKey: [QueryKey.POST],
-    queryFn: ({ queryKey }) => {
-      const [, postQueryRequest] = queryKey as [string, PostQueryRequest];
-      return postApi.getPosts(postQueryRequest);
-    },
+    queryKey: [QueryKey.POST, postQueryRequest],
+    queryFn: () => postApi.getPosts(postQueryRequest as PostQueryRequest),
   });
 };
