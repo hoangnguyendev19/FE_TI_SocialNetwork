@@ -15,31 +15,38 @@ import {
   MenuProps,
   Typography,
 } from "antd";
-import { Color, PostData } from "constants";
+import { Color, PostResponse } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
 import { UpdatePost } from "./UpdatePost";
+import { DeletePost } from "./DeletePost";
 
-export const Post: React.FC<PostData> = (props) => {
+export const Post: React.FC<PostResponse> = (props) => {
   const {
     id,
-    profilePictureUrl,
     firstName,
     lastName,
+    profilePictureUrl,
     content,
+    totalLikes,
+    totalComments,
+    totalShares,
+    parentPost,
     mediaList,
-    likes,
-    comments,
-    shares,
     createdAt,
     lastModified,
   } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const showDeleteModal = () => {
+    setIsDeleteModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -56,6 +63,9 @@ export const Post: React.FC<PostData> = (props) => {
     {
       label: "Delete post",
       key: "2",
+      onClick: () => {
+        showDeleteModal();
+      },
     },
     {
       type: "divider",
@@ -129,39 +139,54 @@ export const Post: React.FC<PostData> = (props) => {
         </Typography.Paragraph>
       </Col>
 
-      <Col
-        span="24"
-        style={{ padding: "15px 0", maxHeight: "450px", overflowY: "auto" }}
-      >
-        <Image.PreviewGroup
-          preview={{
-            onChange: (current, prev) =>
-              console.log(`current index: ${current}, prev index: ${prev}`),
-          }}
-        >
-          {mediaList.map((media) =>
-            media.mediaType === "image" ? (
+      <Col span="24" style={{ maxHeight: "450px", overflowY: "auto" }}>
+        {mediaList.map((media) =>
+          media.type === "IMAGE" ? (
+            <Image.PreviewGroup
+              preview={{
+                onChange: (current, prev) =>
+                  console.log(`current index: ${current}, prev index: ${prev}`),
+              }}
+            >
               <Image
                 key={media.id}
                 width="100%"
                 height="350px"
-                style={{ objectFit: "cover" }}
-                src={media.mediaUrl}
+                style={{ objectFit: "cover", paddingTop: "15px" }}
+                src={media.url}
               />
-            ) : (
-              <ReactPlayer
-                controls
-                width="100%"
-                height="350px"
-                key={media.id}
-                url={media.mediaUrl}
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            )
-          )}
-        </Image.PreviewGroup>
+            </Image.PreviewGroup>
+          ) : (
+            <ReactPlayer
+              controls
+              width="100%"
+              height="350px"
+              key={media.id}
+              url={media.url}
+              style={{
+                objectFit: "cover",
+                paddingTop: "15px",
+              }}
+            />
+          )
+        )}
+      </Col>
+
+      <Col span="24" style={{ padding: "15px 0" }}>
+        {parentPost && (
+          <Col
+            span="24"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.1)",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <Typography.Text style={{ color: "black", fontSize: "12px" }}>
+              {parentPost.content}
+            </Typography.Text>
+          </Col>
+        )}
       </Col>
 
       <Col span="24">
@@ -177,7 +202,7 @@ export const Post: React.FC<PostData> = (props) => {
           >
             <Button type="text" icon={<HeartOutlined />} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
-              {likes.length}
+              {totalLikes}
             </Button>
           </Flex>
           <Button
@@ -189,7 +214,7 @@ export const Post: React.FC<PostData> = (props) => {
             }}
             icon={<MessageOutlined />}
           >
-            {comments.length}
+            {totalComments}
           </Button>
           <Flex
             justify="center"
@@ -198,18 +223,11 @@ export const Post: React.FC<PostData> = (props) => {
           >
             <Button type="text" icon={<ShareAltOutlined />} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
-              {shares.length}
+              {totalShares}
             </Button>
           </Flex>
         </Flex>
       </Col>
-
-      <UpdatePost
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        text={content}
-        mediaList={mediaList}
-      />
     </Col>
   );
 };
