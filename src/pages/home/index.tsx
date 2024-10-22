@@ -12,7 +12,6 @@ const center = {
 };
 
 export const HomePage: React.FC = () => {
-<<<<<<< HEAD
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
@@ -34,13 +33,5 @@ export const HomePage: React.FC = () => {
     </GoogleMap>
   ) : (
     <div>Loading...</div>
-=======
-  return (
-    <div>
-      <Typography.Title level={1} style={{ color: Color.SECONDARY }}>
-        Home page!
-      </Typography.Title>
-    </div>
->>>>>>> Setting-profile
   );
 };
