@@ -112,8 +112,8 @@ export const SideBar = () => {
         width: "100%",
         height: "100%",
       }}
-      defaultSelectedKeys={["1"]}
-      defaultOpenKeys={["sub1"]}
+      defaultSelectedKeys={["Home"]}
+      defaultOpenKeys={["Main"]}
       mode="inline"
       items={items}
     />
