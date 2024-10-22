@@ -26,4 +26,8 @@ export const ErrorMessage = {
   OTP_EXPIRED: "OTP is expired",
   OTP_DOES_NOT_EXIST: "OTP does not exist",
   // PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
+
+  // Update post error
+  FILE_UPLOAD_FAILED: "Failed to upload file",
+  DELTE_FILE_FAILED: "Failed to delete file",
 };

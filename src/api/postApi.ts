@@ -14,4 +14,8 @@ export const postApi = {
     const response = await axiosAuth.post("/post", { content, files });
     return response.data;
   },
+  updatePost: async (postId: string, content: string, files: string[], deleteFileIds: string[]): Promise<any> => {
+    const response = await axiosAuth.put(`/post`, { postId, content, files, deleteFileIds });
+    return response.data;
+  },
 };
