@@ -16,19 +16,20 @@ import { ForgotPasswordData, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { imageStyle } from "styles";
+import { imageStyle, inputErrorStyle, inputStyle } from "styles";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 export const ForgotPassword: React.FC = () => {
+  const [email, setEmail] = React.useState("");
   const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (data: ForgotPasswordData) => authApi.forgotPasword(data),
-    onSuccess: (data: any) => {
-      console.log(data);
-
-      // navigate(`${ROUTE.VERIFY_CODE}?email=${data.data.email}`);
+    onSuccess: () => {
+      navigate(ROUTE.VERIFY_CODE, {
+        state: { email },
+      });
     },
     onError: (error: any) => {
       notification.error({
@@ -47,15 +48,19 @@ export const ForgotPassword: React.FC = () => {
     formState: { errors },
   } = useForm<ForgotPasswordData>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      email: email,
+    },
   });
 
   const onSubmit: SubmitHandler<ForgotPasswordData> = (data) => {
+    setEmail(data.email);
     mutation.mutate(data);
   };
 
   return (
     <Row>
-      <Col span={12}>
+      <Col span={14}>
         <Flex
           justify="center"
           vertical
@@ -64,7 +69,7 @@ export const ForgotPassword: React.FC = () => {
           <Typography.Link href={ROUTE.LOGIN}>
             <LeftOutlined /> Back to login
           </Typography.Link>
-          <Typography.Title level={1}>Forgot your password?</Typography.Title>
+          <Typography.Title level={2}>Forgot your password?</Typography.Title>
           <Typography.Paragraph
             type="secondary"
             style={{ marginBottom: "15px" }}
@@ -73,19 +78,20 @@ export const ForgotPassword: React.FC = () => {
             your password
           </Typography.Paragraph>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <Typography.Title level={5}>Email</Typography.Title>
             <Controller
               name="email"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="Please type your email!"
-                  style={{ padding: "10px" }}
+                  style={inputStyle}
                   {...field}
                   aria-invalid={!!errors.email}
                 />
               )}
             />
-            <div style={{ minHeight: "24px" }}>
+            <div style={inputErrorStyle}>
               {errors.email && (
                 <Typography.Text type="danger">
                   {errors.email.message}
@@ -108,8 +114,8 @@ export const ForgotPassword: React.FC = () => {
           </form>
         </Flex>
       </Col>
-      <Col span={12}>
-        <Flex align="center" justify="center">
+      <Col span={10}>
+        <Flex align="center" justify="end">
           <Image
             style={imageStyle}
             src={PasswordImage}

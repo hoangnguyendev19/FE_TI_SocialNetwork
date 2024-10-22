@@ -21,7 +21,7 @@ export const SettingsPage: React.FC = () => {
       style={{
         margin: "30px 20px",
         backgroundColor: Color.PRIMARY,
-        padding: "20px",
+        padding: "10px 20px 15px",
         borderRadius: "20px",
       }}
     >
