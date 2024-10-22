@@ -47,7 +47,7 @@ axiosAuth.interceptors.response.use(
 
     // Handle 403 Forbidden
     if (error.response?.status === 403) {
-      alert("You do not have permission to access this resource.");
+      // alert("You do not have permission to access this resource.");
     }
 
     // Handle 401 Unauthorized

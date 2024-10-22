@@ -1,14 +1,36 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+} from "@tanstack/react-query";
 import { postApi } from "api";
 import { PostQueryRequest, QueryKey } from "constants";
 
 export const usePost = (
-  options?: Omit<UseQueryOptions<any>, "queryKey" | "queryFn">,
+  options?: Omit<
+    UseInfiniteQueryOptions<any>,
+    "queryKey" | "queryFn" | "getNextPageParam"
+  >,
   postQueryRequest?: PostQueryRequest
 ) => {
-  return useQuery<any>({
+  return useInfiniteQuery({
     ...options,
     queryKey: [QueryKey.POST, postQueryRequest],
-    queryFn: () => postApi.getPosts(postQueryRequest as PostQueryRequest),
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await postApi.getPosts({
+        ...postQueryRequest,
+        page: pageParam,
+        size: postQueryRequest?.size ?? 10,
+        sortField: postQueryRequest?.sortField ?? "createdAt",
+        sortBy: postQueryRequest?.sortBy ?? "DESC",
+        filter: postQueryRequest?.filter ?? {},
+      });
+      return response;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const currentPage = lastPage.page.number + 1;
+      const totalPages = lastPage.page.totalPages;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
+    },
   });
 };
