@@ -1,61 +1,84 @@
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Input,
-  Modal,
-  Typography,
-  Upload,
-  UploadFile,
-  notification,
-} from "antd";
-import { Color, MediaData } from "constants";
-import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Avatar, Button, Divider, Input, Modal, Typography, Upload, UploadFile, notification } from "antd";
+import { postApi } from "api";
+import { Color, ErrorCode, ErrorMessage, MediaResponse, QueryKey } from "constants";
+import { useProfile } from "hooks";
+import { useState } from "react";
 import { inputErrorStyle } from "styles";
+import { convertToBase64 } from "utils";
 import "./style.css";
 
 interface UpdatePostProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
+  id: string;
   text: string;
-  mediaList: Array<MediaData>;
+  mediaList: Array<MediaResponse>;
 }
 
-export const UpdatePost: React.FC<UpdatePostProps> = ({
-  isModalOpen,
-  setIsModalOpen,
-  text,
-  mediaList,
-}) => {
+export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalOpen, id, text, mediaList }) => {
   const [fileList, setFileList] = useState<UploadFile[]>(
     mediaList.map((media) => ({
       uid: media.id,
       name: media.id,
       status: "done",
-      url: media.mediaUrl,
-      thumbUrl: media.mediaUrl,
-      type: media.mediaType,
-    }))
+      url: media.url,
+      thumbUrl: media.url,
+      type: media.type,
+    })),
   );
+
+  const [files, setFiles] = useState<string[]>([]);
+  const [deleteFileIds, setDeleteFileIds] = useState<string[]>([]);
   const [content, setContent] = useState<string>(text);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isModalOpen) {
-      setContent(text);
-      setFileList(
-        mediaList.map((media) => ({
-          uid: media.id,
-          name: media.id,
-          status: "done",
-          url: media.mediaUrl,
-          thumbUrl: media.mediaUrl,
-          type: media.mediaType,
-        }))
-      );
-    }
-  }, [isModalOpen, text, mediaList]);
+  const queryClient = useQueryClient();
+  const { data: res, isLoading }: any = useProfile({
+    enabled: true,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  const mutation = useMutation({
+    mutationFn: ({
+      postId,
+      content,
+      files,
+      deleteFileIds,
+    }: {
+      postId: string;
+      content: string;
+      files: string[];
+      deleteFileIds: string[];
+    }) => postApi.updatePost(postId, content, files, deleteFileIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      notification.success({
+        message: "Post updated successfully.",
+      });
+    },
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        case ErrorCode.FILE_UPLOAD_FAILED:
+          notification.error({
+            message: ErrorMessage.FILE_UPLOAD_FAILED,
+          });
+          break;
+        case ErrorCode.DELTE_FILE_FAILED:
+          notification.error({
+            message: ErrorMessage.DELTE_FILE_FAILED,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "Failed to update post.",
+          });
+          break;
+      }
+    },
+  });
 
   const handleOk = async () => {
     if (content.trim() === "") {
@@ -64,31 +87,9 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
       });
       return;
     }
+    mutation.mutate({ postId: id, content, files, deleteFileIds });
 
-    // Prepare form data for sending to the server
-    const formData = new FormData();
-    formData.append("content", content);
-
-    fileList.forEach((file) => {
-      if (file.originFileObj) {
-        formData.append("images", file.originFileObj);
-      }
-    });
-
-    // try {
-    //   // Example API call (replace with your actual API endpoint)
-    //   await axios.post("https://your-api-endpoint.com/upload", formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
-    //   message.success("Post saved successfully!");
-    //   setIsModalOpen(false);
-    //   setContent(""); // Reset content
-    //   setFileList([]); // Reset file list
-    // } catch (error) {
-    //   message.error("Failed to save the post. Please try again.");
-    // }
+    setIsModalOpen(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -100,22 +101,32 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
     }
   };
 
-  const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
+  const handleUploadChange = async ({ fileList }: { fileList: UploadFile[] }) => {
+    if (fileList[0]?.originFileObj) {
+      try {
+        const base64 = await convertToBase64(fileList[0].originFileObj as File);
+        setFiles([...files, base64]);
+      } catch (error) {
+        notification.error({
+          message: "Failed to convert file to Base64.",
+        });
+      }
+    }
+
     setFileList(fileList);
+  };
+
+  const handleCancel = () => {
+    queryClient.resetQueries({ queryKey: [QueryKey.POST] });
+    setIsModalOpen(false);
   };
 
   return (
     <Modal
       open={isModalOpen}
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={handleCancel}
       footer={[
-        <Button
-          key="submit"
-          type="primary"
-          style={{ width: "100%" }}
-          disabled={!content}
-          onClick={handleOk}
-        >
+        <Button key="submit" type="primary" style={{ width: "100%" }} disabled={!content} onClick={handleOk}>
           Save
         </Button>,
       ]}
@@ -125,14 +136,19 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Avatar
-          alt="avatar"
-          shape="circle"
-          size="large"
-          icon={<UserOutlined />}
-          style={{ marginRight: "15px" }}
-        />
-        <Typography.Text style={{ color: "gray" }}>John Doe</Typography.Text>
+        {isLoading ? (
+          <>
+            <Avatar size={44} icon={<UserOutlined />} alt="Avatar" style={{ marginRight: "15px" }} />
+            <Typography.Text style={{ color: "gray" }}>User Name</Typography.Text>
+          </>
+        ) : (
+          <>
+            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
+            <Typography.Text style={{ color: "gray" }}>
+              {res?.data?.firstName} {res?.data?.lastName}
+            </Typography.Text>
+          </>
+        )}
       </div>
 
       <Input.TextArea
@@ -147,9 +163,7 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
         onChange={handleChange}
       />
 
-      <div style={inputErrorStyle}>
-        {error && <Typography.Text type="danger">{error}</Typography.Text>}
-      </div>
+      <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
 
       <div style={{ maxHeight: "250px", overflowY: "auto", marginTop: "20px" }}>
         <Upload
@@ -159,6 +173,7 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
           beforeUpload={() => false}
           className="custom-upload-list"
           accept="image/*, video/*"
+          onRemove={(file) => setDeleteFileIds([...deleteFileIds, file.uid])}
         >
           {fileList.length < 5 && <UploadOutlined />}
         </Upload>

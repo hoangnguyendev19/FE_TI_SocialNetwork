@@ -112,35 +112,21 @@ export const Post: React.FC<PostResponse> = (props) => {
       </Col>
 
       <Col span="24" style={{ maxHeight: "450px", overflowY: "auto" }}>
-        {mediaList.map((media) =>
-          media.type === "IMAGE" ? (
-            <Image.PreviewGroup
-              preview={{
-                onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-              }}
-            >
-              <Image
-                key={media.id}
-                width="100%"
-                height="350px"
-                style={{ objectFit: "cover", paddingTop: "15px" }}
-                src={media.url}
-              />
-            </Image.PreviewGroup>
-          ) : (
-            <ReactPlayer
-              controls
-              width="100%"
-              height="350px"
-              key={media.id}
-              url={media.url}
-              style={{
-                objectFit: "cover",
-                paddingTop: "15px",
-              }}
-            />
-          ),
-        )}
+        {mediaList.map((media) => (
+          <div key={media.id} style={{ margin: "15px 0" }}>
+            {media.type === "IMAGE" ? (
+              <Image.PreviewGroup
+                preview={{
+                  onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
+                }}
+              >
+                <Image key={media.id} width="100%" height="350px" src={media.url} />
+              </Image.PreviewGroup>
+            ) : (
+              <ReactPlayer controls width="100%" height="350px" key={media.id} url={media.url} />
+            )}
+          </div>
+        ))}
       </Col>
 
       <Col span="24" style={{ padding: "15px 0" }}>
@@ -194,7 +180,13 @@ export const Post: React.FC<PostResponse> = (props) => {
         </Flex>
       </Col>
 
-      <UpdatePost isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} text={content} mediaList={mediaList} />
+      <UpdatePost
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        id={id}
+        text={content}
+        mediaList={mediaList}
+      />
 
       <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} postId={id} />
     </Col>
