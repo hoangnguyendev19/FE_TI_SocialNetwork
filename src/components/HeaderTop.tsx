@@ -8,9 +8,9 @@ import { headerStyle } from "styles";
 
 const { Header } = Layout;
 
-export const HeaderTop = () => {
+export const HeaderTop: React.FC = () => {
   const navigate = useNavigate();
-  const { data: res }: any = useProfile({
+  const { data: res, isLoading }: any = useProfile({
     enabled: true,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -33,10 +33,10 @@ export const HeaderTop = () => {
             alt="Settings"
             onClick={() => navigate(ROUTE.SETTINGS)}
           />
-          {res?.data ? (
-            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" />
-          ) : (
+          {isLoading ? (
             <Avatar size={44} icon={<UserOutlined />} alt="Avatar" />
+          ) : (
+            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" />
           )}
         </Row>
       </Flex>
