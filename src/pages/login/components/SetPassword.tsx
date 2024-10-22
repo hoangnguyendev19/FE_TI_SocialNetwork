@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import PasswordImage from "assets/images/img-password.png";
-import { ROUTE, SetPasswordData } from "constants";
+import { ErrorCode, ErrorMessage, ROUTE, SetPasswordRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -37,9 +37,18 @@ export const SetPassword: React.FC = () => {
       navigate(ROUTE.LOGIN);
     },
     onError: (error: any) => {
-      notification.error({
-        message: error?.response?.data?.message || "Something went wrong!",
-      });
+      switch (error?.response?.data?.message) {
+        case ErrorCode.PASSWORDS_DO_NOT_MATCH:
+          notification.error({
+            message: ErrorMessage.PASSWORDS_DO_NOT_MATCH,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "An unexpected error occurred. Please try again later.",
+          });
+      }
     },
   });
 
@@ -61,11 +70,11 @@ export const SetPassword: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SetPasswordData>({
+  } = useForm<SetPasswordRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<SetPasswordData> = (data) => {
+  const onSubmit: SubmitHandler<SetPasswordRequest> = (data) => {
     mutation.mutate({
       ...data,
       email,

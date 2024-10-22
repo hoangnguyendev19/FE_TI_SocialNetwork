@@ -1,20 +1,5 @@
-import {
-  EllipsisOutlined,
-  HeartOutlined,
-  MessageOutlined,
-  ShareAltOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Dropdown,
-  Flex,
-  Image,
-  MenuProps,
-  Typography,
-} from "antd";
+import { EllipsisOutlined, HeartOutlined, MessageOutlined, ShareAltOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, Typography } from "antd";
 import { Color, PostResponse } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
@@ -90,25 +75,12 @@ export const Post: React.FC<PostResponse> = (props) => {
       <Flex justify="space-between" align="center">
         <Flex align="center">
           {profilePictureUrl ? (
-            <Avatar
-              alt="avatar"
-              shape="circle"
-              size="large"
-              src={profilePictureUrl}
-            />
+            <Avatar alt="avatar" shape="circle" size="large" src={profilePictureUrl} />
           ) : (
-            <Avatar
-              alt="avatar"
-              shape="circle"
-              size="large"
-              icon={<UserOutlined />}
-            />
+            <Avatar alt="avatar" shape="circle" size="large" icon={<UserOutlined />} />
           )}
           <Col style={{ marginLeft: "10px" }}>
-            <Typography.Title
-              level={5}
-              style={{ color: "blue", marginBottom: "0px" }}
-            >
+            <Typography.Title level={5} style={{ color: "blue", marginBottom: "0px" }}>
               {`${firstName} ${lastName}`}
             </Typography.Title>
             <Typography.Text style={{ color: "gray", fontSize: "12px" }}>
@@ -144,8 +116,7 @@ export const Post: React.FC<PostResponse> = (props) => {
           media.type === "IMAGE" ? (
             <Image.PreviewGroup
               preview={{
-                onChange: (current, prev) =>
-                  console.log(`current index: ${current}, prev index: ${prev}`),
+                onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
               }}
             >
               <Image
@@ -168,7 +139,7 @@ export const Post: React.FC<PostResponse> = (props) => {
                 paddingTop: "15px",
               }}
             />
-          )
+          ),
         )}
       </Col>
 
@@ -182,9 +153,7 @@ export const Post: React.FC<PostResponse> = (props) => {
               borderRadius: "10px",
             }}
           >
-            <Typography.Text style={{ color: "black", fontSize: "12px" }}>
-              {parentPost.content}
-            </Typography.Text>
+            <Typography.Text style={{ color: "black", fontSize: "12px" }}>{parentPost.content}</Typography.Text>
           </Col>
         )}
       </Col>
@@ -216,11 +185,7 @@ export const Post: React.FC<PostResponse> = (props) => {
           >
             {totalComments}
           </Button>
-          <Flex
-            justify="center"
-            align="center"
-            style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}
-          >
+          <Flex justify="center" align="center" style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}>
             <Button type="text" icon={<ShareAltOutlined />} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
               {totalShares}
@@ -229,18 +194,9 @@ export const Post: React.FC<PostResponse> = (props) => {
         </Flex>
       </Col>
 
-      <UpdatePost
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        text={content}
-        mediaList={mediaList}
-      />
+      <UpdatePost isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} text={content} mediaList={mediaList} />
 
-      <DeletePost
-        isModalOpen={isDeleteModalOpen}
-        setIsModalOpen={setIsDeleteModalOpen}
-        postId={id}
-      />
+      <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} postId={id} />
     </Col>
   );
 };

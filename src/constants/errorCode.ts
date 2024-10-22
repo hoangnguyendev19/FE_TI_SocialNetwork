@@ -19,4 +19,11 @@ export const ErrorCode = {
 
   // Create post error
   NOT_BASE64_FORMAT: "not-base64-format",
+
+  // Forgot password error
+  USER_DOES_NOT_EXIST: "user-does-not-exist",
+  UNABLE_TO_SEND_OTP: "unable-to-send-otp",
+  OTP_EXPIRED: "otp-expired",
+  OTP_DOES_NOT_EXIST: "otp-does-not-exist",
+  // PASSWORDS_DO_NOT_MATCH: "passwords-do-not-match",
 };

@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
-import { ROUTE, VerifyCodeData } from "constants";
+import { ErrorCode, ErrorMessage, ROUTE, VerifyCodeRequest } from "constants";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { imageStyle, inputErrorStyle, inputStyle } from "styles";
@@ -34,9 +34,23 @@ export const VerifyCode: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      notification.error({
-        message: error?.response?.data?.message || "Something went wrong!",
-      });
+      switch (error?.response?.data?.message) {
+        case ErrorCode.OTP_EXPIRED:
+          notification.error({
+            message: ErrorMessage.OTP_EXPIRED,
+          });
+          break;
+        case ErrorCode.OTP_DOES_NOT_EXIST:
+          notification.error({
+            message: ErrorMessage.OTP_DOES_NOT_EXIST,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "An unexpected error occurred. Please try again later.",
+          });
+      }
     },
   });
 
@@ -48,11 +62,11 @@ export const VerifyCode: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<VerifyCodeData>({
+  } = useForm<VerifyCodeRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<VerifyCodeData> = (data) => {
+  const onSubmit: SubmitHandler<VerifyCodeRequest> = (data) => {
     mutation.mutate({
       ...data,
       email,

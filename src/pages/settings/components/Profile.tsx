@@ -15,19 +15,14 @@ import {
   UploadProps,
 } from "antd";
 import { userApi } from "api";
-import { ProfileData, QueryKey } from "constants";
+import { ProfileRequest, QueryKey } from "constants";
 import { useProfile } from "hooks";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { inputErrorStyle, inputStyle } from "styles";
 import { getAccessToken } from "utils";
 import * as yup from "yup";
-
-const inputStyle = {
-  padding: "5px 10px",
-  borderRadius: "8px",
-  width: "100%",
-};
 
 const inputList = [
   {
@@ -82,10 +77,10 @@ export const Profile: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: (data: any) => userApi.updateProfile(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
       notification.success({
-        message: data.message || "Profile updated successfully!",
+        message: "Profile updated successfully!",
       });
     },
     onError: (error: any) => {
@@ -127,7 +122,7 @@ export const Profile: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ProfileData>({
+  } = useForm<ProfileRequest>({
     resolver: yupResolver(schema),
     defaultValues: {
       firstName: "",
@@ -160,7 +155,7 @@ export const Profile: React.FC = () => {
     }
   }, [res?.data, reset]);
 
-  const onSubmit: SubmitHandler<ProfileData> = (data) => {
+  const onSubmit: SubmitHandler<ProfileRequest> = (data) => {
     mutation.mutate({
       ...data,
       dateOfBirth: moment(data.dateOfBirth).format("YYYY-MM-DD"),
@@ -169,7 +164,7 @@ export const Profile: React.FC = () => {
 
   const uploadProps: UploadProps = {
     name: "imageFile",
-    action: import.meta.env.VITE_API_URL + "/api/v1/users/avatar",
+    action: import.meta.env.VITE_API_URL + "/api/v1/user/avatar",
     headers: {
       Authorization: `Bearer ${getAccessToken()}`,
     },
@@ -179,6 +174,7 @@ export const Profile: React.FC = () => {
         const uploadedUrl = info.file.response?.data;
 
         setProfilePictureUrl(uploadedUrl);
+        queryClient.invalidateQueries({ queryKey: [QueryKey.AUTH] });
         notification.success({
           message: `${info.file.name} file uploaded successfully!`,
         });
@@ -260,9 +256,12 @@ export const Profile: React.FC = () => {
           <Row gutter={[30, 5]}>
             {inputList.map(({ name, label, placeholder }) => (
               <Col span="12" key={name}>
-                <Typography.Title level={5}>{label}</Typography.Title>
+                <Typography.Title level={5}>
+                  {label}
+                  <span style={{ color: "red" }}>*</span>
+                </Typography.Title>
                 <Controller
-                  name={name as keyof ProfileData}
+                  name={name as keyof ProfileRequest}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -272,10 +271,10 @@ export const Profile: React.FC = () => {
                     />
                   )}
                 />
-                <div style={{ minHeight: "24px" }}>
-                  {errors[name as keyof ProfileData] && (
+                <div style={inputErrorStyle}>
+                  {errors[name as keyof ProfileRequest] && (
                     <Typography.Text type="danger">
-                      {errors[name as keyof ProfileData]?.message}
+                      {errors[name as keyof ProfileRequest]?.message}
                     </Typography.Text>
                   )}
                 </div>
@@ -283,7 +282,10 @@ export const Profile: React.FC = () => {
             ))}
 
             <Col span="12">
-              <Typography.Title level={5}>Date of Birth</Typography.Title>
+              <Typography.Title level={5}>
+                Date of Birth
+                <span style={{ color: "red" }}>*</span>
+              </Typography.Title>
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -300,7 +302,7 @@ export const Profile: React.FC = () => {
                   />
                 )}
               />
-              <div style={{ minHeight: "24px" }}>
+              <div style={inputErrorStyle}>
                 {errors.dateOfBirth && (
                   <Typography.Text type="danger">
                     {errors.dateOfBirth.message}
@@ -310,7 +312,7 @@ export const Profile: React.FC = () => {
             </Col>
           </Row>
 
-          <Row justify="end" style={{ marginTop: "20px" }}>
+          <Row justify="end" style={{ marginTop: "15px" }}>
             <Button
               type="primary"
               htmlType="submit"
