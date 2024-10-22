@@ -1,15 +1,16 @@
 import {
   BarChartOutlined,
-  CalendarOutlined,
   CarOutlined,
   HomeOutlined,
   InfoCircleOutlined,
   LogoutOutlined,
-  MessageOutlined,
   SettingOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
+import { ROUTE } from "constants";
+import { useNavigate } from "react-router-dom";
+import { removeToken } from "utils";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -26,33 +27,21 @@ const items: MenuItem[] = [
         style: { fontSize: "16px", padding: "20px" },
       },
       {
-        key: "Car Rent",
-        label: "Car Rent",
+        key: "News",
+        label: "News",
         icon: <CarOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
       },
       {
-        key: "Insight",
-        label: "Insight",
+        key: "Boarding House",
+        label: "Boarding House",
         icon: <BarChartOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
       },
       {
-        key: "Reimburse",
-        label: "Reimburse",
+        key: "Profile",
+        label: "Profile",
         icon: <WalletOutlined style={{ fontSize: "20px" }} />,
-        style: { fontSize: "16px", padding: "20px" },
-      },
-      {
-        key: "Message",
-        label: "Message",
-        icon: <MessageOutlined style={{ fontSize: "20px" }} />,
-        style: { fontSize: "16px", padding: "20px" },
-      },
-      {
-        key: "Calendar",
-        label: "Calendar",
-        icon: <CalendarOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
       },
     ],
@@ -90,9 +79,32 @@ const items: MenuItem[] = [
 ];
 
 export const SideBar = () => {
+  const navigate = useNavigate();
+
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
+    // console.log("click ", e);
+    if (e.key === "Logout") {
+      removeToken();
+      navigate(ROUTE.LOGIN);
+    }
+
+    if (e.key === "Home") {
+      navigate(ROUTE.ROOT);
+    }
+
+    if (e.key === "News") {
+      navigate(ROUTE.NEWS);
+    }
+
+    if (e.key === "Boarding House") {
+      navigate(ROUTE.BOARDING_HOUSE);
+    }
+
+    if (e.key === "Profile") {
+      navigate(ROUTE.PROFILE);
+    }
   };
+
   return (
     <Menu
       onClick={onClick}
