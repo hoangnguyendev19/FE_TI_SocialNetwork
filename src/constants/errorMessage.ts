@@ -16,4 +16,11 @@ export const ErrorMessage = {
   // WRONG_PASSWORD: "Wrong password",
   // PASSWORD_INVALID: "Password is invalid",
   CONFIRM_PASSWORD_DOES_NOT_MATCH: "Confirm password does not match",
+
+  // Forgot password error
+  USER_DOES_NOT_EXIST: "User does not exist",
+  UNABLE_TO_SEND_OTP: "Unable to send OTP",
+  OTP_EXPIRED: "OTP is expired",
+  OTP_DOES_NOT_EXIST: "OTP does not exist",
+  // PASSWORDS_DO_NOT_MATCH: "Passwords do not match",
 };

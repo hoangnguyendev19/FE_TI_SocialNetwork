@@ -16,4 +16,11 @@ export const ErrorCode = {
   // WRONG_PASSWORD: "wrong-password",
   // PASSWORD_INVALID: "password-invalid",
   CONFIRM_PASSWORD_DOES_NOT_MATCH: "confirm-password-does-not-match",
+
+  // Forgot password error
+  USER_DOES_NOT_EXIST: "user-does-not-exist",
+  UNABLE_TO_SEND_OTP: "unable-to-send-otp",
+  OTP_EXPIRED: "otp-expired",
+  OTP_DOES_NOT_EXIST: "otp-does-not-exist",
+  // PASSWORDS_DO_NOT_MATCH: "passwords-do-not-match",
 };

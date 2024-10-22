@@ -15,7 +15,7 @@ import {
 import { authApi } from "api";
 import LogoImage from "assets/images/img-logo.png";
 import SignupImage from "assets/images/img-signup.png";
-import { ROUTE, SignupData } from "constants";
+import { ErrorCode, ErrorMessage, ROUTE, SignupRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -61,14 +61,43 @@ export const SignupPage: React.FC = () => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data: SignupData) => authApi.signup(data),
+    mutationFn: (data: SignupRequest) => authApi.signup(data),
     onSuccess: () => {
       navigate(ROUTE.LOGIN);
     },
     onError: (error: any) => {
-      notification.error({
-        message: error.response?.data.message,
-      });
+      switch (error?.response?.data?.message) {
+        case ErrorCode.EMAIL_ALREADY_EXIST:
+          notification.error({
+            message: ErrorMessage.EMAIL_ALREADY_EXIST,
+          });
+          break;
+        case ErrorCode.EMAIL_NOT_CORRECT_FORMAT:
+          notification.error({
+            message: ErrorMessage.EMAIL_NOT_CORRECT_FORMAT,
+          });
+          break;
+        case ErrorCode.INVALID_PHONE_NUMBER:
+          notification.error({
+            message: ErrorMessage.INVALID_PHONE_NUMBER,
+          });
+          break;
+        case ErrorCode.PASSWORD_INVALID:
+          notification.error({
+            message: ErrorMessage.PASSWORD_INVALID,
+          });
+          break;
+        case ErrorCode.PASSWORDS_DO_NOT_MATCH:
+          notification.error({
+            message: ErrorMessage.PASSWORDS_DO_NOT_MATCH,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "An unexpected error occurred. Please try again later.",
+          });
+      }
     },
   });
 
@@ -98,11 +127,11 @@ export const SignupPage: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupData>({
+  } = useForm<SignupRequest>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<SignupData> = (data) => {
+  const onSubmit: SubmitHandler<SignupRequest> = (data) => {
     mutation.mutate(data);
   };
 
@@ -154,7 +183,7 @@ export const SignupPage: React.FC = () => {
                           <span style={{ color: "red" }}>*</span>
                         </Typography.Title>
                         <Controller
-                          name={name as keyof SignupData}
+                          name={name as keyof SignupRequest}
                           control={control}
                           render={({ field }) =>
                             tooltipText ? (
@@ -178,9 +207,9 @@ export const SignupPage: React.FC = () => {
                           }
                         />
                         <div style={inputErrorStyle}>
-                          {errors[name as keyof SignupData] && (
+                          {errors[name as keyof SignupRequest] && (
                             <Typography.Text type="danger">
-                              {errors[name as keyof SignupData]?.message}
+                              {errors[name as keyof SignupRequest]?.message}
                             </Typography.Text>
                           )}
                         </div>
