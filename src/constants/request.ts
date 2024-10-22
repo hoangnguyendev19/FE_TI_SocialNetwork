@@ -43,7 +43,7 @@ export interface SetPasswordRequest {
 }
 
 export interface PostQueryRequest {
-  page: number;
+  page: number | unknown;
   size: number;
   sortField: string;
   sortBy: string;

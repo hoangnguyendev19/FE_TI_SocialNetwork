@@ -19,7 +19,6 @@ import { Color, PostResponse } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
-import { UpdatePost } from "./UpdatePost";
 
 export const Post: React.FC<PostResponse> = (props) => {
   const {
@@ -38,9 +37,14 @@ export const Post: React.FC<PostResponse> = (props) => {
   } = props;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const showDeleteModal = () => {
+    setIsDeleteModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -57,6 +61,9 @@ export const Post: React.FC<PostResponse> = (props) => {
     {
       label: "Delete post",
       key: "2",
+      onClick: () => {
+        showDeleteModal();
+      },
     },
     {
       type: "divider",
@@ -130,39 +137,37 @@ export const Post: React.FC<PostResponse> = (props) => {
         </Typography.Paragraph>
       </Col>
 
-      <Col
-        span="24"
-        style={{ padding: "15px 0", maxHeight: "450px", overflowY: "auto" }}
-      >
-        <Image.PreviewGroup
-          preview={{
-            onChange: (current, prev) =>
-              console.log(`current index: ${current}, prev index: ${prev}`),
-          }}
-        >
-          {mediaList.map((media) =>
-            media.type === "image" ? (
+      <Col span="24" style={{ maxHeight: "450px", overflowY: "auto" }}>
+        {mediaList.map((media) =>
+          media.type === "IMAGE" ? (
+            <Image.PreviewGroup
+              preview={{
+                onChange: (current, prev) =>
+                  console.log(`current index: ${current}, prev index: ${prev}`),
+              }}
+            >
               <Image
                 key={media.id}
                 width="100%"
                 height="350px"
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "cover", paddingTop: "15px" }}
                 src={media.url}
               />
-            ) : (
-              <ReactPlayer
-                controls
-                width="100%"
-                height="350px"
-                key={media.id}
-                url={media.url}
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            )
-          )}
-        </Image.PreviewGroup>
+            </Image.PreviewGroup>
+          ) : (
+            <ReactPlayer
+              controls
+              width="100%"
+              height="350px"
+              key={media.id}
+              url={media.url}
+              style={{
+                objectFit: "cover",
+                paddingTop: "15px",
+              }}
+            />
+          )
+        )}
       </Col>
 
       <Col span="24" style={{ padding: "15px 0" }}>
@@ -221,12 +226,6 @@ export const Post: React.FC<PostResponse> = (props) => {
           </Flex>
         </Flex>
       </Col>
-
-      <UpdatePost
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        post={props}
-      />
     </Col>
   );
 };
