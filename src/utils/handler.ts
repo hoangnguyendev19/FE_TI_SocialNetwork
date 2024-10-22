@@ -21,3 +21,17 @@ export const getRefreshToken = () => {
 export const convertToRelativeTime = (timestamp: string): string => {
   return moment(timestamp).fromNow();
 };
+
+export const convertToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = (error) => {
+      console.error("Error converting file:", error);
+      reject(error);
+    };
+  });
+};

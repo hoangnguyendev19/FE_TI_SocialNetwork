@@ -228,6 +228,19 @@ export const Post: React.FC<PostResponse> = (props) => {
           </Flex>
         </Flex>
       </Col>
+
+      <UpdatePost
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        text={content}
+        mediaList={mediaList}
+      />
+
+      <DeletePost
+        isModalOpen={isDeleteModalOpen}
+        setIsModalOpen={setIsDeleteModalOpen}
+        postId={id}
+      />
     </Col>
   );
 };
