@@ -17,6 +17,9 @@ export const ErrorMessage = {
   // PASSWORD_INVALID: "Password is invalid",
   CONFIRM_PASSWORD_DOES_NOT_MATCH: "Confirm password does not match",
 
+  // Create post error
+  NOT_BASE64_FORMAT: "Files is not in base64 format",
+
   // Forgot password error
   USER_DOES_NOT_EXIST: "User does not exist",
   UNABLE_TO_SEND_OTP: "Unable to send OTP",

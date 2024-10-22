@@ -10,27 +10,52 @@ import {
   UploadFile,
   notification,
 } from "antd";
-import { Color, PostData } from "constants";
-import { useState } from "react";
+import { Color, MediaData } from "constants";
+import { useEffect, useState } from "react";
 import { inputErrorStyle } from "styles";
 import "./style.css";
 
 interface UpdatePostProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
-  post: PostData;
+  text: string;
+  mediaList: Array<MediaData>;
 }
 
 export const UpdatePost: React.FC<UpdatePostProps> = ({
   isModalOpen,
   setIsModalOpen,
-  post,
+  text,
+  mediaList,
 }) => {
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [content, setContent] = useState<string>("");
+  const [fileList, setFileList] = useState<UploadFile[]>(
+    mediaList.map((media) => ({
+      uid: media.id,
+      name: media.id,
+      status: "done",
+      url: media.mediaUrl,
+      thumbUrl: media.mediaUrl,
+      type: media.mediaType,
+    }))
+  );
+  const [content, setContent] = useState<string>(text);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(post);
+  useEffect(() => {
+    if (isModalOpen) {
+      setContent(text);
+      setFileList(
+        mediaList.map((media) => ({
+          uid: media.id,
+          name: media.id,
+          status: "done",
+          url: media.mediaUrl,
+          thumbUrl: media.mediaUrl,
+          type: media.mediaType,
+        }))
+      );
+    }
+  }, [isModalOpen, text, mediaList]);
 
   const handleOk = async () => {
     if (content.trim() === "") {
@@ -94,7 +119,6 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
           Save
         </Button>,
       ]}
-      // style={{ }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Update the post
@@ -134,6 +158,7 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({
           onChange={handleUploadChange}
           beforeUpload={() => false}
           className="custom-upload-list"
+          accept="image/*, video/*"
         >
           {fileList.length < 5 && <UploadOutlined />}
         </Upload>

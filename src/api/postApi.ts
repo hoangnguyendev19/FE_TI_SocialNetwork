@@ -10,4 +10,8 @@ export const postApi = {
       totalPages: response.data.totalPages,
     };
   },
+  createPost: async (content: string, files: string[]): Promise<any> => {
+    const response = await axiosAuth.post("/post", { content, files });
+    return response.data;
+  },
 };

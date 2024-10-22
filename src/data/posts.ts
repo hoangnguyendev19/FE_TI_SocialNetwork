@@ -5,8 +5,7 @@ export const posts: Array<PostResponse> = [
     id: "1",
     firstName: "John",
     lastName: "Doe",
-    profilePictureUrl:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+    profilePictureUrl: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
     content: "Enjoying the sunny weather at the beach!",
     mediaList: [
       {
@@ -26,8 +25,7 @@ export const posts: Array<PostResponse> = [
     id: "2",
     firstName: "Jane",
     lastName: "Doe",
-    profilePictureUrl:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+    profilePictureUrl: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
     content: "Enjoying the sunny weather at the beach!",
     mediaList: [
       {

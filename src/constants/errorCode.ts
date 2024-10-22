@@ -17,6 +17,9 @@ export const ErrorCode = {
   // PASSWORD_INVALID: "password-invalid",
   CONFIRM_PASSWORD_DOES_NOT_MATCH: "confirm-password-does-not-match",
 
+  // Create post error
+  NOT_BASE64_FORMAT: "not-base64-format",
+
   // Forgot password error
   USER_DOES_NOT_EXIST: "user-does-not-exist",
   UNABLE_TO_SEND_OTP: "unable-to-send-otp",
