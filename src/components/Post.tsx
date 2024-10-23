@@ -16,6 +16,7 @@ import { convertToRelativeTime } from "utils";
 import { DeletePost } from "./DeletePost";
 import { UpdatePost } from "./UpdatePost";
 import { FavouritePost } from "./FavouritePost";
+import { SharePost } from "./SharePost";
 import { ReportPost } from "./ReportPost";
 import { CreateSharePost } from "./CreateSharePost";
 
@@ -64,6 +65,7 @@ export const Post: React.FC<PostResponse> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isCreateShareModalOpen, setIsCreateShareModalOpen] = useState(false);
 
@@ -77,6 +79,10 @@ export const Post: React.FC<PostResponse> = (props) => {
 
   const showFavouriteModal = () => {
     setIsFavouriteModalOpen(true);
+  };
+
+  const showShareModal = () => {
+    setIsShareModalOpen(true);
   };
 
   const showReportModal = () => {
@@ -225,7 +231,7 @@ export const Post: React.FC<PostResponse> = (props) => {
           </Button>
           <Flex justify="center" align="center" style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}>
             <Button type="text" icon={<ShareAltOutlined />} onClick={showCreateShareModal} />
-            <Button type="text" style={{ padding: "0 10px 0 5px" }}>
+            <Button type="text" style={{ padding: "0 10px 0 5px" }} onClick={showShareModal}>
               {totalShares}
             </Button>
           </Flex>
@@ -249,6 +255,8 @@ export const Post: React.FC<PostResponse> = (props) => {
         setIsModalOpen={setIsCreateShareModalOpen}
         parentPost={props}
       />
+
+      <SharePost isModalOpen={isShareModalOpen} setIsModalOpen={setIsShareModalOpen} postId={id} />
     </Col>
   );
 };

@@ -26,4 +26,12 @@ export const postApi = {
     const response = await axiosAuth.post("/post/report", { postId, reason });
     return response.data;
   },
+  getShares: async (postQueryRequest: PostQueryRequest): Promise<any> => {
+    const response = await axiosAuth.post("/post/share", postQueryRequest);
+    return {
+      ...response.data,
+      currentPage: postQueryRequest.page,
+      totalPages: response.data.totalPages,
+    };
+  },
 };
