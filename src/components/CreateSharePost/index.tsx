@@ -112,33 +112,32 @@ export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, s
         Share the post
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {isLoading ? (
-          <>
-            <Skeleton active avatar paragraph={{ rows: 0 }} />
-            <Skeleton active paragraph={{ rows: 4 }} />
-          </>
-        ) : (
-          <>
+      {isLoading ? (
+        <>
+          <Skeleton active avatar paragraph={{ rows: 0 }} />
+          <Skeleton active title={{ width: "100%" }} paragraph={{ rows: 2 }} />
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
             <Typography.Text style={{ color: "gray" }}>
               {res?.data?.firstName} {res?.data?.lastName}
             </Typography.Text>
-          </>
-        )}
-      </div>
-
-      <Input.TextArea
-        placeholder={`${res?.data?.firstName} ${res?.data?.lastName}, what are you thinking?`}
-        style={{
-          width: "100%",
-          margin: "20px 0 10px",
-          border: "none",
-        }}
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        value={content}
-        onChange={handleChange}
-      />
+          </div>
+          <Input.TextArea
+            placeholder={`${res?.data?.firstName} ${res?.data?.lastName}, what are you thinking?`}
+            style={{
+              width: "100%",
+              margin: "20px 0 10px",
+              border: "none",
+            }}
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            value={content}
+            onChange={handleChange}
+          />
+        </>
+      )}
 
       <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
 
