@@ -12,12 +12,9 @@ const axiosAuth = axios.create({
 const refreshToken = async () => {
   try {
     const refresh_token = getRefreshToken();
-    const response = await axios.post(
-      import.meta.env.VITE_API_URL + "/api/v1/auth/refresh",
-      {
-        refreshToken: refresh_token,
-      }
-    );
+    const response = await axios.post(import.meta.env.VITE_API_URL + "/api/v1/auth/refresh", {
+      refreshToken: refresh_token,
+    });
     const { accessToken, refreshToken: newRefreshToken } = response.data;
 
     setToken(accessToken, newRefreshToken);
@@ -37,7 +34,7 @@ axiosAuth.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosAuth.interceptors.response.use(
@@ -68,7 +65,7 @@ axiosAuth.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosAuth;

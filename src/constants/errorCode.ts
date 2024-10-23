@@ -30,4 +30,7 @@ export const ErrorCode = {
   // Update post error
   FILE_UPLOAD_FAILED: "file-upload-failed",
   DELTE_FILE_FAILED: "delete-file-failed",
+
+  // Delete post error
+  POST_DOES_NOT_EXIST: "post-does-not-exist",
 };

@@ -18,4 +18,8 @@ export const postApi = {
     const response = await axiosAuth.put(`/post`, { postId, content, files, deleteFileIds });
     return response.data;
   },
+  deletePost: async (id: string): Promise<any> => {
+    const response = await axiosAuth.delete(`/post/${id}`);
+    return response.data;
+  },
 };
