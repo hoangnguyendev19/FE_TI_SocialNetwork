@@ -1,18 +1,12 @@
-import { UploadOutlined, UserOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Input,
-  Modal,
-  Typography,
-  Upload,
-  UploadFile,
-  notification,
-} from "antd";
-import { Color } from "constants";
+import { UploadOutlined } from "@ant-design/icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
+import { postApi } from "api";
+import { Color, ErrorCode, ErrorMessage, QueryKey } from "constants";
+import { useProfile } from "hooks";
 import { useState } from "react";
 import { inputErrorStyle } from "styles";
+import { convertToBase64 } from "utils";
 import "./style.css";
 
 interface CreatePostProps {
@@ -20,13 +14,42 @@ interface CreatePostProps {
   setIsModalOpen: (isOpen: boolean) => void;
 }
 
-export const CreatePost: React.FC<CreatePostProps> = ({
-  isModalOpen,
-  setIsModalOpen,
-}) => {
+export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalOpen }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [files, setFiles] = useState<string[]>([]);
   const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  const { data: res, isLoading }: any = useProfile({
+    enabled: true,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  const mutation = useMutation({
+    mutationFn: ({ content, files }: { content: string; files: string[] }) => postApi.createPost(content, files),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      notification.success({
+        message: "Post created successfully.",
+      });
+    },
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        case ErrorCode.NOT_BASE64_FORMAT:
+          notification.error({
+            message: ErrorMessage.NOT_BASE64_FORMAT,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "Failed to create post.",
+          });
+          break;
+      }
+    },
+  });
 
   const handleOk = async () => {
     if (content.trim() === "") {
@@ -36,30 +59,9 @@ export const CreatePost: React.FC<CreatePostProps> = ({
       return;
     }
 
-    // Prepare form data for sending to the server
-    const formData = new FormData();
-    formData.append("content", content);
+    mutation.mutate({ content, files });
 
-    fileList.forEach((file) => {
-      if (file.originFileObj) {
-        formData.append("images", file.originFileObj);
-      }
-    });
-
-    // try {
-    //   // Example API call (replace with your actual API endpoint)
-    //   await axios.post("https://your-api-endpoint.com/upload", formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
-    //   message.success("Post saved successfully!");
-    //   setIsModalOpen(false);
-    //   setContent(""); // Reset content
-    //   setFileList([]); // Reset file list
-    // } catch (error) {
-    //   message.error("Failed to save the post. Please try again.");
-    // }
+    setIsModalOpen(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -71,57 +73,72 @@ export const CreatePost: React.FC<CreatePostProps> = ({
     }
   };
 
-  const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
+  const handleUploadChange = async ({ fileList }: { fileList: UploadFile[] }) => {
+    if (fileList[0]?.originFileObj) {
+      try {
+        const base64 = await convertToBase64(fileList[0].originFileObj as File);
+        setFiles([...files, base64]);
+      } catch (error) {
+        notification.error({
+          message: "Failed to convert file to Base64.",
+        });
+      }
+    }
+
     setFileList(fileList);
+  };
+
+  const handleCancel = () => {
+    setFileList([]);
+    setFiles([]);
+    setContent("");
+    setIsModalOpen(false);
   };
 
   return (
     <Modal
       open={isModalOpen}
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={handleCancel}
       footer={[
-        <Button
-          key="submit"
-          type="primary"
-          style={{ width: "100%" }}
-          disabled={!content}
-          onClick={handleOk}
-        >
+        <Button key="submit" type="primary" style={{ width: "100%" }} disabled={!content} onClick={handleOk}>
           Save
         </Button>,
       ]}
-      style={{ maxWidth: "600px", maxHeight: "600px" }}
+      style={{ maxWidth: "700px" }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Create the post
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Avatar
-          alt="avatar"
-          shape="circle"
-          size="large"
-          icon={<UserOutlined />}
-          style={{ marginRight: "15px" }}
-        />
-        <Typography.Text style={{ color: "gray" }}>John Doe</Typography.Text>
-      </div>
 
-      <Input.TextArea
-        placeholder="John Doe, what are you thinking?"
-        style={{
-          width: "100%",
-          margin: "20px 0 10px",
-          border: "none",
-        }}
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        value={content}
-        onChange={handleChange}
-      />
+      {isLoading ? (
+        <>
+          <Skeleton active avatar paragraph={{ rows: 0 }} />
+          <Skeleton active title={{ width: "100%" }} paragraph={{ rows: 2 }} />
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
+            <Typography.Text style={{ color: "gray" }}>
+              {res?.data?.firstName} {res?.data?.lastName}
+            </Typography.Text>
+          </div>
+          <Input.TextArea
+            placeholder={`${res?.data?.firstName} ${res?.data?.lastName}, what are you thinking?`}
+            style={{
+              width: "100%",
+              margin: "20px 0 10px",
+              border: "none",
+            }}
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            value={content}
+            onChange={handleChange}
+          />
+        </>
+      )}
 
-      <div style={inputErrorStyle}>
-        {error && <Typography.Text type="danger">{error}</Typography.Text>}
-      </div>
+      <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
 
       <div style={{ maxHeight: "250px", overflowY: "auto", marginTop: "20px" }}>
         <Upload
@@ -131,7 +148,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({
           beforeUpload={() => false}
           className="custom-upload-list"
         >
-          {fileList.length < 5 && <UploadOutlined />}
+          {fileList.length < 6 && <UploadOutlined />}
         </Upload>
       </div>
     </Modal>

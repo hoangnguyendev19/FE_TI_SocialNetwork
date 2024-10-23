@@ -1,37 +1,25 @@
-import { UploadOutlined, UserOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Divider, Input, Modal, Typography, Upload, UploadFile, notification } from "antd";
+import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
 import { postApi } from "api";
-import { Color, ErrorCode, ErrorMessage, MediaResponse, QueryKey } from "constants";
+import { Color, ErrorCode, ErrorMessage, PostResponse, QueryKey } from "constants";
 import { useProfile } from "hooks";
 import { useState } from "react";
 import { inputErrorStyle } from "styles";
 import { convertToBase64 } from "utils";
 import "./style.css";
+import { Post } from "components/Post";
 
-interface UpdatePostProps {
+interface CreateSharePostProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
-  id: string;
-  text: string;
-  mediaList: Array<MediaResponse>;
+  parentPost: PostResponse;
 }
 
-export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalOpen, id, text, mediaList }) => {
-  const [fileList, setFileList] = useState<UploadFile[]>(
-    mediaList.map((media) => ({
-      uid: media.id,
-      name: media.id,
-      status: "done",
-      url: media.url,
-      thumbUrl: media.url,
-      type: media.type,
-    })),
-  );
-
+export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, setIsModalOpen, parentPost }) => {
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [files, setFiles] = useState<string[]>([]);
-  const [deleteFileIds, setDeleteFileIds] = useState<string[]>([]);
-  const [content, setContent] = useState<string>(text);
+  const [content, setContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
@@ -41,39 +29,26 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
   });
 
   const mutation = useMutation({
-    mutationFn: ({
-      postId,
-      content,
-      files,
-      deleteFileIds,
-    }: {
-      postId: string;
-      content: string;
-      files: string[];
-      deleteFileIds: string[];
-    }) => postApi.updatePost(postId, content, files, deleteFileIds),
+    mutationFn: ({ content, files }: { content: string; files: string[] }) =>
+      postApi.createPost(content, files, parentPost.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      setIsModalOpen(false);
       notification.success({
-        message: "Post updated successfully.",
+        message: "Post shared successfully.",
       });
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
-        case ErrorCode.FILE_UPLOAD_FAILED:
+        case ErrorCode.NOT_BASE64_FORMAT:
           notification.error({
-            message: ErrorMessage.FILE_UPLOAD_FAILED,
-          });
-          break;
-        case ErrorCode.DELTE_FILE_FAILED:
-          notification.error({
-            message: ErrorMessage.DELTE_FILE_FAILED,
+            message: ErrorMessage.NOT_BASE64_FORMAT,
           });
           break;
 
         default:
           notification.error({
-            message: "Failed to update post.",
+            message: "Failed to share post.",
           });
           break;
       }
@@ -87,9 +62,8 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
       });
       return;
     }
-    mutation.mutate({ postId: id, content, files, deleteFileIds });
 
-    setIsModalOpen(false);
+    mutation.mutate({ content, files });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -117,7 +91,9 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
   };
 
   const handleCancel = () => {
-    queryClient.resetQueries({ queryKey: [QueryKey.POST] });
+    setFileList([]);
+    setFiles([]);
+    setContent("");
     setIsModalOpen(false);
   };
 
@@ -130,38 +106,38 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
           Save
         </Button>,
       ]}
+      style={{ maxWidth: "700px" }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
-        Update the post
+        Share the post
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {isLoading ? (
-          <>
-            <Avatar size={44} icon={<UserOutlined />} alt="Avatar" style={{ marginRight: "15px" }} />
-            <Typography.Text style={{ color: "gray" }}>User Name</Typography.Text>
-          </>
-        ) : (
-          <>
+      {isLoading ? (
+        <>
+          <Skeleton active avatar paragraph={{ rows: 0 }} />
+          <Skeleton active title={{ width: "100%" }} paragraph={{ rows: 2 }} />
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
             <Typography.Text style={{ color: "gray" }}>
               {res?.data?.firstName} {res?.data?.lastName}
             </Typography.Text>
-          </>
-        )}
-      </div>
-
-      <Input.TextArea
-        placeholder="John Doe, what are you thinking?"
-        style={{
-          width: "100%",
-          margin: "20px 0 10px",
-          border: "none",
-        }}
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        value={content}
-        onChange={handleChange}
-      />
+          </div>
+          <Input.TextArea
+            placeholder={`${res?.data?.firstName} ${res?.data?.lastName}, what are you thinking?`}
+            style={{
+              width: "100%",
+              margin: "20px 0 10px",
+              border: "none",
+            }}
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            value={content}
+            onChange={handleChange}
+          />
+        </>
+      )}
 
       <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
 
@@ -172,12 +148,12 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
           onChange={handleUploadChange}
           beforeUpload={() => false}
           className="custom-upload-list"
-          accept="image/*, video/*"
-          onRemove={(file) => setDeleteFileIds([...deleteFileIds, file.uid])}
         >
-          {fileList.length < 5 && <UploadOutlined />}
+          {fileList.length < 6 && <UploadOutlined />}
         </Upload>
       </div>
+
+      <Post {...parentPost} />
     </Modal>
   );
 };

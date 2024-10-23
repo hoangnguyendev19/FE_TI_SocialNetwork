@@ -1,48 +1,73 @@
 import {
   EllipsisOutlined,
+  HeartFilled,
   HeartOutlined,
   MessageOutlined,
   ShareAltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Dropdown,
-  Flex,
-  Image,
-  MenuProps,
-  Typography,
-} from "antd";
-import { Color, PostData } from "constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, notification, Typography } from "antd";
+import { favouriteApi } from "api/favouriteApi";
+import { Color, ErrorCode, ErrorMessage, PostResponse, QueryKey } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
-import { UpdatePost } from "./UpdatePost";
 import { DeletePost } from "./DeletePost";
+import { UpdatePost } from "./UpdatePost";
 import { FavouritePost } from "./FavouritePost";
 import { SharePost } from "./SharePost";
+import { ReportPost } from "./ReportPost";
+import { CreateSharePost } from "./CreateSharePost";
 
-export const Post: React.FC<PostData> = (props) => {
+export const Post: React.FC<PostResponse> = (props) => {
   const {
     id,
-    profilePictureUrl,
     firstName,
     lastName,
+    profilePictureUrl,
     content,
+    totalLikes,
+    totalComments,
+    totalShares,
+    liked,
+    owner,
+    parentPost,
     mediaList,
-    likes,
-    comments,
-    shares,
     createdAt,
     lastModified,
   } = props;
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () => (liked ? favouriteApi.deleteFavourite(id) : favouriteApi.createFavourite(id)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+    },
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        case ErrorCode.POST_DOES_NOT_EXIST:
+          notification.error({
+            message: ErrorMessage.POST_DOES_NOT_EXIST,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "Failed to like/unlike post.",
+          });
+          break;
+      }
+    },
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isCreateShareModalOpen, setIsCreateShareModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -60,6 +85,14 @@ export const Post: React.FC<PostData> = (props) => {
     setIsShareModalOpen(true);
   };
 
+  const showReportModal = () => {
+    setIsReportModalOpen(true);
+  };
+
+  const showCreateShareModal = () => {
+    setIsCreateShareModalOpen(true);
+  };
+
   const items: MenuProps["items"] = [
     {
       label: "Update post",
@@ -67,6 +100,7 @@ export const Post: React.FC<PostData> = (props) => {
       onClick: () => {
         showModal();
       },
+      disabled: !owner,
     },
     {
       type: "divider",
@@ -77,6 +111,7 @@ export const Post: React.FC<PostData> = (props) => {
       onClick: () => {
         showDeleteModal();
       },
+      disabled: !owner,
     },
     {
       type: "divider",
@@ -84,6 +119,10 @@ export const Post: React.FC<PostData> = (props) => {
     {
       label: "Report post",
       key: "4",
+      onClick: () => {
+        showReportModal();
+      },
+      disabled: owner,
     },
   ];
 
@@ -101,25 +140,12 @@ export const Post: React.FC<PostData> = (props) => {
       <Flex justify="space-between" align="center">
         <Flex align="center">
           {profilePictureUrl ? (
-            <Avatar
-              alt="avatar"
-              shape="circle"
-              size="large"
-              src={profilePictureUrl}
-            />
+            <Avatar alt="avatar" shape="circle" size="large" src={profilePictureUrl} />
           ) : (
-            <Avatar
-              alt="avatar"
-              shape="circle"
-              size="large"
-              icon={<UserOutlined />}
-            />
+            <Avatar alt="avatar" shape="circle" size="large" icon={<UserOutlined />} />
           )}
           <Col style={{ marginLeft: "10px" }}>
-            <Typography.Title
-              level={5}
-              style={{ color: "blue", marginBottom: "0px" }}
-            >
+            <Typography.Title level={5} style={{ color: "blue", marginBottom: "0px" }}>
               {`${firstName} ${lastName}`}
             </Typography.Title>
             <Typography.Text style={{ color: "gray", fontSize: "12px" }}>
@@ -150,39 +176,26 @@ export const Post: React.FC<PostData> = (props) => {
         </Typography.Paragraph>
       </Col>
 
-      <Col
-        span="24"
-        style={{ padding: "15px 0", maxHeight: "450px", overflowY: "auto" }}
-      >
-        <Image.PreviewGroup
-          preview={{
-            onChange: (current, prev) =>
-              console.log(`current index: ${current}, prev index: ${prev}`),
-          }}
-        >
-          {mediaList.map((media) =>
-            media.mediaType === "image" ? (
-              <Image
-                key={media.id}
-                width="100%"
-                height="350px"
-                style={{ objectFit: "cover" }}
-                src={media.mediaUrl}
-              />
-            ) : (
-              <ReactPlayer
-                controls
-                width="100%"
-                height="350px"
-                key={media.id}
-                url={media.mediaUrl}
-                style={{
-                  objectFit: "cover",
+      <Col span="24" style={{ maxHeight: "450px", overflowY: "auto" }}>
+        {mediaList.map((media) => (
+          <div key={media.id} style={{ margin: "15px 0" }}>
+            {media.type === "IMAGE" ? (
+              <Image.PreviewGroup
+                preview={{
+                  onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
                 }}
-              />
-            )
-          )}
-        </Image.PreviewGroup>
+              >
+                <Image key={media.id} width="100%" height="350px" src={media.url} />
+              </Image.PreviewGroup>
+            ) : (
+              <ReactPlayer controls width="100%" height="350px" key={media.id} url={media.url} />
+            )}
+          </div>
+        ))}
+      </Col>
+
+      <Col span="24" style={{ padding: "15px 0" }}>
+        {parentPost && <Post {...parentPost} />}
       </Col>
 
       <Col span="24">
@@ -196,13 +209,13 @@ export const Post: React.FC<PostData> = (props) => {
               marginRight: "10px",
             }}
           >
-            <Button type="text" icon={<HeartOutlined />} />
             <Button
               type="text"
-              style={{ padding: "0 10px 0 5px" }}
-              onClick={showFavouriteModal}
-            >
-              {likes.length}
+              icon={liked ? <HeartFilled style={{ color: "red" }} /> : <HeartOutlined />}
+              onClick={() => mutation.mutate()}
+            />
+            <Button type="text" style={{ padding: "0 10px 0 5px" }} onClick={showFavouriteModal}>
+              {totalLikes}
             </Button>
           </Flex>
           <Button
@@ -214,20 +227,12 @@ export const Post: React.FC<PostData> = (props) => {
             }}
             icon={<MessageOutlined />}
           >
-            {comments.length}
+            {totalComments}
           </Button>
-          <Flex
-            justify="center"
-            align="center"
-            style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}
-          >
-            <Button type="text" icon={<ShareAltOutlined />} />
-            <Button
-              type="text"
-              style={{ padding: "0 10px 0 5px" }}
-              onClick={showShareModal}
-            >
-              {shares.length}
+          <Flex justify="center" align="center" style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}>
+            <Button type="text" icon={<ShareAltOutlined />} onClick={showCreateShareModal} />
+            <Button type="text" style={{ padding: "0 10px 0 5px" }} onClick={showShareModal}>
+              {totalShares}
             </Button>
           </Flex>
         </Flex>
@@ -236,27 +241,22 @@ export const Post: React.FC<PostData> = (props) => {
       <UpdatePost
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        id={id}
         text={content}
         mediaList={mediaList}
       />
 
-      <DeletePost
-        isModalOpen={isDeleteModalOpen}
-        setIsModalOpen={setIsDeleteModalOpen}
-        postId={id}
+      <FavouritePost isModalOpen={isFavouriteModalOpen} setIsModalOpen={setIsFavouriteModalOpen} postId={id} />
+      <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
+      <ReportPost isModalOpen={isReportModalOpen} setIsModalOpen={setIsReportModalOpen} id={id} />
+
+      <CreateSharePost
+        isModalOpen={isCreateShareModalOpen}
+        setIsModalOpen={setIsCreateShareModalOpen}
+        parentPost={props}
       />
 
-      <FavouritePost
-        isModalOpen={isFavouriteModalOpen}
-        setIsModalOpen={setIsFavouriteModalOpen}
-        likes={likes}
-      />
-
-      <SharePost
-        isModalOpen={isShareModalOpen}
-        setIsModalOpen={setIsShareModalOpen}
-        shares={shares}
-      />
+      <SharePost isModalOpen={isShareModalOpen} setIsModalOpen={setIsShareModalOpen} postId={id} />
     </Col>
   );
 };
