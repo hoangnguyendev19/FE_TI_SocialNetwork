@@ -1,33 +1,20 @@
-import { UploadOutlined, UserOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Input,
-  Modal,
-  Typography,
-  Upload,
-  UploadFile,
-  notification,
-} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
+import { postApi } from "api";
 import { Color, ErrorCode, ErrorMessage, QueryKey } from "constants";
+import { useProfile } from "hooks";
 import { useState } from "react";
 import { inputErrorStyle } from "styles";
-import "./style.css";
-import { useProfile } from "hooks";
 import { convertToBase64 } from "utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postApi } from "api";
+import "./style.css";
 
 interface CreatePostProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }
 
-export const CreatePost: React.FC<CreatePostProps> = ({
-  isModalOpen,
-  setIsModalOpen,
-}) => {
+export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalOpen }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [files, setFiles] = useState<string[]>([]);
   const [content, setContent] = useState<string>("");
@@ -40,8 +27,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({
   });
 
   const mutation = useMutation({
-    mutationFn: ({ content, files }: { content: string; files: string[] }) =>
-      postApi.createPost(content, files),
+    mutationFn: ({ content, files }: { content: string; files: string[] }) => postApi.createPost(content, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
       notification.success({
@@ -87,11 +73,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({
     }
   };
 
-  const handleUploadChange = async ({
-    fileList,
-  }: {
-    fileList: UploadFile[];
-  }) => {
+  const handleUploadChange = async ({ fileList }: { fileList: UploadFile[] }) => {
     if (fileList[0]?.originFileObj) {
       try {
         const base64 = await convertToBase64(fileList[0].originFileObj as File);
@@ -106,70 +88,57 @@ export const CreatePost: React.FC<CreatePostProps> = ({
     setFileList(fileList);
   };
 
+  const handleCancel = () => {
+    setFileList([]);
+    setFiles([]);
+    setContent("");
+    setIsModalOpen(false);
+  };
+
   return (
     <Modal
       open={isModalOpen}
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={handleCancel}
       footer={[
-        <Button
-          key="submit"
-          type="primary"
-          style={{ width: "100%" }}
-          disabled={!content}
-          onClick={handleOk}
-        >
+        <Button key="submit" type="primary" style={{ width: "100%" }} disabled={!content} onClick={handleOk}>
           Save
         </Button>,
       ]}
-      style={{ maxWidth: "600px", maxHeight: "600px" }}
+      style={{ maxWidth: "700px" }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Create the post
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {isLoading ? (
-          <>
-            <Avatar
-              size={44}
-              icon={<UserOutlined />}
-              alt="Avatar"
-              style={{ marginRight: "15px" }}
-            />
-            <Typography.Text style={{ color: "gray" }}>
-              User Name
-            </Typography.Text>
-          </>
-        ) : (
-          <>
-            <Avatar
-              size={44}
-              src={res?.data?.profilePictureUrl}
-              alt="Avatar"
-              style={{ marginRight: "15px" }}
-            />
+
+      {isLoading ? (
+        <>
+          <Skeleton active avatar paragraph={{ rows: 0 }} />
+          <Skeleton active title={{ width: "100%" }} paragraph={{ rows: 2 }} />
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
             <Typography.Text style={{ color: "gray" }}>
               {res?.data?.firstName} {res?.data?.lastName}
             </Typography.Text>
-          </>
-        )}
-      </div>
+          </div>
+          <Input.TextArea
+            placeholder={`${res?.data?.firstName} ${res?.data?.lastName}, what are you thinking?`}
+            style={{
+              width: "100%",
+              margin: "20px 0 10px",
+              border: "none",
+            }}
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            value={content}
+            onChange={handleChange}
+          />
+        </>
+      )}
 
-      <Input.TextArea
-        placeholder="John Doe, what are you thinking?"
-        style={{
-          width: "100%",
-          margin: "20px 0 10px",
-          border: "none",
-        }}
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        value={content}
-        onChange={handleChange}
-      />
-
-      <div style={inputErrorStyle}>
-        {error && <Typography.Text type="danger">{error}</Typography.Text>}
-      </div>
+      <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
 
       <div style={{ maxHeight: "250px", overflowY: "auto", marginTop: "20px" }}>
         <Upload
