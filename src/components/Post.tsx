@@ -16,6 +16,7 @@ import { convertToRelativeTime } from "utils";
 import { DeletePost } from "./DeletePost";
 import { UpdatePost } from "./UpdatePost";
 import { FavouritePost } from "./FavouritePost";
+import { ReportPost } from "./ReportPost";
 
 export const Post: React.FC<PostResponse> = (props) => {
   const {
@@ -62,6 +63,7 @@ export const Post: React.FC<PostResponse> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -73,6 +75,10 @@ export const Post: React.FC<PostResponse> = (props) => {
 
   const showFavouriteModal = () => {
     setIsFavouriteModalOpen(true);
+  };
+
+  const showReportModal = () => {
+    setIsReportModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -101,6 +107,9 @@ export const Post: React.FC<PostResponse> = (props) => {
     {
       label: "Report post",
       key: "4",
+      onClick: () => {
+        showReportModal();
+      },
       disabled: owner,
     },
   ];
@@ -238,6 +247,7 @@ export const Post: React.FC<PostResponse> = (props) => {
 
       <FavouritePost isModalOpen={isFavouriteModalOpen} setIsModalOpen={setIsFavouriteModalOpen} postId={id} />
       <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
+      <ReportPost isModalOpen={isReportModalOpen} setIsModalOpen={setIsReportModalOpen} id={id} />
     </Col>
   );
 };
