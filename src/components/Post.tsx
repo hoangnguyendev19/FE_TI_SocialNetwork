@@ -1,21 +1,6 @@
-import {
-  EllipsisOutlined,
-  HeartOutlined,
-  MessageOutlined,
-  ShareAltOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Dropdown,
-  Flex,
-  Image,
-  MenuProps,
-  Typography,
-} from "antd";
-import { Color, PostData } from "constants";
+import { EllipsisOutlined, HeartOutlined, MessageOutlined, ShareAltOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, Typography } from "antd";
+import { Color, PostResponse } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
@@ -23,17 +8,18 @@ import { UpdatePost } from "./UpdatePost";
 import { DeletePost } from "./DeletePost";
 import { FavouritePost } from "./FavouritePost";
 
-export const Post: React.FC<PostData> = (props) => {
+export const Post: React.FC<PostResponse> = (props) => {
   const {
     id,
-    profilePictureUrl,
     firstName,
     lastName,
+    profilePictureUrl,
     content,
+    totalLikes,
+    totalComments,
+    totalShares,
+    parentPost,
     mediaList,
-    likes,
-    comments,
-    shares,
     createdAt,
     lastModified,
   } = props;
@@ -95,25 +81,12 @@ export const Post: React.FC<PostData> = (props) => {
       <Flex justify="space-between" align="center">
         <Flex align="center">
           {profilePictureUrl ? (
-            <Avatar
-              alt="avatar"
-              shape="circle"
-              size="large"
-              src={profilePictureUrl}
-            />
+            <Avatar alt="avatar" shape="circle" size="large" src={profilePictureUrl} />
           ) : (
-            <Avatar
-              alt="avatar"
-              shape="circle"
-              size="large"
-              icon={<UserOutlined />}
-            />
+            <Avatar alt="avatar" shape="circle" size="large" icon={<UserOutlined />} />
           )}
           <Col style={{ marginLeft: "10px" }}>
-            <Typography.Title
-              level={5}
-              style={{ color: "blue", marginBottom: "0px" }}
-            >
+            <Typography.Title level={5} style={{ color: "blue", marginBottom: "0px" }}>
               {`${firstName} ${lastName}`}
             </Typography.Title>
             <Typography.Text style={{ color: "gray", fontSize: "12px" }}>
@@ -144,39 +117,37 @@ export const Post: React.FC<PostData> = (props) => {
         </Typography.Paragraph>
       </Col>
 
-      <Col
-        span="24"
-        style={{ padding: "15px 0", maxHeight: "450px", overflowY: "auto" }}
-      >
-        <Image.PreviewGroup
-          preview={{
-            onChange: (current, prev) =>
-              console.log(`current index: ${current}, prev index: ${prev}`),
-          }}
-        >
-          {mediaList.map((media) =>
-            media.mediaType === "image" ? (
-              <Image
-                key={media.id}
-                width="100%"
-                height="350px"
-                style={{ objectFit: "cover" }}
-                src={media.mediaUrl}
-              />
-            ) : (
-              <ReactPlayer
-                controls
-                width="100%"
-                height="350px"
-                key={media.id}
-                url={media.mediaUrl}
-                style={{
-                  objectFit: "cover",
+      <Col span="24" style={{ maxHeight: "450px", overflowY: "auto" }}>
+        {mediaList.map((media) => (
+          <div key={media.id} style={{ margin: "15px 0" }}>
+            {media.type === "IMAGE" ? (
+              <Image.PreviewGroup
+                preview={{
+                  onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
                 }}
-              />
-            )
-          )}
-        </Image.PreviewGroup>
+              >
+                <Image key={media.id} width="100%" height="350px" src={media.url} />
+              </Image.PreviewGroup>
+            ) : (
+              <ReactPlayer controls width="100%" height="350px" key={media.id} url={media.url} />
+            )}
+          </div>
+        ))}
+      </Col>
+
+      <Col span="24" style={{ padding: "15px 0" }}>
+        {parentPost && (
+          <Col
+            span="24"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.1)",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <Typography.Text style={{ color: "black", fontSize: "12px" }}>{parentPost.content}</Typography.Text>
+          </Col>
+        )}
       </Col>
 
       <Col span="24">
@@ -191,12 +162,8 @@ export const Post: React.FC<PostData> = (props) => {
             }}
           >
             <Button type="text" icon={<HeartOutlined />} />
-            <Button
-              type="text"
-              style={{ padding: "0 10px 0 5px" }}
-              onClick={showFavouriteModal}
-            >
-              {likes.length}
+            <Button type="text" style={{ padding: "0 10px 0 5px" }}>
+              {totalLikes}
             </Button>
           </Flex>
           <Button
@@ -208,16 +175,12 @@ export const Post: React.FC<PostData> = (props) => {
             }}
             icon={<MessageOutlined />}
           >
-            {comments.length}
+            {totalComments}
           </Button>
-          <Flex
-            justify="center"
-            align="center"
-            style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}
-          >
+          <Flex justify="center" align="center" style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}>
             <Button type="text" icon={<ShareAltOutlined />} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
-              {shares.length}
+              {totalShares}
             </Button>
           </Flex>
         </Flex>
@@ -226,21 +189,17 @@ export const Post: React.FC<PostData> = (props) => {
       <UpdatePost
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        id={id}
         text={content}
         mediaList={mediaList}
       />
 
-      <DeletePost
-        isModalOpen={isDeleteModalOpen}
-        setIsModalOpen={setIsDeleteModalOpen}
-        postId={id}
-      />
-
-      <FavouritePost
+      {/* <FavouritePost
         isModalOpen={isFavouriteModalOpen}
         setIsModalOpen={setIsFavouriteModalOpen}
         likes={likes}
-      />
+      /> */}
+      <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
     </Col>
   );
 };
