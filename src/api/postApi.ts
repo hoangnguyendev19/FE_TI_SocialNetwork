@@ -10,8 +10,8 @@ export const postApi = {
       totalPages: response.data.totalPages,
     };
   },
-  createPost: async (content: string, files: string[]): Promise<any> => {
-    const response = await axiosAuth.post("/post", { content, files });
+  createPost: async (content: string, files: string[], parentPostId?: string): Promise<any> => {
+    const response = await axiosAuth.post("/post", { content, files, parentPostId: parentPostId || null });
     return response.data;
   },
   updatePost: async (postId: string, content: string, files: string[], deleteFileIds: string[]): Promise<any> => {
