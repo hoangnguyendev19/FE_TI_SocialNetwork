@@ -1,11 +1,20 @@
-import { EllipsisOutlined, HeartOutlined, MessageOutlined, ShareAltOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, Typography } from "antd";
-import { Color, PostResponse } from "constants";
+import {
+  EllipsisOutlined,
+  HeartFilled,
+  HeartOutlined,
+  MessageOutlined,
+  ShareAltOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, notification, Typography } from "antd";
+import { favouriteApi } from "api/favouriteApi";
+import { Color, ErrorCode, ErrorMessage, PostResponse, QueryKey } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
-import { UpdatePost } from "./UpdatePost";
 import { DeletePost } from "./DeletePost";
+import { UpdatePost } from "./UpdatePost";
 import { FavouritePost } from "./FavouritePost";
 
 export const Post: React.FC<PostResponse> = (props) => {
@@ -18,11 +27,37 @@ export const Post: React.FC<PostResponse> = (props) => {
     totalLikes,
     totalComments,
     totalShares,
+    liked,
+    owner,
     parentPost,
     mediaList,
     createdAt,
     lastModified,
   } = props;
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () => (liked ? favouriteApi.deleteFavourite(id) : favouriteApi.createFavourite(id)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+    },
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        case ErrorCode.POST_DOES_NOT_EXIST:
+          notification.error({
+            message: ErrorMessage.POST_DOES_NOT_EXIST,
+          });
+          break;
+
+        default:
+          notification.error({
+            message: "Failed to like/unlike post.",
+          });
+          break;
+      }
+    },
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -47,6 +82,7 @@ export const Post: React.FC<PostResponse> = (props) => {
       onClick: () => {
         showModal();
       },
+      disabled: !owner,
     },
     {
       type: "divider",
@@ -57,6 +93,7 @@ export const Post: React.FC<PostResponse> = (props) => {
       onClick: () => {
         showDeleteModal();
       },
+      disabled: !owner,
     },
     {
       type: "divider",
@@ -64,6 +101,7 @@ export const Post: React.FC<PostResponse> = (props) => {
     {
       label: "Report post",
       key: "4",
+      disabled: owner,
     },
   ];
 
@@ -161,8 +199,12 @@ export const Post: React.FC<PostResponse> = (props) => {
               marginRight: "10px",
             }}
           >
-            <Button type="text" icon={<HeartOutlined />} />
-            <Button type="text" style={{ padding: "0 10px 0 5px" }}>
+            <Button
+              type="text"
+              icon={liked ? <HeartFilled style={{ color: "red" }} /> : <HeartOutlined />}
+              onClick={() => mutation.mutate()}
+            />
+            <Button type="text" style={{ padding: "0 10px 0 5px" }} onClick={showFavouriteModal}>
               {totalLikes}
             </Button>
           </Flex>
@@ -194,11 +236,7 @@ export const Post: React.FC<PostResponse> = (props) => {
         mediaList={mediaList}
       />
 
-      {/* <FavouritePost
-        isModalOpen={isFavouriteModalOpen}
-        setIsModalOpen={setIsFavouriteModalOpen}
-        likes={likes}
-      /> */}
+      <FavouritePost isModalOpen={isFavouriteModalOpen} setIsModalOpen={setIsFavouriteModalOpen} postId={id} />
       <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
     </Col>
   );
