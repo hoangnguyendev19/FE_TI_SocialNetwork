@@ -22,4 +22,8 @@ export const postApi = {
     const response = await axiosAuth.delete(`/post/${id}`);
     return response.data;
   },
+  reportPost: async (postId: string, reason: string): Promise<any> => {
+    const response = await axiosAuth.post("/post/report", { postId, reason });
+    return response.data;
+  },
 };
