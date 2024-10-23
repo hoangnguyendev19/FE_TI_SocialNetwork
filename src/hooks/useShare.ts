@@ -8,7 +8,7 @@ export const useShare = (
 ) => {
   return useInfiniteQuery({
     ...options,
-    queryKey: [QueryKey.FAVOURITE, postQueryRequest],
+    queryKey: [QueryKey.SHARE, postQueryRequest],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await postApi.getShares({
         ...postQueryRequest,

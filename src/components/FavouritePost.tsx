@@ -61,7 +61,10 @@ export const FavouritePost: React.FC<FavouritePostProps> = ({ isModalOpen, setIs
       ) : (
         data?.pages.map((page: any) =>
           page.content.map((favour: FavouriteResponse) => (
-            <div key={favour.userId} style={{ display: "flex", alignItems: "center", overflowY: "auto" }}>
+            <div
+              key={favour.userId}
+              style={{ display: "flex", alignItems: "center", overflowY: "auto", marginBottom: "15px" }}
+            >
               <Avatar
                 alt="avatar"
                 shape="circle"
