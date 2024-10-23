@@ -24,6 +24,8 @@ export interface PostResponse {
   totalLikes: number;
   totalComments: number;
   totalShares: number;
+  liked: boolean;
+  owner: boolean;
   parentPost: PostResponse | null;
   mediaList: Array<MediaResponse>;
   createdAt: string;
@@ -34,4 +36,11 @@ export interface MediaResponse {
   id: string;
   url: string;
   type: string;
+}
+
+export interface FavouriteResponse {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
 }
