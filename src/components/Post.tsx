@@ -188,7 +188,7 @@ export const Post: React.FC<PostResponse> = (props) => {
         mediaList={mediaList}
       />
 
-      <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} postId={id} />
+      <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
     </Col>
   );
 };

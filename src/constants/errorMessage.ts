@@ -30,4 +30,7 @@ export const ErrorMessage = {
   // Update post error
   FILE_UPLOAD_FAILED: "Failed to upload file",
   DELTE_FILE_FAILED: "Failed to delete file",
+
+  // Delete post error
+  POST_DOES_NOT_EXIST: "Post does not exist",
 };
