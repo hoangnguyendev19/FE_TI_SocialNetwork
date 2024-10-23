@@ -17,6 +17,7 @@ import { DeletePost } from "./DeletePost";
 import { UpdatePost } from "./UpdatePost";
 import { FavouritePost } from "./FavouritePost";
 import { ReportPost } from "./ReportPost";
+import { CreateSharePost } from "./CreateSharePost";
 
 export const Post: React.FC<PostResponse> = (props) => {
   const {
@@ -64,6 +65,7 @@ export const Post: React.FC<PostResponse> = (props) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isCreateShareModalOpen, setIsCreateShareModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -79,6 +81,10 @@ export const Post: React.FC<PostResponse> = (props) => {
 
   const showReportModal = () => {
     setIsReportModalOpen(true);
+  };
+
+  const showCreateShareModal = () => {
+    setIsCreateShareModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -183,18 +189,7 @@ export const Post: React.FC<PostResponse> = (props) => {
       </Col>
 
       <Col span="24" style={{ padding: "15px 0" }}>
-        {parentPost && (
-          <Col
-            span="24"
-            style={{
-              backgroundColor: "rgba(0,0,0,0.1)",
-              padding: "10px",
-              borderRadius: "10px",
-            }}
-          >
-            <Typography.Text style={{ color: "black", fontSize: "12px" }}>{parentPost.content}</Typography.Text>
-          </Col>
-        )}
+        {parentPost && <Post {...parentPost} />}
       </Col>
 
       <Col span="24">
@@ -229,7 +224,7 @@ export const Post: React.FC<PostResponse> = (props) => {
             {totalComments}
           </Button>
           <Flex justify="center" align="center" style={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: "10px" }}>
-            <Button type="text" icon={<ShareAltOutlined />} />
+            <Button type="text" icon={<ShareAltOutlined />} onClick={showCreateShareModal} />
             <Button type="text" style={{ padding: "0 10px 0 5px" }}>
               {totalShares}
             </Button>
@@ -248,6 +243,12 @@ export const Post: React.FC<PostResponse> = (props) => {
       <FavouritePost isModalOpen={isFavouriteModalOpen} setIsModalOpen={setIsFavouriteModalOpen} postId={id} />
       <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
       <ReportPost isModalOpen={isReportModalOpen} setIsModalOpen={setIsReportModalOpen} id={id} />
+
+      <CreateSharePost
+        isModalOpen={isCreateShareModalOpen}
+        setIsModalOpen={setIsCreateShareModalOpen}
+        parentPost={props}
+      />
     </Col>
   );
 };
