@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
 import { UpdatePost } from "./UpdatePost";
 import { DeletePost } from "./DeletePost";
+import { FavouritePost } from "./FavouritePost";
 
 export const Post: React.FC<PostResponse> = (props) => {
   const {
@@ -25,6 +26,7 @@ export const Post: React.FC<PostResponse> = (props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isFavouriteModalOpen, setIsFavouriteModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -32,6 +34,10 @@ export const Post: React.FC<PostResponse> = (props) => {
 
   const showDeleteModal = () => {
     setIsDeleteModalOpen(true);
+  };
+
+  const showFavouriteModal = () => {
+    setIsFavouriteModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -188,6 +194,11 @@ export const Post: React.FC<PostResponse> = (props) => {
         mediaList={mediaList}
       />
 
+      {/* <FavouritePost
+        isModalOpen={isFavouriteModalOpen}
+        setIsModalOpen={setIsFavouriteModalOpen}
+        likes={likes}
+      /> */}
       <DeletePost isModalOpen={isDeleteModalOpen} setIsModalOpen={setIsDeleteModalOpen} id={id} />
     </Col>
   );
