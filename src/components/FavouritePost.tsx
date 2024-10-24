@@ -50,38 +50,39 @@ export const FavouritePost: React.FC<FavouritePostProps> = ({ isModalOpen, setIs
   }, [hasNextPage, fetchNextPage]);
 
   return (
-    <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={() => null}>
+    <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={() => null} style={{ top: 30 }}>
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Favourite on the post
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
+      <div style={{ maxHeight: "530px", overflowY: "auto" }}>
+        {isLoading ? (
+          <Skeleton avatar active paragraph={{ rows: 0 }} />
+        ) : (
+          data?.pages.map((page: any) =>
+            page.content.map((favour: FavouriteResponse) => (
+              <div
+                key={favour.userId}
+                style={{ display: "flex", alignItems: "center", overflowY: "auto", marginBottom: "15px" }}
+              >
+                <Avatar
+                  alt="avatar"
+                  shape="circle"
+                  size="large"
+                  src={favour.profilePictureUrl}
+                  style={{ marginRight: "15px" }}
+                />
+                <Typography.Text style={{ color: "gray" }}>
+                  {favour.firstName} {favour.lastName}
+                </Typography.Text>
+              </div>
+            )),
+          )
+        )}
 
-      {isLoading ? (
-        <Skeleton avatar active paragraph={{ rows: 0 }} />
-      ) : (
-        data?.pages.map((page: any) =>
-          page.content.map((favour: FavouriteResponse) => (
-            <div
-              key={favour.userId}
-              style={{ display: "flex", alignItems: "center", overflowY: "auto", marginBottom: "15px" }}
-            >
-              <Avatar
-                alt="avatar"
-                shape="circle"
-                size="large"
-                src={favour.profilePictureUrl}
-                style={{ marginRight: "15px" }}
-              />
-              <Typography.Text style={{ color: "gray" }}>
-                {favour.firstName} {favour.lastName}
-              </Typography.Text>
-            </div>
-          )),
-        )
-      )}
-
-      {/* Loader or Fetching more indicator */}
-      <div ref={observerElem}>{isFetchingNextPage && <Skeleton avatar active paragraph={{ rows: 0 }} />}</div>
+        {/* Loader or Fetching more indicator */}
+        <div ref={observerElem}>{isFetchingNextPage && <Skeleton avatar active paragraph={{ rows: 0 }} />}</div>
+      </div>
     </Modal>
   );
 };

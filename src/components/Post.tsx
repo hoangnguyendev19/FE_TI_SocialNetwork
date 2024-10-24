@@ -19,6 +19,7 @@ import { FavouritePost } from "./FavouritePost";
 import { SharePost } from "./SharePost";
 import { ReportPost } from "./ReportPost";
 import { CreateSharePost } from "./CreateSharePost";
+import { CommentPost } from "./CommentPost";
 
 export const Post: React.FC<PostResponse> = (props) => {
   const {
@@ -68,6 +69,7 @@ export const Post: React.FC<PostResponse> = (props) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isCreateShareModalOpen, setIsCreateShareModalOpen] = useState(false);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -91,6 +93,10 @@ export const Post: React.FC<PostResponse> = (props) => {
 
   const showCreateShareModal = () => {
     setIsCreateShareModalOpen(true);
+  };
+
+  const showCommentModal = () => {
+    setIsCommentModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
@@ -194,7 +200,7 @@ export const Post: React.FC<PostResponse> = (props) => {
         ))}
       </Col>
 
-      <Col span="24" style={{ padding: "15px 0" }}>
+      <Col span="24" style={{ paddingBottom: "15px" }}>
         {parentPost && <Post {...parentPost} />}
       </Col>
 
@@ -226,6 +232,7 @@ export const Post: React.FC<PostResponse> = (props) => {
               marginRight: "10px",
             }}
             icon={<MessageOutlined />}
+            onClick={showCommentModal}
           >
             {totalComments}
           </Button>
@@ -257,6 +264,7 @@ export const Post: React.FC<PostResponse> = (props) => {
       />
 
       <SharePost isModalOpen={isShareModalOpen} setIsModalOpen={setIsShareModalOpen} postId={id} />
+      <CommentPost isModalOpen={isCommentModalOpen} setIsModalOpen={setIsCommentModalOpen} id={id} />
     </Col>
   );
 };

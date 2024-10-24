@@ -1,5 +1,5 @@
 import { SettingFilled, UserOutlined } from "@ant-design/icons";
-import { Avatar, Flex, Image, Layout, Row } from "antd";
+import { Avatar, Flex, Image, Layout, Row, Skeleton } from "antd";
 import LogoImage from "assets/images/img-logo.png";
 import { Color, ROUTE } from "constants";
 import { useProfile } from "hooks";
@@ -34,9 +34,11 @@ export const HeaderTop: React.FC = () => {
             onClick={() => navigate(ROUTE.SETTINGS)}
           />
           {isLoading ? (
-            <Avatar size={44} icon={<UserOutlined />} alt="Avatar" />
-          ) : (
+            <Skeleton.Avatar active size="large" shape="circle" />
+          ) : res?.data?.profilePictureUrl ? (
             <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" />
+          ) : (
+            <Avatar size={44} icon={<UserOutlined />} alt="Avatar" />
           )}
         </Row>
       </Flex>

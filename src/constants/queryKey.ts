@@ -3,4 +3,5 @@ export const QueryKey = {
   POST: "post",
   FAVOURITE: "favourite",
   SHARE: "share",
+  COMMENT: "comment",
 };
