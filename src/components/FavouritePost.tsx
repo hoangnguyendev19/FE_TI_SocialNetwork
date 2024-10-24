@@ -1,6 +1,6 @@
 import { Avatar, Divider, Modal, Skeleton, Typography } from "antd";
 import { Color, FavouriteResponse } from "constants";
-import { useFavourite } from "hooks/useFavourite";
+import { useFavourite } from "hooks";
 import { useEffect, useRef } from "react";
 
 interface FavouritePostProps {
