@@ -1,6 +1,6 @@
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Divider, Input, Modal, Typography, Upload, UploadFile, notification } from "antd";
+import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
 import { postApi } from "api";
 import { Color, ErrorCode, ErrorMessage, MediaResponse, QueryKey } from "constants";
 import { useProfile } from "hooks";
@@ -130,42 +130,45 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
           Save
         </Button>,
       ]}
+      style={{ top: 30 }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Update the post
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {isLoading ? (
-          <>
-            <Avatar size={44} icon={<UserOutlined />} alt="Avatar" style={{ marginRight: "15px" }} />
-            <Typography.Text style={{ color: "gray" }}>User Name</Typography.Text>
-          </>
-        ) : (
-          <>
-            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
+      {isLoading ? (
+        <>
+          <Skeleton active avatar paragraph={{ rows: 0 }} />
+          <Skeleton active title={{ width: "100%" }} paragraph={{ rows: 2 }} />
+        </>
+      ) : (
+        <>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {res?.data?.profilePictureUrl ? (
+              <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
+            ) : (
+              <Avatar size={44} icon={<UserOutlined />} alt="Avatar" style={{ marginRight: "15px" }} />
+            )}
             <Typography.Text style={{ color: "gray" }}>
               {res?.data?.firstName} {res?.data?.lastName}
             </Typography.Text>
-          </>
-        )}
-      </div>
+          </div>
+          <Input.TextArea
+            placeholder={`${res?.data?.firstName} ${res?.data?.lastName}, what are you thinking?`}
+            style={{
+              width: "100%",
+              margin: "20px 0 10px",
+              border: "none",
+            }}
+            autoSize={{ minRows: 3, maxRows: 6 }}
+            value={content}
+            onChange={handleChange}
+          />
+          <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
+        </>
+      )}
 
-      <Input.TextArea
-        placeholder="John Doe, what are you thinking?"
-        style={{
-          width: "100%",
-          margin: "20px 0 10px",
-          border: "none",
-        }}
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        value={content}
-        onChange={handleChange}
-      />
-
-      <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
-
-      <div style={{ maxHeight: "250px", overflowY: "auto", marginTop: "20px" }}>
+      <div style={{ maxHeight: "330px", overflowY: "auto", marginTop: "20px" }}>
         <Upload
           listType="picture-card"
           fileList={fileList}

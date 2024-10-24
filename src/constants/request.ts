@@ -49,3 +49,9 @@ export interface PostQueryRequest {
   sortBy: string;
   filter: object;
 }
+
+export interface CommentRequest {
+  postId: string;
+  parentCommentId: string | null;
+  commentText: string;
+}

@@ -1,4 +1,4 @@
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
 import { postApi } from "api";
@@ -104,7 +104,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
           Save
         </Button>,
       ]}
-      style={{ maxWidth: "700px" }}
+      style={{ top: 30 }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Create the post
@@ -119,7 +119,11 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
       ) : (
         <>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
+            {res?.data?.profilePictureUrl ? (
+              <Avatar size={44} src={res?.data?.profilePictureUrl} alt="Avatar" style={{ marginRight: "15px" }} />
+            ) : (
+              <Avatar size={44} icon={<UserOutlined />} alt="Avatar" style={{ marginRight: "15px" }} />
+            )}
             <Typography.Text style={{ color: "gray" }}>
               {res?.data?.firstName} {res?.data?.lastName}
             </Typography.Text>
@@ -135,12 +139,11 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
             value={content}
             onChange={handleChange}
           />
+          <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
         </>
       )}
 
-      <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
-
-      <div style={{ maxHeight: "250px", overflowY: "auto", marginTop: "20px" }}>
+      <div style={{ maxHeight: "330px", overflowY: "auto", marginTop: "20px" }}>
         <Upload
           listType="picture-card"
           fileList={fileList}

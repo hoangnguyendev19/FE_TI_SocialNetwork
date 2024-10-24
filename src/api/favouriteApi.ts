@@ -11,7 +11,7 @@ export const favouriteApi = {
     };
   },
   createFavourite: async (postId: string): Promise<any> => {
-    const response = await axiosAuth.post("/favourite", { postId: postId });
+    const response = await axiosAuth.post("/favourite", { postId });
     return response.data;
   },
   deleteFavourite: async (postId: string): Promise<any> => {

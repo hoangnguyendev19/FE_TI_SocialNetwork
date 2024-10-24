@@ -44,3 +44,20 @@ export interface FavouriteResponse {
   lastName: string;
   profilePictureUrl: string;
 }
+
+export interface CommentResponse {
+  commentId: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+  commentText: string;
+  hidden: boolean;
+  ownedPost: boolean;
+  ownedComment: boolean;
+  liked: boolean;
+  totalLikes: number;
+  childComments: Array<CommentResponse>;
+  createdAt: string;
+  lastModified: string;
+}
