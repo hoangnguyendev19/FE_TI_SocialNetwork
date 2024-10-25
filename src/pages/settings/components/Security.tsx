@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Col, Input, notification, Row, Typography } from "antd";
+import { Button, Col, Input, notification, Row, Tooltip, Typography } from "antd";
 import { userApi } from "api";
 import { ErrorCode, ErrorMessage, PasswordRequest, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { inputErrorStyle, inputStyle } from "styles";
+import { inputErrorStyle, inputStyle, overlayInnerStyle } from "styles";
 import { removeToken } from "utils";
 import * as yup from "yup";
 
@@ -52,14 +52,14 @@ export const Security: React.FC = () => {
       .required("Current password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~]{8,}$/,
-        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character.",
       ),
     newPassword: yup
       .string()
       .required("New password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~]{8,}$/,
-        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character.",
       ),
     confirmNewPassword: yup
       .string()
@@ -90,19 +90,22 @@ export const Security: React.FC = () => {
             name="currentPassword"
             control={control}
             render={({ field }) => (
-              <Input.Password
-                {...field}
-                placeholder="Please type your current password"
-                style={inputStyle}
-                visibilityToggle
-              />
+              <Tooltip
+                title="Current password must contain upper and lower case letters, a number, and a special character"
+                overlayInnerStyle={overlayInnerStyle}
+              >
+                <Input.Password
+                  {...field}
+                  placeholder="Please type your current password"
+                  style={{ ...inputStyle, borderColor: errors.currentPassword ? "red" : "" }}
+                  visibilityToggle
+                />
+              </Tooltip>
             )}
           />
           <div style={inputErrorStyle}>
             {errors.currentPassword && (
-              <Typography.Text type="danger">
-                {errors.currentPassword.message}
-              </Typography.Text>
+              <Typography.Text type="danger">{errors.currentPassword.message}</Typography.Text>
             )}
           </div>
         </Col>
@@ -116,20 +119,21 @@ export const Security: React.FC = () => {
             name="newPassword"
             control={control}
             render={({ field }) => (
-              <Input.Password
-                {...field}
-                placeholder="Please type your new password"
-                style={inputStyle}
-                visibilityToggle
-              />
+              <Tooltip
+                title="New password must contain upper and lower case letters, a number, and a special character"
+                overlayInnerStyle={overlayInnerStyle}
+              >
+                <Input.Password
+                  {...field}
+                  placeholder="Please type your new password"
+                  style={{ ...inputStyle, borderColor: errors.newPassword ? "red" : "" }}
+                  visibilityToggle
+                />
+              </Tooltip>
             )}
           />
           <div style={inputErrorStyle}>
-            {errors.newPassword && (
-              <Typography.Text type="danger">
-                {errors.newPassword.message}
-              </Typography.Text>
-            )}
+            {errors.newPassword && <Typography.Text type="danger">{errors.newPassword.message}</Typography.Text>}
           </div>
         </Col>
 
@@ -141,19 +145,19 @@ export const Security: React.FC = () => {
             name="confirmNewPassword"
             control={control}
             render={({ field }) => (
-              <Input.Password
-                {...field}
-                placeholder="Please confirm your new password"
-                style={inputStyle}
-                visibilityToggle
-              />
+              <Tooltip title="Must match the new password" overlayInnerStyle={overlayInnerStyle}>
+                <Input.Password
+                  {...field}
+                  placeholder="Please confirm your new password"
+                  style={{ ...inputStyle, borderColor: errors.confirmNewPassword ? "red" : "" }}
+                  visibilityToggle
+                />
+              </Tooltip>
             )}
           />
           <div style={inputErrorStyle}>
             {errors.confirmNewPassword && (
-              <Typography.Text type="danger">
-                {errors.confirmNewPassword.message}
-              </Typography.Text>
+              <Typography.Text type="danger">{errors.confirmNewPassword.message}</Typography.Text>
             )}
           </div>
         </Col>
