@@ -91,14 +91,8 @@ export const Profile: React.FC = () => {
   });
 
   const schema = yup.object().shape({
-    firstName: yup
-      .string()
-      .required("First name is required")
-      .min(2, "First name must be at least 2 characters"),
-    lastName: yup
-      .string()
-      .required("Last name is required")
-      .min(2, "Last name must be at least 2 characters"),
+    firstName: yup.string().required("First name is required").min(2, "First name must be at least 2 characters"),
+    lastName: yup.string().required("Last name is required").min(2, "Last name must be at least 2 characters"),
     phoneNumber: yup
       .string()
       .required("Phone number is required")
@@ -267,15 +261,13 @@ export const Profile: React.FC = () => {
                     <Input
                       {...(field as any)}
                       placeholder={placeholder}
-                      style={inputStyle}
+                      style={{ ...inputStyle, borderColor: errors[name as keyof ProfileRequest] ? "red" : "" }}
                     />
                   )}
                 />
                 <div style={inputErrorStyle}>
                   {errors[name as keyof ProfileRequest] && (
-                    <Typography.Text type="danger">
-                      {errors[name as keyof ProfileRequest]?.message}
-                    </Typography.Text>
+                    <Typography.Text type="danger">{errors[name as keyof ProfileRequest]?.message}</Typography.Text>
                   )}
                 </div>
               </Col>
@@ -293,21 +285,15 @@ export const Profile: React.FC = () => {
                   <DatePicker
                     {...field}
                     value={field.value ? moment(field.value) : null}
-                    onChange={(date) =>
-                      field.onChange(date ? date.toDate() : null)
-                    }
+                    onChange={(date) => field.onChange(date ? date.toDate() : null)}
                     placeholder="yyyy-mm-dd"
                     format="YYYY-MM-DD"
-                    style={inputStyle}
+                    style={{ ...inputStyle, borderColor: errors.dateOfBirth ? "red" : "" }}
                   />
                 )}
               />
               <div style={inputErrorStyle}>
-                {errors.dateOfBirth && (
-                  <Typography.Text type="danger">
-                    {errors.dateOfBirth.message}
-                  </Typography.Text>
-                )}
+                {errors.dateOfBirth && <Typography.Text type="danger">{errors.dateOfBirth.message}</Typography.Text>}
               </div>
             </Col>
           </Row>
