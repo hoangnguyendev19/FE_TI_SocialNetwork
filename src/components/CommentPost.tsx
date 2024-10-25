@@ -6,6 +6,7 @@ import { Color, CommentRequest, CommentResponse, QueryKey } from "constants";
 import { useComment, useProfile } from "hooks";
 import { useEffect, useRef, useState } from "react";
 import { Comment } from "./Comment";
+import { favouriteCommentApi } from "api/favouriteCommentApi";
 
 interface CommentPostProps {
   isModalOpen: boolean;
@@ -175,6 +176,58 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
     },
   });
 
+  const likeMutation = useMutation({
+    mutationFn: (id: string) => favouriteCommentApi.createFavouriteComment(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
+      handleCancel();
+      notification.success({
+        message: "Comment liked successfully.",
+      });
+    },
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        // case ErrorCode.POST_DOES_NOT_EXIST:
+        //   notification.error({
+        //     message: ErrorMessage.POST_DOES_NOT_EXIST,
+        //   });
+        //   break;
+
+        default:
+          notification.error({
+            message: "Failed to like comment.",
+          });
+          break;
+      }
+    },
+  });
+
+  const unlikeMutation = useMutation({
+    mutationFn: (id: string) => favouriteCommentApi.deleteFavouriteComment(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
+      handleCancel();
+      notification.success({
+        message: "Comment unliked successfully.",
+      });
+    },
+    onError: (error: any) => {
+      switch (error?.response?.data?.message) {
+        // case ErrorCode.POST_DOES_NOT_EXIST:
+        //   notification.error({
+        //     message: ErrorMessage.POST_DOES_NOT_EXIST,
+        //   });
+        //   break;
+
+        default:
+          notification.error({
+            message: "Failed to unlike comment.",
+          });
+          break;
+      }
+    },
+  });
+
   const handleOk = () => {
     if (choosenCommentId) {
       updateMutation.mutate();
@@ -250,6 +303,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
               setParentCommentId={setParentCommentId}
               hideMutation={hideMutation}
               deleteMutation={deleteMutation}
+              likeMutation={likeMutation}
+              unlikeMutation={unlikeMutation}
             />
           ))}
 

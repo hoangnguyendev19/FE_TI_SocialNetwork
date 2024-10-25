@@ -36,4 +36,7 @@ export const ErrorCode = {
 
   // Create boarding house error
   BOARDING_NAME_ALREADY_EXISTS: "boarding-name-already-exists",
+
+  // Like comment error
+  Like_DOES_NOT_EXIST: "like-does-not-exist",
 };

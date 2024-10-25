@@ -13,6 +13,8 @@ interface CommentProps {
   setParentCommentId: (parentCommentId: string | null) => void;
   hideMutation: any;
   deleteMutation: any;
+  likeMutation: any;
+  unlikeMutation: any;
 }
 
 export const Comment: React.FC<CommentProps> = ({
@@ -25,6 +27,8 @@ export const Comment: React.FC<CommentProps> = ({
   setParentCommentId,
   hideMutation,
   deleteMutation,
+  likeMutation,
+  unlikeMutation,
 }) => {
   const {
     commentId,
@@ -128,6 +132,7 @@ export const Comment: React.FC<CommentProps> = ({
                 bottom: "-22px",
               }}
               icon={liked ? <HeartFilled style={{ color: "red" }} /> : <HeartOutlined />}
+              onClick={() => (liked ? unlikeMutation.mutate(commentId) : likeMutation.mutate(commentId))}
             >
               {totalLikes}
             </Button>
@@ -174,6 +179,8 @@ export const Comment: React.FC<CommentProps> = ({
               setParentCommentId={setParentCommentId}
               hideMutation={hideMutation}
               deleteMutation={deleteMutation}
+              likeMutation={likeMutation}
+              unlikeMutation={unlikeMutation}
             />
           ))}
         </Col>
