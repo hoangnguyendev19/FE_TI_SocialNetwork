@@ -45,6 +45,7 @@ export const Post: React.FC<PostResponse> = (props) => {
     mutationFn: () => (liked ? favouriteApi.deleteFavourite(id) : favouriteApi.createFavourite(id)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.FAVOURITE, id] });
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {

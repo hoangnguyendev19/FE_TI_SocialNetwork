@@ -21,7 +21,7 @@ export const useComment = (
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage.page.number;
+      const currentPage = lastPage.page.number + 1;
       const totalPages = lastPage.page.totalPages;
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },

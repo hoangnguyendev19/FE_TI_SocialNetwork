@@ -1,22 +1,21 @@
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "@tanstack/react-query";
 import { favouriteApi } from "api";
-import { PostQueryRequest, QueryKey } from "constants";
+import { QueryKey } from "constants";
 
 export const useFavourite = (
   options?: Omit<UseInfiniteQueryOptions<any>, "queryKey" | "queryFn" | "getNextPageParam">,
-  postQueryRequest?: PostQueryRequest,
+  postId?: string,
 ) => {
   return useInfiniteQuery({
     ...options,
-    queryKey: [QueryKey.FAVOURITE, postQueryRequest],
+    queryKey: [QueryKey.FAVOURITE, postId],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await favouriteApi.getFavourites({
-        ...postQueryRequest,
         page: pageParam,
-        size: postQueryRequest?.size ?? 10,
-        sortField: postQueryRequest?.sortField ?? "createdAt",
-        sortBy: postQueryRequest?.sortBy ?? "DESC",
-        filter: postQueryRequest?.filter ?? {},
+        size: 10,
+        sortField: "createdAt",
+        sortBy: "DESC",
+        filter: { id: postId },
       });
       return response;
     },
