@@ -9,37 +9,37 @@ import {
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { ROUTE } from "constants";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { removeToken } from "utils";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
-    key: "Main",
+    key: "main",
     label: "Main Menu",
     type: "group",
     children: [
       {
-        key: "Home",
+        key: ROUTE.ROOT,
         label: "Home Page",
         icon: <HomeOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
       },
       {
-        key: "News",
+        key: ROUTE.NEWS,
         label: "News",
         icon: <CarOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
       },
       {
-        key: "Boarding House",
+        key: ROUTE.BOARDING_HOUSE,
         label: "Boarding House",
         icon: <BarChartOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
       },
       {
-        key: "Profile",
+        key: ROUTE.PROFILE,
         label: "Profile",
         icon: <WalletOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
@@ -52,7 +52,7 @@ const items: MenuItem[] = [
     type: "group",
     children: [
       {
-        key: "Settings",
+        key: ROUTE.SETTINGS,
         label: "Settings",
         icon: <SettingOutlined style={{ fontSize: "20px" }} />,
         style: { fontSize: "16px", padding: "20px" },
@@ -66,7 +66,7 @@ const items: MenuItem[] = [
     ],
   },
   {
-    key: "Logout",
+    key: ROUTE.LOGIN,
     label: "Logout",
     icon: <LogoutOutlined style={{ fontSize: "20px" }} />,
     style: {
@@ -80,29 +80,13 @@ const items: MenuItem[] = [
 
 export const SideBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onClick: MenuProps["onClick"] = (e) => {
-    // console.log("click ", e);
-    if (e.key === "Logout") {
+    if (e.key === ROUTE.LOGIN) {
       removeToken();
-      navigate(ROUTE.LOGIN);
     }
-
-    if (e.key === "Home") {
-      navigate(ROUTE.ROOT);
-    }
-
-    if (e.key === "News") {
-      navigate(ROUTE.NEWS);
-    }
-
-    if (e.key === "Boarding House") {
-      navigate(ROUTE.BOARDING_HOUSE);
-    }
-
-    if (e.key === "Profile") {
-      navigate(ROUTE.PROFILE);
-    }
+    navigate(e.key);
   };
 
   return (
@@ -112,8 +96,9 @@ export const SideBar = () => {
         width: "100%",
         height: "100%",
       }}
-      defaultSelectedKeys={["Home"]}
-      defaultOpenKeys={["Main"]}
+      defaultSelectedKeys={[ROUTE.ROOT]}
+      defaultOpenKeys={["main", "preferences"]}
+      selectedKeys={[location.pathname.split("/")[1] || ROUTE.ROOT]}
       mode="inline"
       items={items}
     />

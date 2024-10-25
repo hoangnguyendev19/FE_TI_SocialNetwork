@@ -1,13 +1,6 @@
 import { App } from "app";
 import { ROUTE } from "constants";
-import {
-  HomePage,
-  LoginPage,
-  NewsPage,
-  NotFoundPage,
-  SettingsPage,
-  SignupPage,
-} from "pages";
+import { BoardingHousePage, HomePage, LoginPage, NewsPage, NotFoundPage, SettingsPage, SignupPage } from "pages";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -26,6 +19,20 @@ export const router = createBrowserRouter([
       {
         path: ROUTE.SETTINGS,
         element: <SettingsPage />,
+      },
+      {
+        path: ROUTE.BOARDING_HOUSE,
+        element: <BoardingHousePage />,
+        children: [
+          {
+            path: ROUTE.REGISTER_TO_BECOME,
+            element: <BoardingHousePage />,
+          },
+          {
+            path: ROUTE.UNDER_REVIEW,
+            element: <BoardingHousePage />,
+          },
+        ],
       },
     ],
   },

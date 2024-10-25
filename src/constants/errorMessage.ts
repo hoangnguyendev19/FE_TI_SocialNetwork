@@ -33,4 +33,7 @@ export const ErrorMessage = {
 
   // Delete post error
   POST_DOES_NOT_EXIST: "Post does not exist",
+
+  // Create boarding house error
+  BOARDING_NAME_ALREADY_EXISTS: "Boarding name already exists",
 };

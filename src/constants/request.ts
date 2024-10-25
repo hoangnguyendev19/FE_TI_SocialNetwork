@@ -55,3 +55,10 @@ export interface CommentRequest {
   parentCommentId: string | null;
   commentText: string;
 }
+
+export interface BoardingHouseRequest {
+  boardingHouseName: string;
+  presentAddress: string;
+  ward: string;
+  city: string;
+}
