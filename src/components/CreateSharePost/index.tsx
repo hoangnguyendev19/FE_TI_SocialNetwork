@@ -33,6 +33,7 @@ export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, s
       postApi.createPost(content, files, parentPost.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.SHARE, parentPost.id] });
       handleCancel();
       notification.success({
         message: "Post shared successfully.",
