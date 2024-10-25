@@ -1,3 +1,4 @@
+import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Divider, Modal, Skeleton, Typography } from "antd";
 import { Color, FavouriteResponse } from "constants";
 import { useFavourite } from "hooks";
@@ -10,19 +11,13 @@ interface FavouritePostProps {
 }
 
 export const FavouritePost: React.FC<FavouritePostProps> = ({ isModalOpen, setIsModalOpen, postId }) => {
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useFavourite(
+  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } = useFavourite(
     {
-      enabled: !isModalOpen,
-      staleTime: 1000 * 5, // 5 seconds,
+      enabled: true,
+      staleTime: 1000 * 60, // 1 minutes
       initialPageParam: 1,
     },
-    {
-      page: 1,
-      size: 10,
-      sortField: "createdAt",
-      sortBy: "DESC",
-      filter: { id: postId },
-    },
+    postId,
   );
 
   // Infinite scroll logic
@@ -56,8 +51,10 @@ export const FavouritePost: React.FC<FavouritePostProps> = ({ isModalOpen, setIs
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
       <div style={{ maxHeight: "530px", overflowY: "auto" }}>
-        {isLoading ? (
+        {status === "pending" ? (
           <Skeleton avatar active paragraph={{ rows: 0 }} />
+        ) : status === "error" ? (
+          <Typography.Text type="danger">Failed to fetch favourites.</Typography.Text>
         ) : (
           data?.pages.map((page: any) =>
             page.content.map((favour: FavouriteResponse) => (
@@ -65,13 +62,23 @@ export const FavouritePost: React.FC<FavouritePostProps> = ({ isModalOpen, setIs
                 key={favour.userId}
                 style={{ display: "flex", alignItems: "center", overflowY: "auto", marginBottom: "15px" }}
               >
-                <Avatar
-                  alt="avatar"
-                  shape="circle"
-                  size="large"
-                  src={favour.profilePictureUrl}
-                  style={{ marginRight: "15px" }}
-                />
+                {favour.profilePictureUrl ? (
+                  <Avatar
+                    alt="avatar"
+                    shape="circle"
+                    size="large"
+                    src={favour.profilePictureUrl}
+                    style={{ marginRight: "15px" }}
+                  />
+                ) : (
+                  <Avatar
+                    alt="avatar"
+                    shape="circle"
+                    size="large"
+                    icon={<UserOutlined />}
+                    style={{ marginRight: "15px" }}
+                  />
+                )}
                 <Typography.Text style={{ color: "gray" }}>
                   {favour.firstName} {favour.lastName}
                 </Typography.Text>
