@@ -1,16 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Button,
-  Checkbox,
-  Col,
-  Flex,
-  Image,
-  Input,
-  notification,
-  Row,
-  Typography,
-} from "antd";
+import { Button, Checkbox, Col, Flex, Image, Input, notification, Row, Typography } from "antd";
 import { authApi } from "api";
 import LoginImage from "assets/images/img-login.png";
 import { ErrorCode, ErrorMessage, LoginRequest, ROUTE } from "constants";
@@ -81,63 +71,52 @@ export const Login: React.FC = () => {
   return (
     <Row>
       <Col span={14}>
-        <Flex
-          justify="center"
-          vertical
-          style={{ height: "100%", width: "100%" }}
-        >
+        <Flex justify="center" vertical style={{ height: "100%", width: "100%" }}>
           <Typography.Title level={2}>Login</Typography.Title>
-          <Typography.Paragraph
-            type="secondary"
-            style={{ marginBottom: "15px" }}
-          >
+          <Typography.Paragraph type="secondary" style={{ marginBottom: "15px" }}>
             Login to access your TI-Social Network account
           </Typography.Paragraph>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row gutter={[0, 5]}>
               <Col className="gutter-row" span={24}>
-                <Typography.Title level={5}>Email</Typography.Title>
+                <Typography.Title level={5}>
+                  Email<span style={{ color: "red" }}>*</span>
+                </Typography.Title>
                 <Controller
                   name="email"
                   control={control}
                   render={({ field }) => (
                     <Input
                       placeholder="Please type your email!"
-                      style={inputStyle}
+                      style={{ ...inputStyle, borderColor: errors.email ? "red" : "" }}
                       {...field}
                       aria-invalid={!!errors.email}
                     />
                   )}
                 />
                 <div style={inputErrorStyle}>
-                  {errors.email && (
-                    <Typography.Text type="danger">
-                      {errors.email.message}
-                    </Typography.Text>
-                  )}
+                  {errors.email && <Typography.Text type="danger">{errors.email.message}</Typography.Text>}
                 </div>
               </Col>
               <Col className="gutter-row" span={24}>
-                <Typography.Title level={5}>Password</Typography.Title>
+                <Typography.Title level={5}>
+                  Password<span style={{ color: "red" }}>*</span>
+                </Typography.Title>
                 <Controller
                   name="password"
                   control={control}
                   render={({ field }) => (
                     <Input.Password
                       placeholder="Please type your password!"
-                      style={inputStyle}
+                      style={{ ...inputStyle, borderColor: errors.password ? "red" : "" }}
                       {...field}
                       aria-invalid={!!errors.password}
                     />
                   )}
                 />
                 <div style={inputErrorStyle}>
-                  {errors.password && (
-                    <Typography.Text type="danger">
-                      {errors.password.message}
-                    </Typography.Text>
-                  )}
+                  {errors.password && <Typography.Text type="danger">{errors.password.message}</Typography.Text>}
                 </div>
               </Col>
               <Col className="gutter-row" span={24}>
@@ -173,12 +152,7 @@ export const Login: React.FC = () => {
       </Col>
       <Col span={10}>
         <Flex align="center" justify="end">
-          <Image
-            style={imageStyle}
-            src={LoginImage}
-            placeholder="login"
-            preview={false}
-          />
+          <Image style={imageStyle} src={LoginImage} placeholder="login" preview={false} />
         </Flex>
       </Col>
     </Row>
