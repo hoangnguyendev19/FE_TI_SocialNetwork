@@ -1,22 +1,21 @@
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "@tanstack/react-query";
 import { postApi } from "api";
-import { PostQueryRequest, QueryKey } from "constants";
+import { QueryKey } from "constants";
 
 export const useShare = (
   options?: Omit<UseInfiniteQueryOptions<any>, "queryKey" | "queryFn" | "getNextPageParam">,
-  postQueryRequest?: PostQueryRequest,
+  postId?: string,
 ) => {
   return useInfiniteQuery({
     ...options,
-    queryKey: [QueryKey.SHARE, postQueryRequest],
+    queryKey: [QueryKey.SHARE, postId],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await postApi.getShares({
-        ...postQueryRequest,
         page: pageParam,
-        size: postQueryRequest?.size ?? 10,
-        sortField: postQueryRequest?.sortField ?? "createdAt",
-        sortBy: postQueryRequest?.sortBy ?? "DESC",
-        filter: postQueryRequest?.filter ?? {},
+        size: 10,
+        sortField: "createdAt",
+        sortBy: "DESC",
+        filter: { id: postId },
       });
       return response;
     },
