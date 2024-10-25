@@ -1,5 +1,5 @@
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "@tanstack/react-query";
-import { favouriteApi } from "api/favouriteApi";
+import { favouriteApi } from "api";
 import { PostQueryRequest, QueryKey } from "constants";
 
 export const useFavourite = (
