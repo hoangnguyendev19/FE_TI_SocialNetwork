@@ -54,6 +54,7 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
     }) => postApi.updatePost(postId, content, files, deleteFileIds),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      handleCancel();
       notification.success({
         message: "Post updated successfully.",
       });
@@ -87,9 +88,8 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
       });
       return;
     }
-    mutation.mutate({ postId: id, content, files, deleteFileIds });
 
-    setIsModalOpen(false);
+    mutation.mutate({ postId: id, content, files, deleteFileIds });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -117,7 +117,9 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
   };
 
   const handleCancel = () => {
-    queryClient.resetQueries({ queryKey: [QueryKey.POST] });
+    setFileList([]);
+    setFiles([]);
+    setContent("");
     setIsModalOpen(false);
   };
 

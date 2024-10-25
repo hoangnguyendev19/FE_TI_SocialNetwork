@@ -139,7 +139,7 @@ export const Post: React.FC<PostResponse> = (props) => {
         backgroundColor: Color.PRIMARY,
         padding: "15px 20px",
         borderRadius: "10px",
-        marginTop: "15px",
+        marginBottom: "15px",
         border: `1px solid rgba(0, 0, 0, 0.2)`,
       }}
     >
