@@ -1,17 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Button,
-  Col,
-  Flex,
-  Image,
-  Input,
-  Layout,
-  notification,
-  Row,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Col, Flex, Image, Input, Layout, notification, Row, Tooltip, Typography } from "antd";
 import { authApi } from "api";
 import LogoImage from "assets/images/img-logo.png";
 import SignupImage from "assets/images/img-signup.png";
@@ -47,13 +36,13 @@ const inputList = [
     name: "email",
     label: "Email",
     placeholder: "Please type your email!",
-    tooltipText: "Enter a valid email address",
+    tooltipText: "Email must be in the correct format",
   },
   {
     name: "phoneNumber",
     label: "Phone Number",
     placeholder: "Please type your phone number!",
-    tooltipText: "Enter a valid email address",
+    tooltipText: "Phone number must have 10 digits",
   },
 ];
 
@@ -115,7 +104,7 @@ export const SignupPage: React.FC = () => {
       .required("Password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~]{8,}$/,
-        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character.",
       ),
     confirmPassword: yup
       .string()
@@ -139,83 +128,60 @@ export const SignupPage: React.FC = () => {
     <Layout style={layoutStyle}>
       <Header style={headerStyle}>
         <Flex justify="flex-end">
-          <Image
-            width={120}
-            src={LogoImage}
-            placeholder="logo"
-            preview={false}
-          />
+          <Image width={120} src={LogoImage} placeholder="logo" preview={false} />
         </Flex>
       </Header>
       <Content style={contentStyle}>
         <Row>
           <Col span={8}>
             <Flex align="center" justify="start">
-              <Image
-                style={imageStyle}
-                src={SignupImage}
-                placeholder="signup"
-                preview={false}
-              />
+              <Image style={imageStyle} src={SignupImage} placeholder="signup" preview={false} />
             </Flex>
           </Col>
           <Col span={16}>
-            <Flex
-              justify="center"
-              vertical
-              style={{ height: "100%", width: "100%" }}
-            >
+            <Flex justify="center" vertical style={{ height: "100%", width: "100%" }}>
               <Typography.Title level={2}>Sign up</Typography.Title>
-              <Typography.Paragraph
-                type="secondary"
-                style={{ marginBottom: "15px" }}
-              >
-                Let’s get you all set up so you can access your personal
-                account.
+              <Typography.Paragraph type="secondary" style={{ marginBottom: "15px" }}>
+                Let’s get you all set up so you can access your personal account.
               </Typography.Paragraph>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Row gutter={[16, 5]}>
-                  {inputList.map(
-                    ({ name, label, placeholder, tooltipText }) => (
-                      <Col span="12" key={name}>
-                        <Typography.Title level={5}>
-                          {label}
-                          <span style={{ color: "red" }}>*</span>
-                        </Typography.Title>
-                        <Controller
-                          name={name as keyof SignupRequest}
-                          control={control}
-                          render={({ field }) =>
-                            tooltipText ? (
-                              <Tooltip
-                                title={tooltipText}
-                                overlayInnerStyle={overlayInnerStyle}
-                              >
-                                <Input
-                                  {...field}
-                                  placeholder={placeholder}
-                                  style={inputStyle}
-                                />
-                              </Tooltip>
-                            ) : (
+                  {inputList.map(({ name, label, placeholder, tooltipText }) => (
+                    <Col span="12" key={name}>
+                      <Typography.Title level={5}>
+                        {label}
+                        <span style={{ color: "red" }}>*</span>
+                      </Typography.Title>
+                      <Controller
+                        name={name as keyof SignupRequest}
+                        control={control}
+                        render={({ field }) =>
+                          tooltipText ? (
+                            <Tooltip title={tooltipText} overlayInnerStyle={overlayInnerStyle}>
                               <Input
                                 {...field}
                                 placeholder={placeholder}
-                                style={inputStyle}
+                                style={{ ...inputStyle, borderColor: errors[name as keyof SignupRequest] ? "red" : "" }}
                               />
-                            )
-                          }
-                        />
-                        <div style={inputErrorStyle}>
-                          {errors[name as keyof SignupRequest] && (
-                            <Typography.Text type="danger">
-                              {errors[name as keyof SignupRequest]?.message}
-                            </Typography.Text>
-                          )}
-                        </div>
-                      </Col>
-                    )
-                  )}
+                            </Tooltip>
+                          ) : (
+                            <Input
+                              {...field}
+                              placeholder={placeholder}
+                              style={{ ...inputStyle, borderColor: errors[name as keyof SignupRequest] ? "red" : "" }}
+                            />
+                          )
+                        }
+                      />
+                      <div style={inputErrorStyle}>
+                        {errors[name as keyof SignupRequest] && (
+                          <Typography.Text type="danger">
+                            {errors[name as keyof SignupRequest]?.message}
+                          </Typography.Text>
+                        )}
+                      </div>
+                    </Col>
+                  ))}
 
                   <Col span={24}>
                     <Typography.Title level={5}>
@@ -232,17 +198,13 @@ export const SignupPage: React.FC = () => {
                           <Input.Password
                             {...field}
                             placeholder="Please type your password!"
-                            style={inputStyle}
+                            style={{ ...inputStyle, borderColor: errors.password ? "red" : "" }}
                           />
                         </Tooltip>
                       )}
                     />
                     <div style={inputErrorStyle}>
-                      {errors.password && (
-                        <Typography.Text type="danger">
-                          {errors.password.message}
-                        </Typography.Text>
-                      )}
+                      {errors.password && <Typography.Text type="danger">{errors.password.message}</Typography.Text>}
                     </div>
                   </Col>
                   <Col span={24}>
@@ -253,23 +215,18 @@ export const SignupPage: React.FC = () => {
                       name="confirmPassword"
                       control={control}
                       render={({ field }) => (
-                        <Tooltip
-                          title="Must match the password"
-                          overlayInnerStyle={overlayInnerStyle}
-                        >
+                        <Tooltip title="Must match the password" overlayInnerStyle={overlayInnerStyle}>
                           <Input.Password
                             {...field}
                             placeholder="Please type your confirmed password!"
-                            style={inputStyle}
+                            style={{ ...inputStyle, borderColor: errors.confirmPassword ? "red" : "" }}
                           />
                         </Tooltip>
                       )}
                     />
                     <div style={inputErrorStyle}>
                       {errors.confirmPassword && (
-                        <Typography.Text type="danger">
-                          {errors.confirmPassword.message}
-                        </Typography.Text>
+                        <Typography.Text type="danger">{errors.confirmPassword.message}</Typography.Text>
                       )}
                     </div>
                   </Col>
