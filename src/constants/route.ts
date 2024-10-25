@@ -10,4 +10,6 @@ export const ROUTE = {
   SETTINGS: "settings",
   PROFILE: "profile",
   BOARDING_HOUSE: "boarding-house",
+  REGISTER_TO_BECOME: "register-to-become",
+  UNDER_REVIEW: "under-review",
 };

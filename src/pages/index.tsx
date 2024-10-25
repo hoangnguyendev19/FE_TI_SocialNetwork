@@ -4,3 +4,4 @@ export * from "./news";
 export * from "./home";
 export * from "./notFound";
 export * from "./settings";
+export * from "./boardingHouse";
