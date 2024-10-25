@@ -25,25 +25,12 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const {
-    data,
-    isLoading: isPending,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useComment(
+  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } = useComment(
     {
-      enabled: !isModalOpen,
-      staleTime: 1000 * 5, // 5 seconds,
+      enabled: true,
       initialPageParam: 1,
     },
-    {
-      page: 1,
-      size: 10,
-      sortField: "createdAt",
-      sortBy: "DESC",
-      filter: { id },
-    },
+    id,
   );
 
   // Infinite scroll logic
@@ -73,12 +60,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
   const mutation = useMutation({
     mutationFn: (data: CommentRequest) => commentApi.createComment(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
-      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
-      handleCancel();
-      notification.success({
-        message: "Comment created successfully.",
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT, id] });
+      handleReset();
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
@@ -100,11 +83,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
   const updateMutation = useMutation({
     mutationFn: () => commentApi.updateComment(choosenCommentId, commentText),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
-      handleCancel();
-      notification.success({
-        message: "Comment updated successfully.",
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT, id] });
+      handleReset();
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
@@ -126,11 +106,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
   const hideMutation = useMutation({
     mutationFn: (id: string) => commentApi.hideComment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
-      handleCancel();
-      notification.success({
-        message: "Comment hidden successfully.",
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT, id] });
+      handleReset();
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
@@ -152,12 +129,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
   const deleteMutation = useMutation({
     mutationFn: (id: string) => commentApi.deleteComment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
-      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
-      handleCancel();
-      notification.success({
-        message: "Comment deleted successfully.",
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT, id] });
+      handleReset();
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
@@ -179,11 +152,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
   const likeMutation = useMutation({
     mutationFn: (id: string) => favouriteCommentApi.createFavouriteComment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
-      handleCancel();
-      notification.success({
-        message: "Comment liked successfully.",
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT, id] });
+      handleReset();
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
@@ -205,11 +175,8 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
   const unlikeMutation = useMutation({
     mutationFn: (id: string) => favouriteCommentApi.deleteFavouriteComment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT] });
-      handleCancel();
-      notification.success({
-        message: "Comment unliked successfully.",
-      });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.COMMENT, id] });
+      handleReset();
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
@@ -236,11 +203,16 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
     }
   };
 
-  const handleCancel = () => {
+  const handleReset = () => {
     setCommentText("");
     setChoosenCommentId(null);
-    setIsModalOpen(false);
     setParentCommentId(null);
+  };
+
+  const handleCancel = () => {
+    handleReset();
+    queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+    setIsModalOpen(false);
   };
 
   return (
@@ -283,12 +255,14 @@ export const CommentPost: React.FC<CommentPostProps> = ({ isModalOpen, setIsModa
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
 
-      {isPending ? (
+      {status === "pending" ? (
         <>
           <Skeleton avatar active paragraph={{ rows: 3 }} />
           <Skeleton avatar active paragraph={{ rows: 3 }} />
           <Skeleton avatar active paragraph={{ rows: 3 }} />
         </>
+      ) : status === "error" ? (
+        <Typography.Text type="danger">Failed to fetch comments.</Typography.Text>
       ) : (
         <div style={{ margin: "25px 0px", height: "450px", overflowY: "auto" }}>
           {data?.pages[0].content.map((comment: CommentResponse) => (
