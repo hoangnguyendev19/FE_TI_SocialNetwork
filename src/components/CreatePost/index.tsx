@@ -30,6 +30,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
     mutationFn: ({ content, files }: { content: string; files: string[] }) => postApi.createPost(content, files),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
+      handleCancel();
       notification.success({
         message: "Post created successfully.",
       });
@@ -60,8 +61,6 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
     }
 
     mutation.mutate({ content, files });
-
-    setIsModalOpen(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
