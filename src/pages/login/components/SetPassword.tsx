@@ -1,28 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Button,
-  Col,
-  Flex,
-  Image,
-  Input,
-  notification,
-  Row,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Col, Flex, Image, Input, notification, Row, Tooltip, Typography } from "antd";
 import { authApi } from "api";
 import PasswordImage from "assets/images/img-password.png";
 import { ErrorCode, ErrorMessage, ROUTE, SetPasswordRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  imageStyle,
-  inputErrorStyle,
-  inputStyle,
-  overlayInnerStyle,
-} from "styles";
+import { imageStyle, inputErrorStyle, inputStyle, overlayInnerStyle } from "styles";
 import * as yup from "yup";
 
 export const SetPassword: React.FC = () => {
@@ -58,7 +43,7 @@ export const SetPassword: React.FC = () => {
       .required("New password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\[\]\{\};':"\\|,.<>\/?`~]{8,}$/,
-        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character."
+        "Password must be at least 8 characters long, contain upper and lower case letters, a number, and a special character.",
       ),
     confirmNewPassword: yup
       .string()
@@ -83,18 +68,10 @@ export const SetPassword: React.FC = () => {
   return (
     <Row>
       <Col span={12}>
-        <Flex
-          justify="center"
-          vertical
-          style={{ height: "100%", width: "100%" }}
-        >
+        <Flex justify="center" vertical style={{ height: "100%", width: "100%" }}>
           <Typography.Title level={1}>Set a password</Typography.Title>
-          <Typography.Paragraph
-            type="secondary"
-            style={{ marginBottom: "15px" }}
-          >
-            Your previous password has been reseted. Please set a new password
-            for your account.
+          <Typography.Paragraph type="secondary" style={{ marginBottom: "15px" }}>
+            Your previous password has been reseted. Please set a new password for your account.
           </Typography.Paragraph>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row gutter={[0, 5]}>
@@ -112,7 +89,7 @@ export const SetPassword: React.FC = () => {
                     >
                       <Input.Password
                         placeholder="Please type your new password!"
-                        style={inputStyle}
+                        style={{ ...inputStyle, borderColor: errors.newPassword ? "red" : "" }}
                         {...field}
                         aria-invalid={!!errors.newPassword}
                       />
@@ -120,11 +97,7 @@ export const SetPassword: React.FC = () => {
                   )}
                 />
                 <div style={inputErrorStyle}>
-                  {errors.newPassword && (
-                    <Typography.Text type="danger">
-                      {errors.newPassword.message}
-                    </Typography.Text>
-                  )}
+                  {errors.newPassword && <Typography.Text type="danger">{errors.newPassword.message}</Typography.Text>}
                 </div>
               </Col>
               <Col className="gutter-row" span={24}>
@@ -135,13 +108,10 @@ export const SetPassword: React.FC = () => {
                   name="confirmNewPassword"
                   control={control}
                   render={({ field }) => (
-                    <Tooltip
-                      title="Must match the password"
-                      overlayInnerStyle={overlayInnerStyle}
-                    >
+                    <Tooltip title="Must match the password" overlayInnerStyle={overlayInnerStyle}>
                       <Input.Password
                         placeholder="Please type your confirm new password!"
-                        style={inputStyle}
+                        style={{ ...inputStyle, borderColor: errors.confirmNewPassword ? "red" : "" }}
                         {...field}
                         aria-invalid={!!errors.confirmNewPassword}
                       />
@@ -150,9 +120,7 @@ export const SetPassword: React.FC = () => {
                 />
                 <div style={inputErrorStyle}>
                   {errors.confirmNewPassword && (
-                    <Typography.Text type="danger">
-                      {errors.confirmNewPassword.message}
-                    </Typography.Text>
+                    <Typography.Text type="danger">{errors.confirmNewPassword.message}</Typography.Text>
                   )}
                 </div>
               </Col>
@@ -174,12 +142,7 @@ export const SetPassword: React.FC = () => {
       </Col>
       <Col span={12}>
         <Flex align="center" justify="center">
-          <Image
-            style={imageStyle}
-            src={PasswordImage}
-            placeholder="Set A Password"
-            preview={false}
-          />
+          <Image style={imageStyle} src={PasswordImage} placeholder="Set A Password" preview={false} />
         </Flex>
       </Col>
     </Row>

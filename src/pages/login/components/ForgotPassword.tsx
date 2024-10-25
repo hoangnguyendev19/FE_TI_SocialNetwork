@@ -1,23 +1,9 @@
 import { LeftOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Button,
-  Col,
-  Flex,
-  Image,
-  Input,
-  notification,
-  Row,
-  Typography,
-} from "antd";
+import { Button, Col, Flex, Image, Input, notification, Row, Typography } from "antd";
 import { authApi } from "api";
 import PasswordImage from "assets/images/img-password.png";
-import {
-  ErrorCode,
-  ErrorMessage,
-  ForgotPasswordRequest,
-  ROUTE,
-} from "constants";
+import { ErrorCode, ErrorMessage, ForgotPasswordRequest, ROUTE } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -80,42 +66,32 @@ export const ForgotPassword: React.FC = () => {
   return (
     <Row>
       <Col span={14}>
-        <Flex
-          justify="center"
-          vertical
-          style={{ height: "100%", width: "100%" }}
-        >
+        <Flex justify="center" vertical style={{ height: "100%", width: "100%" }}>
           <Typography.Link href={ROUTE.LOGIN}>
             <LeftOutlined /> Back to login
           </Typography.Link>
           <Typography.Title level={2}>Forgot your password?</Typography.Title>
-          <Typography.Paragraph
-            type="secondary"
-            style={{ marginBottom: "15px" }}
-          >
-            Don’t worry, happens to all of us. Enter your email below to recover
-            your password
+          <Typography.Paragraph type="secondary" style={{ marginBottom: "15px" }}>
+            Don’t worry, happens to all of us. Enter your email below to recover your password
           </Typography.Paragraph>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Typography.Title level={5}>Email</Typography.Title>
+            <Typography.Title level={5}>
+              Email<span style={{ color: "red" }}>*</span>
+            </Typography.Title>
             <Controller
               name="email"
               control={control}
               render={({ field }) => (
                 <Input
                   placeholder="Please type your email!"
-                  style={inputStyle}
+                  style={{ ...inputStyle, borderColor: errors.email ? "red" : "" }}
                   {...field}
                   aria-invalid={!!errors.email}
                 />
               )}
             />
             <div style={inputErrorStyle}>
-              {errors.email && (
-                <Typography.Text type="danger">
-                  {errors.email.message}
-                </Typography.Text>
-              )}
+              {errors.email && <Typography.Text type="danger">{errors.email.message}</Typography.Text>}
             </div>
 
             <Button
@@ -135,12 +111,7 @@ export const ForgotPassword: React.FC = () => {
       </Col>
       <Col span={10}>
         <Flex align="center" justify="end">
-          <Image
-            style={imageStyle}
-            src={PasswordImage}
-            placeholder="Forgot Password"
-            preview={false}
-          />
+          <Image style={imageStyle} src={PasswordImage} placeholder="Forgot Password" preview={false} />
         </Flex>
       </Col>
     </Row>
