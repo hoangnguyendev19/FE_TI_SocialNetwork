@@ -12,7 +12,7 @@ const axiosAuth = axios.create({
 const refreshToken = async () => {
   try {
     const refresh_token = getRefreshToken();
-    const response = await axios.post(import.meta.env.VITE_API_URL + "/api/v1/auth/refresh", {
+    const response = await axios.post(import.meta.env.VITE_API_URL + "/api/v1/auth/refresh-token", {
       refreshToken: refresh_token,
     });
     const { accessToken, refreshToken: newRefreshToken } = response.data;

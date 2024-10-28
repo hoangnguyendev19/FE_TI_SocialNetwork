@@ -1,6 +1,18 @@
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Input,
+  Modal,
+  Skeleton,
+  Spin,
+  Typography,
+  Upload,
+  UploadFile,
+  notification,
+} from "antd";
 import { postApi } from "api";
 import { Color, ErrorCode, ErrorMessage, PostResponse, QueryKey } from "constants";
 import { useProfile } from "hooks";
@@ -57,13 +69,6 @@ export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, s
   });
 
   const handleOk = async () => {
-    if (content.trim() === "") {
-      notification.error({
-        message: "Please fill in the content.",
-      });
-      return;
-    }
-
     mutation.mutate({ content, files });
   };
 
@@ -103,8 +108,14 @@ export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, s
       open={isModalOpen}
       onCancel={handleCancel}
       footer={[
-        <Button key="submit" type="primary" style={{ width: "100%" }} disabled={!content} onClick={handleOk}>
-          Save
+        <Button
+          key="submit"
+          type={mutation.isPending ? "default" : "primary"}
+          style={{ width: "100%" }}
+          disabled={(!content.trim() && fileList.length === 0) || mutation.isPending}
+          onClick={handleOk}
+        >
+          {mutation.isPending ? <Spin /> : "Save"}
         </Button>,
       ]}
       style={{ top: 30 }}
@@ -156,7 +167,9 @@ export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, s
         >
           {fileList.length < 6 && <UploadOutlined />}
         </Upload>
-        <Post {...parentPost} />
+        <div style={{ marginTop: "20px" }}>
+          <Post {...parentPost} />
+        </div>
       </div>
     </Modal>
   );
