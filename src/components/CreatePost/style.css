@@ -8,6 +8,11 @@
 .custom-upload-list .ant-upload-list {
     flex-direction: column;
 }
+
+.custom-upload-list .ant-upload-list-item-container {
+    width: 100% !important;
+    height: 100% !important;
+}
   
 .custom-upload-list .ant-upload-list .ant-upload-list-item-container .ant-upload-list-item .ant-upload-list-item-thumbnail .ant-upload-list-item-image {
     height: 270px;

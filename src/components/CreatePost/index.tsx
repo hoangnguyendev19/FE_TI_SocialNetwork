@@ -65,13 +65,6 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
   });
 
   const handleOk = async () => {
-    if (content.trim() === "") {
-      notification.error({
-        message: "Please fill in the content.",
-      });
-      return;
-    }
-
     mutation.mutate({ content, files });
   };
 
@@ -168,6 +161,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ isModalOpen, setIsModalO
           beforeUpload={() => false}
           onPreview={() => null}
           className={fileList.length <= 1 ? "custom-upload-list" : ""}
+          accept="image/*, video/*"
         >
           {fileList.length < 6 && <UploadOutlined />}
         </Upload>
