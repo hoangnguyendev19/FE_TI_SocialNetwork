@@ -7,7 +7,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, notification, Typography } from "antd";
+import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, notification, Row, Space, Typography } from "antd";
 import { favouriteApi } from "api/favouriteApi";
 import { Color, ErrorCode, ErrorMessage, PostResponse, QueryKey } from "constants";
 import React, { useState } from "react";
@@ -183,22 +183,28 @@ export const Post: React.FC<PostResponse> = (props) => {
         </Typography.Paragraph>
       </Col>
 
-      <Col span="24" style={{ maxHeight: "450px", overflowY: "auto" }}>
-        {mediaList.map((media) => (
-          <div key={media.id} style={{ margin: "15px 0" }}>
-            {media.type === "IMAGE" ? (
-              <Image.PreviewGroup
-                preview={{
-                  onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-                }}
-              >
-                <Image key={media.id} width="100%" height="350px" src={media.url} />
-              </Image.PreviewGroup>
-            ) : (
-              <ReactPlayer controls width="100%" height="350px" key={media.id} url={media.url} />
-            )}
-          </div>
-        ))}
+      <Col span="24">
+        <Row gutter={[15, 15]} style={{ marginBottom: "15px" }}>
+          {mediaList.map((media) => (
+            <Col
+              className="gutter-row"
+              span={mediaList.length === 1 ? 24 : mediaList.length === 2 ? 12 : mediaList.length === 3 ? 8 : 6}
+              key={media.id}
+            >
+              {media.type === "IMAGE" ? (
+                <Image.PreviewGroup
+                  preview={{
+                    onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
+                  }}
+                >
+                  <Image key={media.id} src={media.url} />
+                </Image.PreviewGroup>
+              ) : (
+                <ReactPlayer controls key={media.id} url={media.url} />
+              )}
+            </Col>
+          ))}
+        </Row>
       </Col>
 
       <Col span="24" style={{ paddingBottom: "15px" }}>
