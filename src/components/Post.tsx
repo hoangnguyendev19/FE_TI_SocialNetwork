@@ -7,19 +7,19 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, notification, Row, Space, Typography } from "antd";
+import { Avatar, Button, Col, Dropdown, Flex, Image, MenuProps, notification, Row, Typography } from "antd";
 import { favouriteApi } from "api/favouriteApi";
 import { Color, ErrorCode, ErrorMessage, PostResponse, QueryKey } from "constants";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { convertToRelativeTime } from "utils";
-import { DeletePost } from "./DeletePost";
-import { UpdatePost } from "./UpdatePost";
-import { FavouritePost } from "./FavouritePost";
-import { SharePost } from "./SharePost";
-import { ReportPost } from "./ReportPost";
-import { CreateSharePost } from "./CreateSharePost";
 import { CommentPost } from "./CommentPost";
+import { CreateSharePost } from "./CreateSharePost";
+import { DeletePost } from "./DeletePost";
+import { FavouritePost } from "./FavouritePost";
+import { ReportPost } from "./ReportPost";
+import { SharePost } from "./SharePost";
+import { UpdatePost } from "./UpdatePost";
 
 export const Post: React.FC<PostResponse> = (props) => {
   const {
