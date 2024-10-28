@@ -258,6 +258,7 @@ export const Post: React.FC<PostResponse> = (props) => {
         id={id}
         text={content}
         mediaList={mediaList}
+        parentPost={parentPost}
       />
 
       <FavouritePost isModalOpen={isFavouriteModalOpen} setIsModalOpen={setIsFavouriteModalOpen} postId={id} />

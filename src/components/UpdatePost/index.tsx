@@ -1,13 +1,26 @@
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Divider, Input, Modal, Skeleton, Typography, Upload, UploadFile, notification } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Input,
+  Modal,
+  Skeleton,
+  Spin,
+  Typography,
+  Upload,
+  UploadFile,
+  notification,
+} from "antd";
 import { postApi } from "api";
-import { Color, ErrorCode, ErrorMessage, MediaResponse, QueryKey } from "constants";
+import { Color, ErrorCode, ErrorMessage, MediaResponse, PostResponse, QueryKey } from "constants";
 import { useProfile } from "hooks";
 import { useState } from "react";
 import { inputErrorStyle } from "styles";
 import { convertToBase64 } from "utils";
 import "./style.css";
+import { Post } from "components/Post";
 
 interface UpdatePostProps {
   isModalOpen: boolean;
@@ -15,9 +28,17 @@ interface UpdatePostProps {
   id: string;
   text: string;
   mediaList: Array<MediaResponse>;
+  parentPost: PostResponse | null;
 }
 
-export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalOpen, id, text, mediaList }) => {
+export const UpdatePost: React.FC<UpdatePostProps> = ({
+  isModalOpen,
+  setIsModalOpen,
+  id,
+  text,
+  mediaList,
+  parentPost,
+}) => {
   const [fileList, setFileList] = useState<UploadFile[]>(
     mediaList.map((media) => ({
       uid: media.id,
@@ -54,7 +75,10 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
     }) => postApi.updatePost(postId, content, files, deleteFileIds),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.POST] });
-      handleCancel();
+      setFileList([]);
+      setFiles([]);
+      setContent("");
+      setIsModalOpen(false);
       notification.success({
         message: "Post updated successfully.",
       });
@@ -82,13 +106,6 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
   });
 
   const handleOk = async () => {
-    if (content.trim() === "") {
-      notification.error({
-        message: "Please fill in the content.",
-      });
-      return;
-    }
-
     mutation.mutate({ postId: id, content, files, deleteFileIds });
   };
 
@@ -120,6 +137,7 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
     setFileList([]);
     setFiles([]);
     setContent("");
+    queryClient.resetQueries({ queryKey: [QueryKey.POST] });
     setIsModalOpen(false);
   };
 
@@ -128,8 +146,14 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
       open={isModalOpen}
       onCancel={handleCancel}
       footer={[
-        <Button key="submit" type="primary" style={{ width: "100%" }} disabled={!content} onClick={handleOk}>
-          Save
+        <Button
+          key="submit"
+          type={mutation.isPending ? "default" : "primary"}
+          style={{ width: "100%" }}
+          disabled={(!content.trim() && fileList.length === 0) || mutation.isPending}
+          onClick={handleOk}
+        >
+          {mutation.isPending ? <Spin /> : "Save"}
         </Button>,
       ]}
       style={{ top: 30 }}
@@ -170,18 +194,24 @@ export const UpdatePost: React.FC<UpdatePostProps> = ({ isModalOpen, setIsModalO
         </>
       )}
 
-      <div style={{ maxHeight: "330px", overflowY: "auto", marginTop: "20px" }}>
+      <div style={{ marginTop: "20px" }}>
         <Upload
           listType="picture-card"
           fileList={fileList}
           onChange={handleUploadChange}
           beforeUpload={() => false}
-          className="custom-upload-list"
+          onPreview={() => null}
+          className={fileList.length <= 1 ? "custom-upload-list" : ""}
           accept="image/*, video/*"
           onRemove={(file) => setDeleteFileIds([...deleteFileIds, file.uid])}
         >
-          {fileList.length < 5 && <UploadOutlined />}
+          {fileList.length < 6 && <UploadOutlined />}
         </Upload>
+        {parentPost && (
+          <div style={{ marginTop: "20px" }}>
+            <Post {...parentPost} />
+          </div>
+        )}
       </div>
     </Modal>
   );

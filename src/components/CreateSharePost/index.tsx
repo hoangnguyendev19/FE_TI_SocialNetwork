@@ -157,13 +157,15 @@ export const CreateSharePost: React.FC<CreateSharePostProps> = ({ isModalOpen, s
 
       <div style={inputErrorStyle}>{error && <Typography.Text type="danger">{error}</Typography.Text>}</div>
 
-      <div style={{ maxHeight: "330px", overflowY: "auto", marginTop: "20px" }}>
+      <div style={{ marginTop: "20px" }}>
         <Upload
           listType="picture-card"
           fileList={fileList}
           onChange={handleUploadChange}
           beforeUpload={() => false}
-          className="custom-upload-list"
+          onPreview={() => null}
+          className={fileList.length <= 1 ? "custom-upload-list" : ""}
+          accept="image/*, video/*"
         >
           {fileList.length < 6 && <UploadOutlined />}
         </Upload>
