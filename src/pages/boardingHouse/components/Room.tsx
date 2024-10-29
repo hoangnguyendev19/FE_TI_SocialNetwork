@@ -20,10 +20,12 @@ import { useRoom } from "hooks";
 import { Color, RoomResponse } from "constants";
 import { SkeletonRoomItem } from "./SkeletonRoomItem";
 import { Settings } from "./Settings";
+import { AddNewRoom } from "./AddNewRoom";
 
 export const Room: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSettingsModal, setIsSettingsModal] = useState(false);
+  const [isAddNewRoomModal, setIsAddNewRoomModal] = useState(false);
 
   const { data: boardingHouse } = useBoardingHouse({ enabled: false });
 
@@ -84,7 +86,7 @@ export const Room: React.FC = () => {
               onClick={() => setIsSettingsModal(true)}
             />
           </Space>
-          <Button type="primary" icon={<PlusOutlined />} />
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsAddNewRoomModal(true)} />
         </div>
       </Col>
 
@@ -167,6 +169,7 @@ export const Room: React.FC = () => {
       </Col>
 
       <Settings isModalOpen={isSettingsModal} setIsModalOpen={setIsSettingsModal} id={boardingHouse?.id} />
+      <AddNewRoom isModalOpen={isAddNewRoomModal} setIsModalOpen={setIsAddNewRoomModal} id={boardingHouse?.id} />
     </Row>
   );
 };

@@ -68,3 +68,11 @@ export interface SettingsRequest {
   electricityBill: number;
   waterBill: number;
 }
+
+export interface RoomRequest {
+  boardingHouseId: string;
+  roomName: string;
+  roomStatus: string;
+  electricityMeterOldNumber: number;
+  waterMeterOldNumber: number;
+}
