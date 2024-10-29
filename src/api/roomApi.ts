@@ -10,4 +10,8 @@ export const roomApi = {
       totalPages: response.data.totalPages,
     };
   },
+  createRoom: async (data: any): Promise<any> => {
+    const response = await axiosAuth.post("/room", data);
+    return response.data;
+  },
 };
