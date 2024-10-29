@@ -1,9 +1,11 @@
 import { DollarOutlined, EllipsisOutlined, UsergroupAddOutlined } from "@ant-design/icons";
-import { Col, Flex, Image, Typography } from "antd";
+import { Col, Dropdown, Flex, Image, MenuProps, Typography } from "antd";
 import PaperIcon from "assets/images/img-icon-paper.png";
 import PlugIcon from "assets/images/img-icon-plug.png";
 import WaterIcon from "assets/images/img-icon-water.png";
 import { Color, RoomResponse } from "constants";
+import { useState } from "react";
+import { ResetRoom } from "./ResetRoom";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -12,6 +14,21 @@ interface RoomItemProps {
 export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
   const { id, roomName, roomRate, roomStatus, electricityMeterOldNumber, waterMeterOldNumber, payment, createdAt } =
     room;
+
+  const [isResetRoomModal, setIsResetRoomModal] = useState(false);
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Reset",
+      key: "0",
+      onClick: () => {
+        setIsResetRoomModal(true);
+      },
+    },
+    {
+      type: "divider",
+    },
+  ];
 
   return (
     <Col
@@ -41,7 +58,13 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         >
           {roomStatus === "FULL_ROOM" ? "Full Room" : "Room Available"}
         </Typography.Text>
-        <EllipsisOutlined style={{ marginLeft: "auto", fontSize: "20px" }} />
+        <div style={{ marginLeft: "auto" }}>
+          <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight">
+            <a onClick={(e) => e.preventDefault()}>
+              <EllipsisOutlined style={{ color: "black", fontSize: "20px" }} />
+            </a>
+          </Dropdown>
+        </div>
       </Flex>
       <Typography.Text style={{ fontSize: "12px", color: "#000", marginTop: "5px" }}>
         Created At: <Typography.Text style={{ fontWeight: "bold" }}>{createdAt}</Typography.Text>
@@ -92,6 +115,8 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
           </Typography.Text>
         </Flex>
       </Flex>
+
+      <ResetRoom isModalOpen={isResetRoomModal} setIsModalOpen={setIsResetRoomModal} id={id} name={roomName} />
     </Col>
   );
 };
