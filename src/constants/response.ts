@@ -61,3 +61,21 @@ export interface CommentResponse {
   createdAt: string;
   lastModified: string;
 }
+
+export interface RoomResponse {
+  id: string;
+  boardingHouseId: string;
+  roomName: string;
+  roomRate: number;
+  roomStatus: string;
+  electricityMeterOldNumber: number;
+  waterMeterOldNumber: number;
+  payment: PaymentResponse;
+  createdAt: string;
+}
+
+export interface PaymentResponse {
+  id: string;
+  status: string;
+  totalAmount: number;
+}

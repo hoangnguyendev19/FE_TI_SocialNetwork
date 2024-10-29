@@ -5,3 +5,4 @@ export * from "./InputPost";
 export * from "./CreatePost";
 export * from "./UpdatePost";
 export * from "./SkeletonPost";
+export * from "./Loading";
