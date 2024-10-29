@@ -62,3 +62,9 @@ export interface BoardingHouseRequest {
   ward: string;
   city: string;
 }
+
+export interface SettingsRequest {
+  boardingHouseId: string;
+  electricityBill: number;
+  waterBill: number;
+}

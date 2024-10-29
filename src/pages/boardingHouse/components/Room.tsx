@@ -19,9 +19,11 @@ import { useBoardingHouse } from "hooks";
 import { useRoom } from "hooks";
 import { Color, RoomResponse } from "constants";
 import { SkeletonRoomItem } from "./SkeletonRoomItem";
+import { Settings } from "./Settings";
 
 export const Room: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSettingsModal, setIsSettingsModal] = useState(false);
 
   const { data: boardingHouse } = useBoardingHouse({ enabled: false });
 
@@ -79,6 +81,7 @@ export const Room: React.FC = () => {
               }}
               icon={<SettingFilled />}
               alt="Settings"
+              onClick={() => setIsSettingsModal(true)}
             />
           </Space>
           <Button type="primary" icon={<PlusOutlined />} />
@@ -162,6 +165,8 @@ export const Room: React.FC = () => {
           style={{ marginTop: "15px", textAlign: "center" }}
         />
       </Col>
+
+      <Settings isModalOpen={isSettingsModal} setIsModalOpen={setIsSettingsModal} id={boardingHouse?.id} />
     </Row>
   );
 };
