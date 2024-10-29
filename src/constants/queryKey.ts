@@ -4,4 +4,6 @@ export const QueryKey = {
   FAVOURITE: "favourite",
   SHARE: "share",
   COMMENT: "comment",
+  BOARDING_HOUSE: "boarding-house",
+  ROOM: "room",
 };

@@ -1,8 +1,19 @@
 import { Flex, Image, Space, Typography } from "antd";
 import { Color } from "constants";
 import UnderReviewImage from "assets/images/img-boarding-house-review.png";
+import { useBoardingHouse } from "hooks";
+import { useLocation } from "react-router-dom";
 
 export const UnderReview: React.FC = () => {
+  const location = useLocation();
+  const { data: boardingHouse } = useBoardingHouse({
+    enabled: false,
+  });
+
+  if (boardingHouse) {
+    location.pathname = "/boarding-house/room";
+  }
+
   return (
     <Flex style={{ width: "100%", height: "100%" }} align="center" justify="center">
       <Space direction="vertical" align="center">
