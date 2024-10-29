@@ -111,7 +111,7 @@ export const AddNewRoom: React.FC<AddNewRoomProps> = ({ isModalOpen, setIsModalO
               control={control}
               render={({ field }) => (
                 <Radio.Group {...field}>
-                  <Radio value="ROOM_AVAILABLE">Rooms Available</Radio>
+                  <Radio value="ROOM_AVAILABLE">Rooms Available</Radio>
                   <Radio value="FULL_ROOM">Full Room</Radio>
                 </Radio.Group>
               )}

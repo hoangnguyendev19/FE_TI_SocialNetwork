@@ -1,4 +1,4 @@
-import { PostQueryRequest } from "constants";
+import { PostQueryRequest, RoomRequest } from "constants";
 import axiosAuth from "./axiosAuth";
 
 export const roomApi = {
@@ -10,8 +10,12 @@ export const roomApi = {
       totalPages: response.data.totalPages,
     };
   },
-  createRoom: async (data: any): Promise<any> => {
+  createRoom: async (data: RoomRequest): Promise<any> => {
     const response = await axiosAuth.post("/room", data);
+    return response.data;
+  },
+  resetRoom: async (id: string): Promise<any> => {
+    const response = await axiosAuth.put(`/room/reset-room?roomId=${id}`);
     return response.data;
   },
 };
