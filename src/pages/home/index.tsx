@@ -1,4 +1,5 @@
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { Loading } from "components";
 import React from "react";
 
 const containerStyle = {
@@ -32,6 +33,6 @@ export const HomePage: React.FC = () => {
       {/* Add any child components like markers here */}
     </GoogleMap>
   ) : (
-    <div>Loading...</div>
+    <Loading />
   );
 };
