@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Divider, Input, Modal, notification, Typography } from "antd";
-import { roomApi } from "api/roomApi";
+import { roomApi } from "api";
 import { Color, QueryKey } from "constants";
 import React from "react";
 import { inputStyle } from "styles";

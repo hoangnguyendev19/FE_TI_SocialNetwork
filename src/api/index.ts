@@ -5,3 +5,4 @@ export * from "./commentApi";
 export * from "./boardingHouseApi";
 export * from "./favouriteApi";
 export * from "./favouriteCommentApi";
+export * from "./roomApi";
