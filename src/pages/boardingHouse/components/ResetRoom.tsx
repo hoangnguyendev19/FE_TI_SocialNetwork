@@ -54,7 +54,7 @@ export const ResetRoom: React.FC<ResetRoomProps> = ({ isModalOpen, setIsModalOpe
 
       <Typography.Title level={5}>Room Name</Typography.Title>
 
-      <Input style={{ ...inputStyle }} value={name} disabled />
+      <Input style={{ ...inputStyle, color: "#000" }} value={name} disabled />
 
       <div style={{ margin: "25px 0px" }}>
         <Typography.Text style={{ color: "red" }}>Are you sure you want to reset the data?</Typography.Text>

@@ -61,7 +61,7 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
 
       <div style={{ marginBottom: "15px" }}>
         <Typography.Title level={5}>Room name</Typography.Title>
-        <Input placeholder="Please type your room name!" style={{ ...inputStyle }} value={name} disabled />
+        <Input style={{ ...inputStyle, color: "#000" }} value={name} disabled />
       </div>
 
       <div>

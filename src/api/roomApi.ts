@@ -38,4 +38,16 @@ export const roomApi = {
     const response = await axiosAuth.post("/room/add-people", { roomId, people });
     return response.data;
   },
+  getDetail: async (id: string): Promise<any> => {
+    const response = await axiosAuth.get(`/room/detail/${id}`);
+    return response.data;
+  },
+  updatePeople: async (id: string, fullName: string, phoneNumber: string): Promise<any> => {
+    const response = await axiosAuth.put("/room/update-people", { id, fullName, phoneNumber });
+    return response.data;
+  },
+  deletePeople: async (id: string): Promise<any> => {
+    const response = await axiosAuth.delete(`/room/delete-people/${id}`);
+    return response.data;
+  },
 };

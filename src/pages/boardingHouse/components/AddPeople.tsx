@@ -104,7 +104,7 @@ export const AddPeople: React.FC<AddPeopleProps> = ({ isModalOpen, setIsModalOpe
 
       <div style={{ marginBottom: "15px" }}>
         <Typography.Title level={5}>Room Name</Typography.Title>
-        <Input style={inputStyle} value={name} disabled />
+        <Input style={{ ...inputStyle, color: "#000" }} value={name} disabled />
       </div>
 
       <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
