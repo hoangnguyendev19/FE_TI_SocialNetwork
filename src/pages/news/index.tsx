@@ -40,8 +40,8 @@ export const NewsPage: React.FC = () => {
   }, [hasNextPage, fetchNextPage]);
 
   return (
-    <Flex justify="center" dir="column" style={{ maxHeight: "100%", overflowY: "auto" }}>
-      <Col span={10}>
+    <Flex justify="center" dir="column" style={{ maxHeight: "100%", overflowY: "auto", paddingTop: "20px" }}>
+      <Col span={12}>
         <InputPost showModal={showModal} />
 
         {status === "pending" ? (

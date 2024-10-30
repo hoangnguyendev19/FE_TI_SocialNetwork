@@ -18,7 +18,7 @@ export const SkeletonPost: React.FC = () => {
       <Skeleton active paragraph={{ rows: 3 }} />
 
       <div style={{ padding: "15px 0" }}>
-        <Skeleton.Image style={{ width: "480px", height: "350px" }} />
+        <Skeleton.Image style={{ width: "600px", height: "350px" }} />
       </div>
 
       <Col span="24">
