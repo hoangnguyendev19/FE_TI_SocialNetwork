@@ -67,6 +67,7 @@ export interface RoomResponse {
   boardingHouseId: string;
   roomName: string;
   roomRate: number;
+  numberOfPeople: number;
   roomStatus: string;
   electricityMeterOldNumber: number;
   waterMeterOldNumber: number;
