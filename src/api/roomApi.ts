@@ -34,4 +34,8 @@ export const roomApi = {
     const response = await axiosAuth.delete(`/room/${id}`);
     return response.data;
   },
+  addPeople: async (roomId: string, people: Array<object>): Promise<any> => {
+    const response = await axiosAuth.post("/room/add-people", { roomId, people });
+    return response.data;
+  },
 };
