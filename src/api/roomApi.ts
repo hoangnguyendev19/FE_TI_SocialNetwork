@@ -22,4 +22,8 @@ export const roomApi = {
     const response = await axiosAuth.put("/room/status", { id, status });
     return response.data;
   },
+  updatePaymentStatus: async (id: string, status: string): Promise<any> => {
+    const response = await axiosAuth.put("/room/update-payment-status", { id, status });
+    return response.data;
+  },
 };

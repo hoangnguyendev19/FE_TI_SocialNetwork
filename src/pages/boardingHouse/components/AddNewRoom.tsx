@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Col, Divider, Input, Modal, notification, Radio, Row, Typography } from "antd";
-import { roomApi } from "api/roomApi";
+import { roomApi } from "api";
 import { Color, QueryKey, RoomRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";

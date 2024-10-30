@@ -5,37 +5,37 @@ import { Color, QueryKey } from "constants";
 import React from "react";
 import { inputStyle } from "styles";
 
-interface UpdateRoomStatusProps {
+interface UpdatePaymentStatusProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   id: string;
   name: string;
-  roomStatus: string;
+  paymentStatus: string;
 }
 
-export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
+export const UpdatePaymentStatus: React.FC<UpdatePaymentStatusProps> = ({
   isModalOpen,
   setIsModalOpen,
   id,
   name,
-  roomStatus,
+  paymentStatus,
 }) => {
-  const [status, setStatus] = React.useState(roomStatus);
+  const [status, setStatus] = React.useState(paymentStatus);
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => roomApi.updateRoomStatus(id, status),
+    mutationFn: () => roomApi.updatePaymentStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM] });
       setIsModalOpen(false);
       notification.success({
-        message: "Update room status successfully.",
+        message: "Update payment status successfully.",
       });
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
         default:
           notification.error({
-            message: "Failed to update room status.",
+            message: "Failed to update payment status.",
           });
           break;
       }
@@ -55,7 +55,7 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
   return (
     <Modal open={isModalOpen} onCancel={handleCancel} okText="Save" onOk={handleOk}>
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
-        Update Room Status
+        Update Payment Status
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
 
@@ -65,10 +65,10 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
       </div>
 
       <div>
-        <Typography.Title level={5}>Room status</Typography.Title>
+        <Typography.Title level={5}>Payment status</Typography.Title>
         <Radio.Group value={status} onChange={(e) => setStatus(e.target.value)}>
-          <Radio value="ROOM_AVAILABLE">Rooms Available</Radio>
-          <Radio value="FULL_ROOM">Full Room</Radio>
+          <Radio value="PAID">Paid</Radio>
+          <Radio value="UNPAID">Unpaid</Radio>
         </Radio.Group>
       </div>
     </Modal>

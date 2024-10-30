@@ -8,6 +8,7 @@ import { useState } from "react";
 import { ResetRoom } from "./ResetRoom";
 import dayjs from "dayjs";
 import { UpdateRoomStatus } from "./UpdateRoomStatus";
+import { UpdatePaymentStatus } from "./UpdatePaymentStatus";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -19,6 +20,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
 
   const [isResetRoomModal, setIsResetRoomModal] = useState(false);
   const [isUpdateRoomStatusModal, setIsUpdateRoomStatusModal] = useState(false);
+  const [isUpdatePaymentStatusModal, setIsUpdatePaymentStatusModal] = useState(false);
 
   const items: MenuProps["items"] = [
     {
@@ -36,6 +38,16 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       key: "1",
       onClick: () => {
         setIsUpdateRoomStatusModal(true);
+      },
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "Update Payment Status",
+      key: "2",
+      onClick: () => {
+        setIsUpdatePaymentStatusModal(true);
       },
     },
     {
@@ -137,6 +149,13 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         id={id}
         name={roomName}
         roomStatus={roomStatus}
+      />
+      <UpdatePaymentStatus
+        isModalOpen={isUpdatePaymentStatusModal}
+        setIsModalOpen={setIsUpdatePaymentStatusModal}
+        id={id}
+        name={roomName}
+        paymentStatus={payment?.status}
       />
     </Col>
   );
