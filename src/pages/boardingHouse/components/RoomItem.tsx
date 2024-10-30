@@ -18,8 +18,17 @@ interface RoomItemProps {
 }
 
 export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
-  const { id, roomName, roomRate, roomStatus, electricityMeterOldNumber, waterMeterOldNumber, payment, createdAt } =
-    room;
+  const {
+    id,
+    roomName,
+    roomRate,
+    numberOfPeople,
+    roomStatus,
+    electricityMeterOldNumber,
+    waterMeterOldNumber,
+    payment,
+    createdAt,
+  } = room;
 
   const [isResetRoomModal, setIsResetRoomModal] = useState(false);
   const [isUpdateRoomStatusModal, setIsUpdateRoomStatusModal] = useState(false);
@@ -134,7 +143,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       <Flex align="center" style={{ marginTop: "5px" }}>
         <UsergroupAddOutlined style={{ fontSize: "16px" }} />
         <Typography.Text style={{ fontSize: "12px", marginLeft: "5px", color: "#000" }}>
-          Number of people: <Typography.Text style={{ fontWeight: "bold" }}>3</Typography.Text>
+          Number of people: <Typography.Text style={{ fontWeight: "bold" }}>{numberOfPeople}</Typography.Text>
         </Typography.Text>
       </Flex>
       <Flex align="center" style={{ marginTop: "5px" }}>
@@ -189,7 +198,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       <UpdatePaymentStatus
         isModalOpen={isUpdatePaymentStatusModal}
         setIsModalOpen={setIsUpdatePaymentStatusModal}
-        id={id}
+        id={payment?.id}
         name={roomName}
         paymentStatus={payment?.status}
       />

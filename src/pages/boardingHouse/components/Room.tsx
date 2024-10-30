@@ -37,7 +37,7 @@ export const Room: React.FC = () => {
     {
       page: currentPage,
       size: 6,
-      sortField: "created_at",
+      sortField: "createdAt",
       sortBy: "DESC",
       filter: {
         boardingHouseId: boardingHouse?.id,
@@ -179,7 +179,7 @@ export const Room: React.FC = () => {
           </Row>
         </Col>
         <Pagination
-          total={data?.pages[0].page.totalPages || 10}
+          total={data?.pages[0].page.totalElements || 0}
           itemRender={itemRender}
           size="small"
           defaultPageSize={data?.pages[0].page.size || 6}
