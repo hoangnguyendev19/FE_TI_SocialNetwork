@@ -5,29 +5,29 @@ import { Color, QueryKey } from "constants";
 import React from "react";
 import { inputStyle } from "styles";
 
-interface ResetRoomProps {
+interface DeleteRoomProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   id: string;
   name: string;
 }
 
-export const ResetRoom: React.FC<ResetRoomProps> = ({ isModalOpen, setIsModalOpen, id, name }) => {
+export const DeleteRoom: React.FC<DeleteRoomProps> = ({ isModalOpen, setIsModalOpen, id, name }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => roomApi.resetRoom(id),
+    mutationFn: () => roomApi.deleteRoom(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM] });
       setIsModalOpen(false);
       notification.success({
-        message: "Reset room successfully.",
+        message: "Delete room successfully.",
       });
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
         default:
           notification.error({
-            message: "Failed to reset room.",
+            message: "Failed to delete room.",
           });
           break;
       }
@@ -43,12 +43,12 @@ export const ResetRoom: React.FC<ResetRoomProps> = ({ isModalOpen, setIsModalOpe
     <Modal
       open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
-      okText="Reset"
+      okText="Delete"
       onOk={handleOk}
       style={{ maxWidth: "600px", maxHeight: "600px" }}
     >
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
-        Reset Room
+        Delete Room
       </Typography.Title>
       <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
 
@@ -57,7 +57,7 @@ export const ResetRoom: React.FC<ResetRoomProps> = ({ isModalOpen, setIsModalOpe
       <Input style={{ ...inputStyle }} value={name} disabled />
 
       <div style={{ margin: "25px 0px" }}>
-        <Typography.Text style={{ color: "red" }}>Are you sure you want to reset the data?</Typography.Text>
+        <Typography.Text style={{ color: "red" }}>Are you sure you want to delete the data?</Typography.Text>
       </div>
     </Modal>
   );
