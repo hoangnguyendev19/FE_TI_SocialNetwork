@@ -1,4 +1,4 @@
-import { PostQueryRequest, RoomRequest } from "constants";
+import { PaymentRequest, PostQueryRequest, RoomRequest } from "constants";
 import axiosAuth from "./axiosAuth";
 
 export const roomApi = {
@@ -24,6 +24,10 @@ export const roomApi = {
   },
   updatePaymentStatus: async (id: string, status: string): Promise<any> => {
     const response = await axiosAuth.put("/room/update-payment-status", { id, status });
+    return response.data;
+  },
+  createPayment: async (data: PaymentRequest): Promise<any> => {
+    const response = await axiosAuth.post("/room/create-payment", data);
     return response.data;
   },
 };

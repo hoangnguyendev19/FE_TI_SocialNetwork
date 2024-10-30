@@ -48,7 +48,7 @@ export const UpdatePaymentStatus: React.FC<UpdatePaymentStatusProps> = ({
   };
 
   const handleCancel = () => {
-    queryClient.resetQueries({ queryKey: [QueryKey.ROOM] });
+    setStatus(paymentStatus);
     setIsModalOpen(false);
   };
 
