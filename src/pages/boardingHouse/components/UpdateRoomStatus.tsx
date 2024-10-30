@@ -48,7 +48,7 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
   };
 
   const handleCancel = () => {
-    queryClient.resetQueries({ queryKey: [QueryKey.ROOM] });
+    setStatus(roomStatus);
     setIsModalOpen(false);
   };
 

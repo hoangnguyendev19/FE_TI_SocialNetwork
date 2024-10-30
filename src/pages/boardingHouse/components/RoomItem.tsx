@@ -4,11 +4,12 @@ import PaperIcon from "assets/images/img-icon-paper.png";
 import PlugIcon from "assets/images/img-icon-plug.png";
 import WaterIcon from "assets/images/img-icon-water.png";
 import { Color, RoomResponse } from "constants";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { ResetRoom } from "./ResetRoom";
-import dayjs from "dayjs";
-import { UpdateRoomStatus } from "./UpdateRoomStatus";
 import { UpdatePaymentStatus } from "./UpdatePaymentStatus";
+import { UpdateRoomStatus } from "./UpdateRoomStatus";
+import { RoomInformation } from "./RoomInformation";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -21,6 +22,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
   const [isResetRoomModal, setIsResetRoomModal] = useState(false);
   const [isUpdateRoomStatusModal, setIsUpdateRoomStatusModal] = useState(false);
   const [isUpdatePaymentStatusModal, setIsUpdatePaymentStatusModal] = useState(false);
+  const [isRoomInformationModal, setIsRoomInformationModal] = useState(false);
 
   const items: MenuProps["items"] = [
     {
@@ -48,6 +50,16 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       key: "2",
       onClick: () => {
         setIsUpdatePaymentStatusModal(true);
+      },
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "Room Information",
+      key: "3",
+      onClick: () => {
+        setIsRoomInformationModal(true);
       },
     },
     {
@@ -156,6 +168,15 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         id={id}
         name={roomName}
         paymentStatus={payment?.status}
+      />
+      <RoomInformation
+        isModalOpen={isRoomInformationModal}
+        setIsModalOpen={setIsRoomInformationModal}
+        id={id}
+        name={roomName}
+        roomRate={roomRate}
+        electricityMeterOldNumber={electricityMeterOldNumber}
+        waterMeterOldNumber={waterMeterOldNumber}
       />
     </Col>
   );

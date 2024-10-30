@@ -76,3 +76,10 @@ export interface RoomRequest {
   electricityMeterOldNumber: number;
   waterMeterOldNumber: number;
 }
+
+export interface PaymentRequest {
+  roomId: string;
+  roomRate: number;
+  waterMeterNewNumber: number;
+  electricityMeterNewNumber: number;
+}

@@ -82,7 +82,7 @@ export const AddNewRoom: React.FC<AddNewRoomProps> = ({ isModalOpen, setIsModalO
         </Typography.Title>
         <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
 
-        <Row gutter={[0, 5]}>
+        <Row gutter={[0, 10]} style={{ paddingTop: "10px", paddingBottom: "20px" }}>
           <Col className="gutter-row" span={24}>
             <Typography.Title level={5}>
               Room Name<span style={{ color: "red" }}>*</span>
