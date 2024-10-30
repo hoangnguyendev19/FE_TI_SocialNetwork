@@ -30,4 +30,8 @@ export const roomApi = {
     const response = await axiosAuth.post("/room/create-payment", data);
     return response.data;
   },
+  deleteRoom: async (id: string): Promise<any> => {
+    const response = await axiosAuth.delete(`/room/${id}`);
+    return response.data;
+  },
 };

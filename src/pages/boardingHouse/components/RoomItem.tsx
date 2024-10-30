@@ -10,6 +10,7 @@ import { ResetRoom } from "./ResetRoom";
 import { UpdatePaymentStatus } from "./UpdatePaymentStatus";
 import { UpdateRoomStatus } from "./UpdateRoomStatus";
 import { RoomInformation } from "./RoomInformation";
+import { DeleteRoom } from "./DeleteRoom";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -23,6 +24,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
   const [isUpdateRoomStatusModal, setIsUpdateRoomStatusModal] = useState(false);
   const [isUpdatePaymentStatusModal, setIsUpdatePaymentStatusModal] = useState(false);
   const [isRoomInformationModal, setIsRoomInformationModal] = useState(false);
+  const [isDeleteRoomModal, setIsDeleteRoomModal] = useState(false);
 
   const items: MenuProps["items"] = [
     {
@@ -60,6 +62,16 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       key: "3",
       onClick: () => {
         setIsRoomInformationModal(true);
+      },
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "Delete",
+      key: "4",
+      onClick: () => {
+        setIsDeleteRoomModal(true);
       },
     },
     {
@@ -178,6 +190,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         electricityMeterOldNumber={electricityMeterOldNumber}
         waterMeterOldNumber={waterMeterOldNumber}
       />
+      <DeleteRoom isModalOpen={isDeleteRoomModal} setIsModalOpen={setIsDeleteRoomModal} id={id} name={roomName} />
     </Col>
   );
 };
