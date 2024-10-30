@@ -18,4 +18,8 @@ export const roomApi = {
     const response = await axiosAuth.put(`/room/reset-room?roomId=${id}`);
     return response.data;
   },
+  updateRoomStatus: async (id: string, status: string): Promise<any> => {
+    const response = await axiosAuth.put("/room/status", { id, status });
+    return response.data;
+  },
 };
