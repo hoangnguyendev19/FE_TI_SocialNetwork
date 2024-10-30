@@ -12,6 +12,7 @@ import { UpdateRoomStatus } from "./UpdateRoomStatus";
 import { RoomInformation } from "./RoomInformation";
 import { DeleteRoom } from "./DeleteRoom";
 import { AddPeople } from "./AddPeople";
+import { RoomDetail } from "./RoomDetail";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -36,6 +37,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
   const [isRoomInformationModal, setIsRoomInformationModal] = useState(false);
   const [isDeleteRoomModal, setIsDeleteRoomModal] = useState(false);
   const [isAddPeopleModal, setIsAddPeopleModal] = useState(false);
+  const [isRoomDetailModal, setIsRoomDetailModal] = useState(false);
 
   const items: MenuProps["items"] = [
     {
@@ -97,6 +99,13 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
     },
     {
       type: "divider",
+    },
+    {
+      label: "Room Detail",
+      key: "6",
+      onClick: () => {
+        setIsRoomDetailModal(true);
+      },
     },
   ];
 
@@ -213,6 +222,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       />
       <DeleteRoom isModalOpen={isDeleteRoomModal} setIsModalOpen={setIsDeleteRoomModal} id={id} name={roomName} />
       <AddPeople isModalOpen={isAddPeopleModal} setIsModalOpen={setIsAddPeopleModal} id={id} name={roomName} />
+      <RoomDetail isModalOpen={isRoomDetailModal} setIsModalOpen={setIsRoomDetailModal} id={id} />
     </Col>
   );
 };

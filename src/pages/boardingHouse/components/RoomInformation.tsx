@@ -94,8 +94,7 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
         <Row gutter={[0, 10]} style={{ paddingTop: "10px", paddingBottom: "20px" }}>
           <Col className="gutter-row" span={24}>
             <Typography.Title level={5}>Room Name</Typography.Title>
-
-            <Input style={{ ...inputStyle }} value={name} disabled />
+            <Input style={{ ...inputStyle, color: "#000" }} value={name} disabled />
           </Col>
           <Col className="gutter-row" span={24}>
             <Typography.Title level={5}>
@@ -121,7 +120,12 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
             <Row gutter={[15, 10]}>
               <Col className="gutter-row" span={12}>
                 <Typography.Title level={5}>Electricity meter old number</Typography.Title>
-                <Input type="number" style={{ ...inputStyle }} value={electricityMeterOldNumber} disabled />
+                <Input
+                  type="number"
+                  style={{ ...inputStyle, color: "#000" }}
+                  value={electricityMeterOldNumber}
+                  disabled
+                />
               </Col>
               <Col className="gutter-row" span={12}>
                 <Typography.Title level={5}>
@@ -149,7 +153,7 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
               </Col>
               <Col className="gutter-row" span={12}>
                 <Typography.Title level={5}>Water meter old number</Typography.Title>
-                <Input type="number" style={{ ...inputStyle }} value={waterMeterOldNumber} disabled />
+                <Input type="number" style={{ ...inputStyle, color: "#000" }} value={waterMeterOldNumber} disabled />
               </Col>
               <Col className="gutter-row" span={12}>
                 <Typography.Title level={5}>
