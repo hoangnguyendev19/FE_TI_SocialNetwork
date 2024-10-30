@@ -1,6 +1,15 @@
 import { App } from "app";
 import { ROUTE } from "constants";
-import { BoardingHousePage, HomePage, LoginPage, NewsPage, NotFoundPage, SettingsPage, SignupPage } from "pages";
+import {
+  BoardingHousePage,
+  HomePage,
+  LoginPage,
+  NewsPage,
+  NotFoundPage,
+  ProfilePage,
+  SettingsPage,
+  SignupPage,
+} from "pages";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -33,6 +42,10 @@ export const router = createBrowserRouter([
             element: <BoardingHousePage />,
           },
         ],
+      },
+      {
+        path: ROUTE.PROFILE,
+        element: <ProfilePage />,
       },
     ],
   },

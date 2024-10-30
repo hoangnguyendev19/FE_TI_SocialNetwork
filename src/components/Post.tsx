@@ -191,17 +191,19 @@ export const Post: React.FC<PostResponse> = (props) => {
               span={mediaList.length === 1 ? 24 : mediaList.length === 2 ? 12 : mediaList.length === 3 ? 8 : 6}
               key={media.id}
             >
-              {media.type === "IMAGE" ? (
-                <Image.PreviewGroup
-                  preview={{
-                    onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-                  }}
-                >
-                  <Image key={media.id} src={media.url} />
-                </Image.PreviewGroup>
-              ) : (
-                <ReactPlayer controls key={media.id} url={media.url} />
-              )}
+              <Flex justify="center" align="center">
+                {media.type === "IMAGE" ? (
+                  <Image.PreviewGroup
+                    preview={{
+                      onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
+                    }}
+                  >
+                    <Image key={media.id} src={media.url} width="100%" height="100%" style={{ objectFit: "cover" }} />
+                  </Image.PreviewGroup>
+                ) : (
+                  <ReactPlayer controls key={media.id} url={media.url} width="100%" />
+                )}
+              </Flex>
             </Col>
           ))}
         </Row>

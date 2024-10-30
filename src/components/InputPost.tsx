@@ -24,7 +24,7 @@ export const InputPost: React.FC<InputPostProps> = ({ showModal }) => {
           style={{ marginRight: "5px", marginLeft: "10px" }}
         />
       }
-      style={{ width: "100%", border: "1px solid rgba(0,0,0,0.2)", margin: "20px 0" }}
+      style={{ width: "100%", border: "1px solid rgba(0,0,0,0.2)", marginBottom: "20px" }}
       onClick={showModal}
     />
   );
