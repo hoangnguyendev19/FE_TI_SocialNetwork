@@ -6,6 +6,7 @@ import WaterIcon from "assets/images/img-icon-water.png";
 import { Color, RoomResponse } from "constants";
 import { useState } from "react";
 import { ResetRoom } from "./ResetRoom";
+import dayjs from "dayjs";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -48,8 +49,8 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         <Typography.Text
           style={{
             fontSize: "12px",
-            color: "#00B884",
-            backgroundColor: Color.ACCENT_ONE,
+            color: roomStatus === "FULL_ROOM" ? "#00B884" : "#FD71AF",
+            backgroundColor: roomStatus === "FULL_ROOM" ? Color.ACCENT_ONE : Color.ACCENT_TWO,
             padding: "5px 10px",
             borderRadius: "15px",
             marginLeft: "5px",
@@ -67,7 +68,8 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         </div>
       </Flex>
       <Typography.Text style={{ fontSize: "12px", color: "#000", marginTop: "5px" }}>
-        Created At: <Typography.Text style={{ fontWeight: "bold" }}>{createdAt}</Typography.Text>
+        Created At:{" "}
+        <Typography.Text style={{ fontWeight: "bold" }}>{dayjs(createdAt).format("YYYY-MM-DD")}</Typography.Text>
       </Typography.Text>
       <Flex align="center" style={{ marginTop: "5px" }}>
         <UsergroupAddOutlined style={{ fontSize: "16px" }} />
@@ -98,8 +100,8 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         <Typography.Text
           style={{
             fontSize: "12px",
-            color: "#FD71AF",
-            backgroundColor: Color.ACCENT_TWO,
+            color: payment?.status === "PAID" ? "#00B884" : "#FD71AF",
+            backgroundColor: payment?.status === "PAID" ? Color.ACCENT_ONE : Color.ACCENT_TWO,
             padding: "5px 10px",
             borderRadius: "15px",
             marginLeft: "5px",
