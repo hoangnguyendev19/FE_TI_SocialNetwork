@@ -48,13 +48,7 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
   };
 
   return (
-    <Modal
-      open={isModalOpen}
-      onCancel={() => setIsModalOpen(false)}
-      okText="Reset"
-      onOk={handleOk}
-      style={{ maxWidth: "600px", maxHeight: "600px" }}
-    >
+    <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} okText="Save" onOk={handleOk}>
       <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
         Update Room Status
       </Typography.Title>

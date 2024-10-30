@@ -7,6 +7,7 @@ import { Color, RoomResponse } from "constants";
 import { useState } from "react";
 import { ResetRoom } from "./ResetRoom";
 import dayjs from "dayjs";
+import { UpdateRoomStatus } from "./UpdateRoomStatus";
 
 interface RoomItemProps {
   room: RoomResponse;
@@ -17,6 +18,7 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
     room;
 
   const [isResetRoomModal, setIsResetRoomModal] = useState(false);
+  const [isUpdateRoomStatusModal, setIsUpdateRoomStatusModal] = useState(false);
 
   const items: MenuProps["items"] = [
     {
@@ -24,6 +26,16 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       key: "0",
       onClick: () => {
         setIsResetRoomModal(true);
+      },
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "Update Room Status",
+      key: "1",
+      onClick: () => {
+        setIsUpdateRoomStatusModal(true);
       },
     },
     {
@@ -119,6 +131,13 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
       </Flex>
 
       <ResetRoom isModalOpen={isResetRoomModal} setIsModalOpen={setIsResetRoomModal} id={id} name={roomName} />
+      <UpdateRoomStatus
+        isModalOpen={isUpdateRoomStatusModal}
+        setIsModalOpen={setIsUpdateRoomStatusModal}
+        id={id}
+        name={roomName}
+        roomStatus={roomStatus}
+      />
     </Col>
   );
 };
