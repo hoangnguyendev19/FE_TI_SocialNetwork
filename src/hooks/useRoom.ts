@@ -14,7 +14,7 @@ export const useRoom = (
         ...postQueryRequest,
         page: postQueryRequest?.page ?? 1,
         size: postQueryRequest?.size ?? 6,
-        sortField: postQueryRequest?.sortField ?? "createdAt",
+        sortField: postQueryRequest?.sortField ?? "created_at",
         sortBy: postQueryRequest?.sortBy ?? "DESC",
         filter: postQueryRequest?.filter ?? {},
       });
