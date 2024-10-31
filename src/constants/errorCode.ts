@@ -39,4 +39,7 @@ export const ErrorCode = {
 
   // Like comment error
   Like_DOES_NOT_EXIST: "like-does-not-exist",
+
+  // Add new room error
+  ROOM_SETTING_NOT_FOUND: "room-setting-not-found",
 };
