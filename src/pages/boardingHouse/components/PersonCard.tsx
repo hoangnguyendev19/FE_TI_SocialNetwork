@@ -39,7 +39,6 @@ export const PersonCard: React.FC<PersonCardProps> = ({
           <Typography.Title level={5}>Phone Number</Typography.Title>
           <Input
             style={inputStyle}
-            type="number"
             placeholder="Please type your phone number!"
             value={phoneNumber}
             onChange={(e) => handlePersonChange(id, "phoneNumber", e.target.value)}

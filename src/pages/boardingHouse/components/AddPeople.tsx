@@ -63,6 +63,15 @@ export const AddPeople: React.FC<AddPeopleProps> = ({ isModalOpen, setIsModalOpe
       return;
     }
 
+    // check if phone number have 10 digits
+    const hasInvalidPhoneNumber = people.some((person) => person.phoneNumber.length !== 10);
+    if (hasInvalidPhoneNumber) {
+      notification.error({
+        message: "Phone number must have 10 digits.",
+      });
+      return;
+    }
+
     // check if there is a duplicate phone number
     const phoneNumbers = people.map((person) => person.phoneNumber);
     const hasDuplicatePhoneNumber = new Set(phoneNumbers).size !== phoneNumbers.length;
