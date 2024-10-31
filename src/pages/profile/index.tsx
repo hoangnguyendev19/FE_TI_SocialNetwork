@@ -103,7 +103,7 @@ export const ProfilePage: React.FC = () => {
               <Space>
                 <EnvironmentOutlined style={{ color: Color.SECONDARY }} />
                 <Typography.Text>
-                  {res?.data?.presentAddress ? res?.data?.presentAddress : "Không timg thấy địa chỉ"}
+                  {res?.data?.presentAddress ? res?.data?.presentAddress : "Không tìm thấy địa chỉ"}
                 </Typography.Text>
               </Space>
               <Row gutter={[5, 5]} style={{ borderRadius: "15px", overflow: "hidden", marginTop: "20px" }}>
@@ -126,7 +126,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography.Text type="danger">Failed to fetch posts.</Typography.Text>
                 ) : (
                   data?.pages.map((page: any) =>
-                    page.content.map((post: PostResponse) => <Post key={post.id} {...post} />),
+                    page.content.map((post: PostResponse) => post.owner && <Post key={post.id} {...post} />),
                   )
                 )}
 
