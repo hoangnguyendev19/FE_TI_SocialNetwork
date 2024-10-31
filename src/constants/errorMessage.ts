@@ -36,4 +36,7 @@ export const ErrorMessage = {
 
   // Create boarding house error
   BOARDING_NAME_ALREADY_EXISTS: "Boarding name already exists",
+
+  // Add new room error
+  ROOM_SETTING_NOT_FOUND: "Room setting not found",
 };

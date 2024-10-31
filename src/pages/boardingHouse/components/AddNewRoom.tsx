@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Col, Divider, Input, Modal, notification, Radio, Row, Typography } from "antd";
 import { roomApi } from "api";
-import { Color, QueryKey, RoomRequest } from "constants";
+import { Color, ErrorCode, ErrorMessage, QueryKey, RoomRequest } from "constants";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { inputErrorStyle, inputStyle } from "styles";
@@ -27,6 +27,12 @@ export const AddNewRoom: React.FC<AddNewRoomProps> = ({ isModalOpen, setIsModalO
     },
     onError: (error: any) => {
       switch (error?.response?.data?.message) {
+        case ErrorCode.ROOM_SETTING_NOT_FOUND:
+          notification.error({
+            message: ErrorMessage.ROOM_SETTING_NOT_FOUND,
+          });
+          break;
+
         default:
           notification.error({
             message: "Failed to add new room.",
