@@ -42,8 +42,8 @@ export const roomApi = {
     const response = await axiosAuth.get(`/room/detail/${id}`);
     return response.data;
   },
-  updatePeople: async (id: string, fullName: string, phoneNumber: string): Promise<any> => {
-    const response = await axiosAuth.put("/room/update-people", { id, fullName, phoneNumber });
+  updatePeople: async (roomUserId: string, fullName: string, phoneNumber: string): Promise<any> => {
+    const response = await axiosAuth.put("/room/update-people", { roomUserId, fullName, phoneNumber });
     return response.data;
   },
   deletePeople: async (id: string): Promise<any> => {

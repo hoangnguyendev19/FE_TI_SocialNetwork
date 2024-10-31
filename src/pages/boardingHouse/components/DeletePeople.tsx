@@ -10,6 +10,7 @@ interface DeletePeopleProps {
   setIsModalOpen: (isOpen: boolean) => void;
   id: string;
   name: string;
+  roomUserId: string;
   fullName: string;
   phoneNumber: string;
 }
@@ -19,14 +20,15 @@ export const DeletePeople: React.FC<DeletePeopleProps> = ({
   setIsModalOpen,
   id,
   name,
+  roomUserId,
   fullName,
   phoneNumber,
 }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => roomApi.deletePeople(id),
+    mutationFn: () => roomApi.deletePeople(roomUserId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM, id] });
       handleCancel();
       notification.success({
         message: "Delete people successfully.",

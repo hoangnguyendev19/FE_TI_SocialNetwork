@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, Divider, Input, Modal, Space, Typography, notification } from "antd";
 import { roomApi } from "api";
 import { Color, QueryKey } from "constants";
-import React, { useState } from "react";
+import React from "react";
 import { inputStyle } from "styles";
 
 interface UpdatePeopleProps {
@@ -10,8 +10,11 @@ interface UpdatePeopleProps {
   setIsModalOpen: (isOpen: boolean) => void;
   id: string;
   name: string;
+  roomUserId: string;
   fullName: string;
+  setFullName: (fullName: string) => void;
   phoneNumber: string;
+  setPhoneNumber: (phoneNumber: string) => void;
 }
 
 export const UpdatePeople: React.FC<UpdatePeopleProps> = ({
@@ -19,17 +22,17 @@ export const UpdatePeople: React.FC<UpdatePeopleProps> = ({
   setIsModalOpen,
   id,
   name,
+  roomUserId,
   fullName,
+  setFullName,
   phoneNumber,
+  setPhoneNumber,
 }) => {
-  const [inputFullName, setFullName] = useState(fullName);
-  const [inputPhoneNumber, setPhoneNumber] = useState(phoneNumber);
-
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => roomApi.updatePeople(id, inputFullName, inputPhoneNumber),
+    mutationFn: () => roomApi.updatePeople(roomUserId, fullName, phoneNumber),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM, id] });
       handleCancel();
       notification.success({
         message: "Update people successfully.",
@@ -48,10 +51,29 @@ export const UpdatePeople: React.FC<UpdatePeopleProps> = ({
   });
 
   const handleOk = () => {
+    // check if there is a person with empty full name or phone number
+    const hasEmptyPerson = fullName === "" || phoneNumber === "";
+    if (hasEmptyPerson) {
+      notification.error({
+        message: "Please fill in all fields.",
+      });
+      return;
+    }
+
+    // check if phone number have 10 digits
+    if (phoneNumber.length !== 10) {
+      notification.error({
+        message: "Phone number must have 10 digits.",
+      });
+      return;
+    }
+
     mutation.mutate();
   };
 
   const handleCancel = () => {
+    setFullName("");
+    setPhoneNumber("");
     setIsModalOpen(false);
   };
 

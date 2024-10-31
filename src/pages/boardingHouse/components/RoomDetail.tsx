@@ -1,5 +1,5 @@
 import { Button, Col, Divider, Input, Modal, Row, Space, Table, Typography } from "antd";
-import { Color } from "constants";
+import { Color, QueryKey } from "constants";
 import { useRoomDetail } from "hooks";
 import React, { useState } from "react";
 import { inputStyle } from "styles";
@@ -7,6 +7,7 @@ import type { TableProps } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { UpdatePeople } from "./UpdatePeople";
 import { DeletePeople } from "./DeletePeople";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RoomDetailProps {
   isModalOpen: boolean;
@@ -15,34 +16,20 @@ interface RoomDetailProps {
 }
 
 interface DataType {
-  key: string;
+  key: number;
+  roomUserId: string;
   fullName: string;
   phoneNumber: string;
 }
 
-const dataSource: DataType[] = [
-  {
-    key: "1",
-    fullName: "John Brown",
-    phoneNumber: "0987654321",
-  },
-  {
-    key: "2",
-    fullName: "Jim Green",
-    phoneNumber: "0987654321",
-  },
-  {
-    key: "3",
-    fullName: "Joe Black",
-    phoneNumber: "0987654321",
-  },
-];
-
 export const RoomDetail: React.FC<RoomDetailProps> = ({ isModalOpen, setIsModalOpen, id }) => {
+  const [roomUserId, setRoomUserId] = useState("");
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isUpdatePeopleModal, setIsUpdatePeopleModal] = useState(false);
   const [isDeletePeopleModal, setIsDeletePeopleModal] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useRoomDetail(
     {
@@ -51,14 +38,15 @@ export const RoomDetail: React.FC<RoomDetailProps> = ({ isModalOpen, setIsModalO
     id,
   );
 
-  console.log(data, isLoading);
   const handleEdit = (record: DataType) => {
+    setRoomUserId(record.roomUserId);
     setFullName(record.fullName);
     setPhoneNumber(record.phoneNumber);
     setIsUpdatePeopleModal(true);
   };
 
   const handleDelete = (record: DataType) => {
+    setRoomUserId(record.roomUserId);
     setFullName(record.fullName);
     setPhoneNumber(record.phoneNumber);
     setIsDeletePeopleModal(true);
@@ -93,6 +81,7 @@ export const RoomDetail: React.FC<RoomDetailProps> = ({ isModalOpen, setIsModalO
   ];
 
   const handleCancel = () => {
+    queryClient.resetQueries({ queryKey: [QueryKey.ROOM] });
     setIsModalOpen(false);
   };
 
@@ -106,50 +95,82 @@ export const RoomDetail: React.FC<RoomDetailProps> = ({ isModalOpen, setIsModalO
       <Row gutter={[0, 10]} style={{ paddingTop: "10px", paddingBottom: "20px" }}>
         <Col className="gutter-row" span={24}>
           <Typography.Title level={5}>Room Name</Typography.Title>
-          <Input style={{ ...inputStyle, color: "#000" }} value="" disabled />
+          <Input style={{ ...inputStyle, color: "#000" }} value={data?.roomName} disabled />
         </Col>
         <Col className="gutter-row" span={24}>
           <Typography.Title level={5}>Room Rate</Typography.Title>
-          <Input type="number" style={{ ...inputStyle, color: "#000" }} value="" disabled />
+          <Input type="number" style={{ ...inputStyle, color: "#000" }} value={data?.roomRate} disabled />
         </Col>
         <Col className="gutter-row" span={24}>
           <Row gutter={[15, 10]}>
             <Col className="gutter-row" span={12}>
               <Typography.Title level={5}>Electricity meter old number</Typography.Title>
-              <Input type="number" style={{ ...inputStyle, color: "#000" }} value="" disabled />
+              <Input
+                type="number"
+                style={{ ...inputStyle, color: "#000" }}
+                value={data?.electricMeterOldNumber || 0}
+                disabled
+              />
             </Col>
             <Col className="gutter-row" span={12}>
               <Typography.Title level={5}>Electricity meter new number</Typography.Title>
-              <Input type="number" style={{ ...inputStyle, color: "#000" }} value="" disabled />
+              <Input
+                type="number"
+                style={{ ...inputStyle, color: "#000" }}
+                value={data?.electricMeterNewNumber || 0}
+                disabled
+              />
             </Col>
             <Col className="gutter-row" span={12}>
               <Typography.Title level={5}>Water meter old number</Typography.Title>
-              <Input type="number" style={{ ...inputStyle, color: "#000" }} value="" disabled />
+              <Input
+                type="number"
+                style={{ ...inputStyle, color: "#000" }}
+                value={data?.waterMeterOldNumber || 0}
+                disabled
+              />
             </Col>
             <Col className="gutter-row" span={12}>
               <Typography.Title level={5}>Water meter new number</Typography.Title>
-              <Input type="number" style={{ ...inputStyle, color: "#000" }} value="" disabled />
+              <Input
+                type="number"
+                style={{ ...inputStyle, color: "#000" }}
+                value={data?.waterMeterNewNumber || 0}
+                disabled
+              />
             </Col>
           </Row>
         </Col>
         <Col className="gutter-row" span={24} style={{ marginTop: "10px" }}>
-          <Table<DataType> columns={columns} dataSource={dataSource} pagination={false} bordered size="small" />
+          <Table<DataType>
+            columns={columns}
+            dataSource={data ? [...data?.users].map((user, index) => ({ ...user, key: index + 1 })) : []}
+            loading={isLoading}
+            showHeader={true}
+            pagination={false}
+            bordered
+            size="small"
+          />
         </Col>
       </Row>
 
       <UpdatePeople
         isModalOpen={isUpdatePeopleModal}
         setIsModalOpen={setIsUpdatePeopleModal}
-        id=""
-        name=""
+        id={id}
+        roomUserId={roomUserId}
+        name={data?.roomName}
         fullName={fullName}
+        setFullName={setFullName}
         phoneNumber={phoneNumber}
+        setPhoneNumber={setPhoneNumber}
       />
       <DeletePeople
         isModalOpen={isDeletePeopleModal}
         setIsModalOpen={setIsDeletePeopleModal}
-        id=""
-        name=""
+        id={id}
+        roomUserId={roomUserId}
+        name={data?.roomName}
         fullName={fullName}
         phoneNumber={phoneNumber}
       />
