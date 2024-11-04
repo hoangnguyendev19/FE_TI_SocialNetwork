@@ -217,8 +217,11 @@ export const RoomItem: React.FC<RoomItemProps> = ({ room }) => {
         id={id}
         name={roomName}
         roomRate={roomRate}
+        paymentStatus={payment?.status}
         electricityMeterOldNumber={electricityMeterOldNumber}
         waterMeterOldNumber={waterMeterOldNumber}
+        electricityMeterNewNumber={payment?.electricityMeterNewNumber}
+        waterMeterNewNumber={payment?.waterMeterNewNumber}
       />
       <DeleteRoom isModalOpen={isDeleteRoomModal} setIsModalOpen={setIsDeleteRoomModal} id={id} name={roomName} />
       <AddPeople isModalOpen={isAddPeopleModal} setIsModalOpen={setIsAddPeopleModal} id={id} name={roomName} />

@@ -1,21 +1,26 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Col, Divider, Input, Modal, notification, Row, Typography } from "antd";
 import { boardingHouseApi } from "api";
 import { Color, QueryKey, SettingsRequest } from "constants";
-import React from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { inputErrorStyle, inputStyle } from "styles";
-import * as yup from "yup";
+import React, { useEffect, useState } from "react";
+import { inputStyle } from "styles";
 
 interface SettingsProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   id: string;
+  electricityBill: number;
+  waterBill: number;
 }
 
-export const Settings: React.FC<SettingsProps> = ({ isModalOpen, setIsModalOpen, id }) => {
+export const Settings: React.FC<SettingsProps> = ({ isModalOpen, setIsModalOpen, id, electricityBill, waterBill }) => {
+  console.log(electricityBill);
+
+  const [electBill, setElectBill] = useState(String(electricityBill));
+  const [watBill, setWatBill] = useState(String(waterBill));
+
   const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: (data: SettingsRequest) => boardingHouseApi.updateSetting(data),
     onSuccess: () => {
@@ -37,92 +42,74 @@ export const Settings: React.FC<SettingsProps> = ({ isModalOpen, setIsModalOpen,
     },
   });
 
-  const schema = yup.object().shape({
-    electricityBill: yup.string().required("Electricity bill is required"),
-    waterBill: yup.string().required("Water bill is required"),
-  });
+  useEffect(() => {
+    setElectBill(String(electricityBill));
+    setWatBill(String(waterBill));
+  }, [electricityBill, waterBill]);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<any>({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      electricityBill: 0,
-      waterBill: 0,
-    },
-  });
+  const handleOk = () => {
+    // check if electBill and watBill is empty
+    if (!electBill || !watBill) {
+      notification.error({
+        message: "Please fill all required fields.",
+      });
+      return;
+    }
 
-  const onSubmit: SubmitHandler<any> = (data) => {
+    // check if electBill and watBill < 0
+    if (Number(electBill) < 0 || Number(watBill) < 0) {
+      notification.error({
+        message: "Electricity bill and water bill must be greater than 0.",
+      });
+      return;
+    }
+
     mutation.mutate({
       boardingHouseId: id,
-      electricityBill: Number(data.electricityBill),
-      waterBill: Number(data.waterBill),
+      electricityBill: Number(electBill),
+      waterBill: Number(watBill),
     });
   };
 
   const handleCancel = () => {
-    reset();
+    setElectBill(String(electricityBill));
+    setWatBill(String(waterBill));
     setIsModalOpen(false);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Modal open={isModalOpen} onCancel={handleCancel} okText="Save" onOk={handleSubmit(onSubmit)}>
-        <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
-          Settings Boarding House
-        </Typography.Title>
-        <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
+    <Modal open={isModalOpen} onCancel={handleCancel} okText="Save" onOk={handleOk}>
+      <Typography.Title level={4} style={{ color: Color.SECONDARY }}>
+        Settings Boarding House
+      </Typography.Title>
+      <Divider style={{ margin: "15px 0", borderBlockColor: "#000" }} />
 
-        <Row gutter={[0, 5]}>
-          <Col className="gutter-row" span={24}>
-            <Typography.Title level={5}>
-              Electricity bill/meter<span style={{ color: "red" }}>*</span>
-            </Typography.Title>
-            <Controller
-              name="electricityBill"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  placeholder="Please type your electricity bill!"
-                  type="number"
-                  style={{ ...inputStyle, borderColor: errors.electricityBill ? "red" : "" }}
-                  {...field}
-                />
-              )}
-            />
-            <div style={inputErrorStyle}>
-              {errors.electricityBill && (
-                <Typography.Text type="danger">{errors.electricityBill.message as string}</Typography.Text>
-              )}
-            </div>
-          </Col>
-          <Col className="gutter-row" span={24}>
-            <Typography.Title level={5}>
-              Water bill/meter<span style={{ color: "red" }}>*</span>
-            </Typography.Title>
-            <Controller
-              name="waterBill"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  placeholder="Please type your water bill!"
-                  type="number"
-                  style={{ ...inputStyle, borderColor: errors.waterBill ? "red" : "" }}
-                  {...field}
-                />
-              )}
-            />
-            <div style={inputErrorStyle}>
-              {errors.waterBill && (
-                <Typography.Text type="danger">{errors.waterBill.message as string}</Typography.Text>
-              )}
-            </div>
-          </Col>
-        </Row>
-      </Modal>
-    </form>
+      <Row gutter={[0, 5]}>
+        <Col className="gutter-row" span={24}>
+          <Typography.Title level={5}>
+            Electricity bill/meter<span style={{ color: "red" }}>*</span>
+          </Typography.Title>
+          <Input
+            placeholder="Please type your electricity bill!"
+            type="number"
+            style={inputStyle}
+            value={electBill}
+            onChange={(e) => setElectBill(e.target.value)}
+          />
+        </Col>
+        <Col className="gutter-row" span={24}>
+          <Typography.Title level={5}>
+            Water bill/meter<span style={{ color: "red" }}>*</span>
+          </Typography.Title>
+          <Input
+            placeholder="Please type your water bill!"
+            type="number"
+            style={inputStyle}
+            value={watBill}
+            onChange={(e) => setWatBill(e.target.value)}
+          />
+        </Col>
+      </Row>
+    </Modal>
   );
 };

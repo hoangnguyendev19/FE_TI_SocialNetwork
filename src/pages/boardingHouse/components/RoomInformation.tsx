@@ -14,8 +14,11 @@ interface RoomInformationProps {
   id: string;
   name: string;
   roomRate: number;
+  paymentStatus: string;
   electricityMeterOldNumber: number;
   waterMeterOldNumber: number;
+  electricityMeterNewNumber: number;
+  waterMeterNewNumber: number;
 }
 
 export const RoomInformation: React.FC<RoomInformationProps> = ({
@@ -24,8 +27,11 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
   id,
   name,
   roomRate,
+  paymentStatus,
   electricityMeterOldNumber,
   waterMeterOldNumber,
+  electricityMeterNewNumber,
+  waterMeterNewNumber,
 }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -64,8 +70,8 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
     resolver: yupResolver(schema),
     defaultValues: {
       roomRate,
-      electricityMeterNewNumber: electricityMeterOldNumber,
-      waterMeterNewNumber: waterMeterOldNumber,
+      electricityMeterNewNumber,
+      waterMeterNewNumber,
     },
   });
 
@@ -107,8 +113,9 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
                 <Input
                   placeholder="Please type your room rate!"
                   type="number"
-                  style={{ ...inputStyle, borderColor: errors.roomRate ? "red" : "" }}
+                  style={{ ...inputStyle, borderColor: errors.roomRate ? "red" : "", color: "#000" }}
                   {...field}
+                  disabled={paymentStatus === "UNPAID"}
                 />
               )}
             />
@@ -138,8 +145,13 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
                     <Input
                       placeholder="Electricity meter new number!"
                       type="number"
-                      style={{ ...inputStyle, borderColor: errors.electricityMeterNewNumber ? "red" : "" }}
+                      style={{
+                        ...inputStyle,
+                        borderColor: errors.electricityMeterNewNumber ? "red" : "",
+                        color: "#000",
+                      }}
                       {...field}
+                      disabled={paymentStatus === "UNPAID"}
                     />
                   )}
                 />
@@ -166,8 +178,9 @@ export const RoomInformation: React.FC<RoomInformationProps> = ({
                     <Input
                       placeholder="Water meter new number!"
                       type="number"
-                      style={{ ...inputStyle, borderColor: errors.waterMeterNewNumber ? "red" : "" }}
+                      style={{ ...inputStyle, borderColor: errors.waterMeterNewNumber ? "red" : "", color: "#000" }}
                       {...field}
+                      disabled={paymentStatus === "UNPAID"}
                     />
                   )}
                 />
