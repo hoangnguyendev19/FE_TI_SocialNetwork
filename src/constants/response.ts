@@ -79,4 +79,6 @@ export interface PaymentResponse {
   id: string;
   status: string;
   totalAmount: number;
+  electricityMeterNewNumber: number;
+  waterMeterNewNumber: number;
 }

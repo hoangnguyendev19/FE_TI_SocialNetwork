@@ -1,19 +1,6 @@
-import { DownOutlined, FilterOutlined, PlusOutlined, RollbackOutlined, SettingFilled } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  DatePicker,
-  DatePickerProps,
-  Pagination,
-  PaginationProps,
-  Row,
-  Select,
-  Space,
-  Typography,
-} from "antd";
+import { FilterOutlined, PlusOutlined, RollbackOutlined, SettingFilled } from "@ant-design/icons";
+import { Avatar, Button, Col, Flex, Input, Pagination, PaginationProps, Row, Space, Typography } from "antd";
 import { Color, RoomResponse } from "constants";
-import dayjs from "dayjs";
 import { useBoardingHouse, useRoom } from "hooks";
 import React, { useState } from "react";
 import { AddNewRoom } from "./AddNewRoom";
@@ -26,9 +13,9 @@ export const Room: React.FC = () => {
   const [isSettingsModal, setIsSettingsModal] = useState(false);
   const [isAddNewRoomModal, setIsAddNewRoomModal] = useState(false);
 
-  const [roomStatus, setRoomStatus] = useState<any>(undefined);
-  const [paymentStatus, setPaymentStatus] = useState<any>(undefined);
-  const [date, setDate] = useState<any>(undefined);
+  const [roomStatus, setRoomStatus] = useState<any>("");
+  const [paymentStatus, setPaymentStatus] = useState<any>("");
+  const [date, setDate] = useState<any>("");
 
   const { data: boardingHouse } = useBoardingHouse({ enabled: false });
 
@@ -41,9 +28,9 @@ export const Room: React.FC = () => {
       sortBy: "DESC",
       filter: {
         boardingHouseId: boardingHouse?.id,
-        roomStatus: roomStatus ? roomStatus : "",
-        paymentStatus: paymentStatus ? paymentStatus : "",
-        date: date ? date : "",
+        roomStatus,
+        paymentStatus,
+        date,
       },
     },
   );
@@ -53,19 +40,19 @@ export const Room: React.FC = () => {
     refetch();
   };
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    setDate(dateString);
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(e.target.value);
   };
 
   const itemRender: PaginationProps["itemRender"] = (_, type, originalElement) => {
-    if (type === "prev") return <a>Previous</a>;
-    if (type === "next") return <a>Next</a>;
+    if (type === "prev") return <a style={{ marginRight: 8 }}>Previous</a>;
+    if (type === "next") return <a style={{ marginLeft: 8 }}>Next</a>;
     return originalElement;
   };
 
   const handleResetFilter = () => {
-    setRoomStatus(undefined);
-    setPaymentStatus(undefined);
+    setRoomStatus("");
+    setPaymentStatus("");
     setDate(undefined);
     refetch();
   };
@@ -108,60 +95,79 @@ export const Room: React.FC = () => {
 
         {/* Filter Section */}
         <Col span={24} style={{ marginBottom: "15px" }}>
-          <Row align="middle">
-            <FilterOutlined
+          <Flex align="center">
+            <Space
               style={{
                 border: "1px solid rgba(0,0,0,0.5)",
-                padding: "10px 20px",
+                height: 40,
                 borderRadius: "10px 0 0 10px",
-                fontSize: "12px",
+                padding: "0 20px",
               }}
-            />
-            <Typography.Text style={{ border: "1px solid rgba(0,0,0,0.5)", padding: "5px 20px", fontSize: "14px" }}>
-              Filter By
-            </Typography.Text>
-            <DatePicker
-              placeholder="Date"
-              onChange={onChangeDate}
-              style={{ border: "1px solid rgba(0,0,0,0.5)", borderRadius: "0", backgroundColor: "transparent" }}
-              suffixIcon={<DownOutlined />}
-              value={date ? dayjs(date) : undefined}
-            />
-            <Select
-              size="large"
-              style={{ border: "1px solid rgba(0,0,0,0.5)", width: "200px", borderRadius: "0", height: 32 }}
-              placeholder="Payment Status"
+            >
+              <FilterOutlined
+                style={{
+                  fontSize: "18px",
+                }}
+              />
+            </Space>
+            <Space style={{ border: "1px solid rgba(0,0,0,0.5)", height: 40, padding: "0 20px" }}>
+              <Typography.Text style={{ fontSize: "14px" }}>Filter By</Typography.Text>
+            </Space>
+            <Space>
+              <Input
+                type="date"
+                style={{
+                  border: "1px solid rgba(0,0,0,0.5)",
+                  height: 40,
+                  borderRadius: "0",
+                  backgroundColor: "transparent",
+                  padding: "0 20px",
+                }}
+                onChange={handleDateChange}
+                value={date}
+              />
+            </Space>
+            <select
+              style={{ border: "1px solid rgba(0,0,0,0.5)", height: 40, padding: "0 20px" }}
               value={paymentStatus}
-              onChange={(value) => setPaymentStatus(value)}
+              onChange={(e) => setPaymentStatus(e.target.value)}
+              defaultValue=""
             >
-              <Select.Option value="PAID">Paid</Select.Option>
-              <Select.Option value="UNPAID">Unpaid</Select.Option>
-            </Select>
-            <Select
-              size="large"
-              style={{ border: "1px solid rgba(0,0,0,0.5)", width: "200px", borderRadius: "0", height: 32 }}
-              placeholder="Room Status"
+              <option value="">Payment Status</option>
+              <option value="PAID">Paid</option>
+              <option value="UNPAID">Unpaid</option>
+            </select>
+            <select
+              style={{ border: "1px solid rgba(0,0,0,0.5)", height: 40, padding: "0 20px" }}
               value={roomStatus}
-              onChange={(value) => setRoomStatus(value)}
+              onChange={(e) => setRoomStatus(e.target.value)}
+              defaultValue=""
             >
-              <Select.Option value="FULL_ROOM">Full room</Select.Option>
-              <Select.Option value="ROOM_AVAILABLE">Room available</Select.Option>
-            </Select>
-            <div
-              style={{ border: "1px solid rgba(0,0,0,0.5)", padding: "5px 20px", cursor: "pointer" }}
+              <option value="">Room Status</option>
+              <option value="FULL_ROOM">Full room</option>
+              <option value="ROOM_AVAILABLE">Room available</option>
+            </select>
+            <Space
+              style={{
+                border: "1px solid rgba(0,0,0,0.5)",
+                height: 40,
+                cursor: "pointer",
+                padding: "0 20px",
+                borderRadius: "0 10px 10px 0",
+              }}
               onClick={handleResetFilter}
             >
               <RollbackOutlined style={{ color: "red" }} />
               <Typography.Text type="danger" style={{ marginLeft: "10px", fontSize: "14px" }}>
                 Reset Filter
               </Typography.Text>
-            </div>
-          </Row>
+            </Space>
+          </Flex>
         </Col>
 
         {/* Room List Section */}
         <Col span={24}>
-          <Row justify="space-between" gutter={[0, 15]}>
+          <Row style={{ gap: "15px" }}>
             {isFetching ? (
               <>
                 <SkeletonRoomItem />
@@ -189,7 +195,13 @@ export const Room: React.FC = () => {
           style={{ position: "absolute", bottom: 10, left: 20 }}
         />
 
-        <Settings isModalOpen={isSettingsModal} setIsModalOpen={setIsSettingsModal} id={boardingHouse?.id} />
+        <Settings
+          isModalOpen={isSettingsModal}
+          setIsModalOpen={setIsSettingsModal}
+          id={boardingHouse?.id}
+          electricityBill={boardingHouse?.setting.electricityBill}
+          waterBill={boardingHouse?.setting.waterBill}
+        />
         <AddNewRoom isModalOpen={isAddNewRoomModal} setIsModalOpen={setIsAddNewRoomModal} id={boardingHouse?.id} />
       </Row>
     </div>
