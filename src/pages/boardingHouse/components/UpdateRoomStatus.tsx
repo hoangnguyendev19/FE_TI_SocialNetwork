@@ -26,7 +26,7 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
     mutationFn: () => roomApi.updateRoomStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.ROOM] });
-      setIsModalOpen(false);
+      handleCancel();
       notification.success({
         message: "Update room status successfully.",
       });
@@ -39,7 +39,7 @@ export const UpdateRoomStatus: React.FC<UpdateRoomStatusProps> = ({
           });
           break;
       }
-      setIsModalOpen(false);
+      handleCancel();
     },
   });
 

@@ -14,8 +14,6 @@ interface SettingsProps {
 }
 
 export const Settings: React.FC<SettingsProps> = ({ isModalOpen, setIsModalOpen, id, electricityBill, waterBill }) => {
-  console.log(electricityBill);
-
   const [electBill, setElectBill] = useState(String(electricityBill));
   const [watBill, setWatBill] = useState(String(waterBill));
 
